@@ -7,9 +7,22 @@
 const saveInventory = () => saveData(LS_KEY, inventory);
 
 /**
- * Loads inventory from localStorage with data migration
+ * Loads inventory from localStorage with comprehensive data migration
  * 
- * Handles legacy data by adding missing fields and calculating defaults
+ * This function handles backwards compatibility by:
+ * - Loading existing inventory data from localStorage
+ * - Migrating legacy records that may be missing newer fields
+ * - Calculating premiums for older records that lack this data
+ * - Ensuring all records have required fields with sensible defaults
+ * - Preserving existing user data while adding new functionality
+ * 
+ * @returns {void} Updates the global inventory array with migrated data
+ * @throws {Error} Logs errors to console if localStorage access fails
+ * 
+ * @example
+ * // Called during app initialization to restore saved data
+ * loadInventory();
+ * console.log(inventory); // Array of properly formatted inventory items
  */
 const loadInventory = () => {
   const data = loadData(LS_KEY, []);
@@ -44,7 +57,29 @@ const loadInventory = () => {
 };
 
 /**
- * Renders inventory table with current sorting, pagination, and filtering
+ * Renders the main inventory table with all current display settings
+ * 
+ * This is the primary display function that:
+ * - Applies current search filters to inventory data
+ * - Sorts data according to user-selected column and direction
+ * - Implements pagination to show only current page items
+ * - Generates HTML table rows with interactive elements
+ * - Updates sort indicators in column headers
+ * - Refreshes pagination controls and summary totals
+ * - Re-establishes column resizing functionality
+ * 
+ * Called whenever inventory data changes or display settings update
+ * 
+ * @returns {void} Updates DOM elements with fresh inventory display
+ * 
+ * @example
+ * // Refresh table after adding new item
+ * inventory.push(newItem);
+ * renderTable();
+ * 
+ * // Update display after search
+ * searchQuery = 'silver';
+ * renderTable();
  */
 const renderTable = () => {
   const filteredInventory = filterInventory();
@@ -107,7 +142,29 @@ const renderTable = () => {
 };
 
 /**
- * Updates all summary/totals displays based on current inventory
+ * Calculates and updates all financial summary displays across the application
+ * 
+ * This comprehensive function:
+ * - Processes entire inventory to calculate metal-specific totals
+ * - Handles collectable vs non-collectable item calculations separately
+ * - Updates DOM elements for all metal types (Silver, Gold, Platinum, Palladium)
+ * - Calculates weighted averages for prices and premiums
+ * - Formats currency and profit/loss values with appropriate styling
+ * - Handles edge cases like division by zero and missing data
+ * 
+ * Key calculations performed:
+ * - Total items, weight, purchase price, current value
+ * - Average prices per ounce (overall, collectable, non-collectable)
+ * - Premium analysis and profit/loss calculations
+ * - Current market value based on spot prices
+ * 
+ * @returns {void} Updates DOM elements in totals cards and summary sections
+ * 
+ * @example
+ * // Recalculate totals after inventory change
+ * inventory[0].price = 150.00;
+ * saveInventory();
+ * updateSummary(); // Refreshes all totals displays
  */
 const updateSummary = () => {
   /**
@@ -368,9 +425,33 @@ const toggleCollectable = (idx, checkbox) => {
 // =============================================================================
 
 /**
- * Imports inventory data from CSV file
+ * Imports inventory data from CSV file with comprehensive validation and error handling
  * 
- * @param {File} file - CSV file to import
+ * This function:
+ * - Uses PapaParse library for robust CSV parsing
+ * - Maps CSV columns to inventory object properties
+ * - Validates data types and required fields
+ * - Handles various date formats automatically
+ * - Calculates premiums and totals for imported items
+ * - Provides user feedback on import success/failure
+ * - Offers replacement or append options (currently replacement only)
+ * 
+ * Supported CSV columns:
+ * - Metal, Name, Qty, Type, Weight(oz), Purchase Price
+ * - Purchase Location, Storage Location, Date, Collectable
+ * - Spot Price ($/oz) for historical premium calculations
+ * 
+ * @param {File} file - CSV file selected by user through file input
+ * @returns {void} Updates inventory array if import successful
+ * 
+ * @example
+ * // Typically called from file input change event
+ * const fileInput = document.getElementById('importCsvFile');
+ * fileInput.addEventListener('change', (e) => {
+ *   if (e.target.files.length > 0) {
+ *     importCsv(e.target.files[0]);
+ *   }
+ * });
  */
 const importCsv = (file) => {
   Papa.parse(file, {

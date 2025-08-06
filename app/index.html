@@ -1,11 +1,21 @@
 <!DOCTYPE html>
-
+<!--
+  Precious Metals Inventory Tool - Main Application Interface
+  
+  A comprehensive client-side web application for tracking precious metal investments
+  including silver, gold, platinum, and palladium. Features include spot price management,
+  premium calculations, collectable item handling, and multi-format data import/export.
+  
+  All data is stored locally using localStorage - no server required.
+  Application version is managed dynamically via constants.js
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes" name="viewport"/>
 <meta content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;" http-equiv="Content-Security-Policy"/>
-<title>Precious Metals Inventory Tool 3.0.2</title>
+<!-- Title is dynamically updated by init.js using APP_VERSION constant -->
+<title>Precious Metals Inventory Tool</title>
 <!-- External libraries for data import/export functionality -->
 <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -19,7 +29,7 @@
 <body>
 <!-- Application Header -->
 <div class="app-header">
-<h1>Precious Metals Inventory Tool 3.0.2</h1>
+<h1>Precious Metals Inventory Tool</h1>
 <div style="margin-left: auto;">
 <button class="btn" id="themeToggle">Dark Mode</button>
 </div>
@@ -27,6 +37,14 @@
 <div class="container">
 <!-- =============================================================================
          SPOT PRICES SECTION
+         
+         Displays current spot prices for all four supported metals and provides
+         manual input controls for setting custom spot prices. Each metal has:
+         - Display card showing current spot price
+         - Input field for setting new spot price
+         - Save and Reset buttons for price management
+         
+         Spot prices are used for premium calculations and profit/loss analysis
          ============================================================================= -->
 <section class="spot-prices">
 <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
@@ -94,6 +112,16 @@
 </section>
 <!-- =============================================================================
          TOTALS SECTION
+         
+         Comprehensive financial summary cards for each metal type showing:
+         - Total items and weight in inventory
+         - Purchase price vs current value calculations
+         - Average prices (overall, collectable, non-collectable)
+         - Premium analysis and profit/loss calculations
+         - "View Details" buttons that open analytics modals with pie charts
+         
+         All calculations are performed by updateSummary() in inventory.js
+         Values are updated automatically when inventory changes
          ============================================================================= -->
 <section class="totals-section">
 <div class="totals">
@@ -305,6 +333,14 @@
 </section>
 <!-- =============================================================================
          INVENTORY FORM SECTION
+         
+         Primary data entry form for adding new inventory items. Includes fields for:
+         - Metal type selection (Silver, Gold, Platinum, Palladium)
+         - Item details (name, type, quantity, weight)
+         - Purchase information (price, location, storage location, date)
+         
+         Form submission is handled by events.js with validation and automatic
+         premium calculation based on current spot prices
          ============================================================================= -->
 <section class="form-section">
 <form id="inventoryForm">
@@ -374,6 +410,15 @@
 </section>
 <!-- =============================================================================
          SEARCH FUNCTIONALITY
+         
+         Live search interface that filters inventory table in real-time.
+         Searches across all relevant fields including:
+         - Metal type, name, type, purchase/storage locations, date
+         - Quantity, weight, price values
+         - Collectable status (yes/no)
+         
+         Search is case-insensitive and supports partial matches
+         Implementation in search.js with filterInventory() function
          ============================================================================= -->
 <section class="search-section">
 <div class="search-container">
@@ -384,6 +429,16 @@
 </section>
 <!-- =============================================================================
          INVENTORY TABLE SECTION
+         
+         Main data display table showing all inventory items with:
+         - Sortable columns (click headers to sort ascending/descending)
+         - Clickable item names for editing (opens edit modal)
+         - Collectable status checkboxes for quick toggle
+         - Delete buttons with confirmation
+         - Responsive design with column resizing capability
+         
+         Table rendering handled by renderTable() in inventory.js
+         Pagination controls limit display to selected items per page
          ============================================================================= -->
 <section class="table-section">
 <table id="inventoryTable">
@@ -435,6 +490,23 @@
 </section>
 <!-- =============================================================================
          IMPORT/EXPORT SECTION
+         
+         Comprehensive data management with support for multiple formats:
+         
+         IMPORT OPTIONS:
+         - CSV: Standard comma-separated values with automatic field mapping
+         - JSON: Native application format preserving all data
+         - Excel: .xlsx and .xls files with robust parsing
+         
+         EXPORT OPTIONS:
+         - CSV: Compatible with spreadsheet applications
+         - JSON: Full data backup with metadata
+         - Excel: Formatted spreadsheet with proper column types
+         - PDF: Print-ready report with totals and formatting
+         - HTML: Standalone web page with embedded styles
+         
+         All import/export functions include data validation and error handling
+         Implementation in inventory.js with format-specific parsing
          ============================================================================= -->
 <section class="import-export-section">
 <h2>Import Options</h2>
@@ -469,6 +541,19 @@
 </section>
 <!-- =============================================================================
        EDIT MODAL
+       
+       Comprehensive item editing interface that appears when:
+       - User clicks on item name in table
+       - Edit button is pressed (in older versions)
+       
+       Features:
+       - All item fields editable including historical spot price
+       - Collectable toggle switch with explanatory text
+       - Real-time validation and premium recalculation
+       - Save/Cancel actions with confirmation
+       
+       Modal display controlled by editItem() function in inventory.js
+       Form submission handled in events.js with data validation
        ============================================================================= -->
 <div class="modal" id="editModal" style="display: none;">
 <div class="modal-content">
@@ -562,6 +647,22 @@
 </div>
 <!-- =============================================================================
        DETAILS MODAL WITH PIE CHARTS
+       
+       Advanced analytics modal opened from "View Details" buttons on totals cards.
+       Provides in-depth analysis for selected metal including:
+       
+       VISUAL ANALYTICS:
+       - Pie chart breakdown by item type (rounds, bars, coins, etc.)
+       - Pie chart breakdown by purchase location
+       - Interactive Chart.js visualizations with hover details
+       
+       DATA BREAKDOWNS:
+       - Type details: count, weight, and value by item type
+       - Location details: count, weight, and value by purchase location
+       - Formatted currency and weight displays
+       
+       Modal implementation in detailsModal.js with Chart.js integration
+       Data preparation and chart rendering handled by charts.js
        ============================================================================= -->
 <div class="modal" id="detailsModal" style="display: none;">
 <div class="details-modal-content">
@@ -601,7 +702,21 @@
 <button class="close-details-btn" onclick="closeDetailsModal()">Close</button>
 </div>
 </div>
-<!-- JavaScript with pie chart integration -->
+<!-- =============================================================================
+       JAVASCRIPT MODULE LOADING
+       
+       Modular architecture with proper dependency order:
+       1. constants.js - Global configuration and version
+       2. state.js - Application state and DOM element caching
+       3. utils.js - Utility functions and formatters
+       4. Feature modules - charts, theme, search, sorting, pagination, etc.
+       5. Core modules - spot price management and inventory operations
+       6. events.js - Event listener setup (requires all other modules)
+       7. init.js - Application initialization and startup
+       
+       All scripts use 'defer' to ensure DOM is ready before execution
+       External libraries (Chart.js, jsPDF, PapaParse, XLSX) loaded via CDN
+       ============================================================================= -->
 
 <script defer src="js/constants.js"></script>
 <script defer src="js/state.js"></script>

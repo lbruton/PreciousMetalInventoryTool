@@ -1,5 +1,26 @@
 /**
- * Sets up column resizing functionality for the inventory table
+ * Implements dynamic column resizing for the inventory table
+ * 
+ * This function adds interactive resize handles to table headers that allow users to:
+ * - Drag column borders to adjust width
+ * - Maintain minimum and maximum column widths
+ * - Provide visual feedback during resize operations
+ * - Prevent text selection during drag operations
+ * - Clean up existing handles before re-adding (for table re-renders)
+ * 
+ * Technical implementation:
+ * - Adds resize handles as DOM elements positioned on column borders
+ * - Uses mouse event listeners for drag detection and movement
+ * - Calculates new widths based on mouse position changes
+ * - Applies width constraints to prevent unusable column sizes
+ * - Temporarily disables other interactions during resize
+ * 
+ * @returns {void} Modifies DOM to add resize functionality
+ * 
+ * @example
+ * // Called after table re-render to restore resize capability
+ * renderTable();
+ * setupColumnResizing(); // Re-establish resize handles
  */
 const setupColumnResizing = () => {
   const table = document.getElementById('inventoryTable');
@@ -87,7 +108,41 @@ const setupColumnResizing = () => {
 // =============================================================================
 
 /**
- * Sets up all primary event listeners for the application
+ * Initializes all primary event listeners for the application interface
+ * 
+ * This comprehensive setup function establishes event handlers for:
+ * 
+ * TABLE INTERACTIONS:
+ * - Column header clicks for sorting (skips # and Delete columns)
+ * - Toggle direction on repeated clicks (asc/desc)
+ * 
+ * FORM SUBMISSIONS:
+ * - Main inventory form with validation and premium calculation
+ * - Edit form with historical spot price handling
+ * - Input validation for quantity, weight, and price fields
+ * 
+ * SPOT PRICE MANAGEMENT:
+ * - Save/reset buttons for all four metal types
+ * - Enter key support for quick spot price updates
+ * 
+ * IMPORT/EXPORT OPERATIONS:
+ * - File input change events for CSV, JSON, Excel imports
+ * - Export button clicks for all supported formats
+ * - File input reset after processing
+ * 
+ * UTILITY FUNCTIONS:
+ * - Modal close handlers (cancel edit, ESC key support)
+ * - "Boating Accident" data reset with confirmation
+ * - Theme toggle and persistence
+ * 
+ * @returns {void} Attaches event listeners to DOM elements
+ * 
+ * @example
+ * // Called once during application initialization
+ * document.addEventListener('DOMContentLoaded', () => {
+ *   // ... other initialization
+ *   setupEventListeners();
+ * });
  */
 const setupEventListeners = () => {
   // Table header sorting

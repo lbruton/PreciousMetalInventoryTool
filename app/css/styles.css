@@ -462,7 +462,17 @@ input:focus, select:focus {
 .palladium .total-title {  }
 
 /* =============================================================================
-   TABLES
+   TABLES - Main inventory table with interactive features
+   
+   Features implemented:
+   - Fixed table layout for precise column control
+   - Sortable headers with visual indicators
+   - Clickable item names for editing
+   - Collectable status checkboxes
+   - Delete buttons with hover effects
+   - Column resizing with drag handles
+   - Responsive design with mobile optimizations
+   - Hover effects and zebra striping for readability
    ============================================================================= */
 
 table {
@@ -680,7 +690,18 @@ td input:checked + .slider:before {
 }
 
 /* =============================================================================
-   MODALS
+   MODALS - Edit modal and analytics modal with charts
+   
+   Two modal types:
+   1. Edit Modal: Item editing form with validation and collectable toggle
+   2. Details Modal: Analytics with pie charts and data breakdowns
+   
+   Features:
+   - Backdrop blur and overlay effects
+   - Smooth slide-in animation
+   - Responsive sizing for all screen sizes
+   - Keyboard navigation support
+   - Auto-scrolling for content overflow
    ============================================================================= */
 
 .modal {
@@ -806,7 +827,18 @@ td input:checked + .slider:before {
 }
 
 /* =============================================================================
-   PIE CHART STYLES
+   PIE CHART STYLES - Chart.js integration for analytics
+   
+   Provides styling for:
+   - Chart containers with proper aspect ratios
+   - Chart titles and section headers
+   - Responsive chart sizing for all screen sizes
+   - Grid layout for side-by-side chart display
+   - Integration with details modal layout
+   
+   Charts display breakdowns by:
+   - Item type (rounds, bars, coins, etc.)
+   - Purchase location (dealer, online, local, etc.)
    ============================================================================= */
 
 .charts-section {
@@ -1134,6 +1166,19 @@ input:disabled + .slider {
 
 /* =============================================================================
    RESPONSIVE DESIGN - Consolidated Media Queries
+   
+   Breakpoint strategy:
+   - 1200px: Large desktop - reduce chart complexity, stack some elements
+   - 992px: Desktop - simplify totals grid, reduce modal sizes
+   - 768px: Tablet - stack most elements, smaller fonts, compact controls
+   - 480px: Mobile - single column layout, minimal spacing, touch-friendly
+   
+   Key responsive features:
+   - Flexible grid layouts that adapt to screen size
+   - Progressive enhancement from mobile-first approach
+   - Touch-friendly button and input sizing
+   - Readable font sizes across all devices
+   - Optimized table display with column adjustments
    ============================================================================= */
 
 @media (max-width: 1200px) {

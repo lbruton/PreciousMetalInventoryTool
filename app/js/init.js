@@ -2,7 +2,43 @@
 // =============================================================================
 
 /**
- * Initializes the application after DOM content is loaded
+ * Main application initialization function - entry point for the application
+ * 
+ * This function coordinates the complete application startup process:
+ * 
+ * DOM ELEMENT INITIALIZATION:
+ * - Caches all DOM elements in the global elements object for performance
+ * - Maps metal configurations to their corresponding DOM elements
+ * - Initializes totals display elements with null-safety for missing elements
+ * 
+ * VERSION MANAGEMENT:
+ * - Updates page title and header with current version from constants.js
+ * - Ensures consistent version display across application
+ * 
+ * DATA LOADING:
+ * - Restores inventory from localStorage with migration
+ * - Loads spot price history for analytics
+ * - Sets default form values (today's date)
+ * 
+ * INTERFACE SETUP:
+ * - Renders initial table display
+ * - Fetches current spot prices (if implemented)
+ * - Applies saved theme preference
+ * 
+ * EVENT BINDING:
+ * - Establishes all event listeners for user interactions
+ * - Sets up pagination, search, and theme controls
+ * - Initializes column resizing functionality
+ * 
+ * GLOBAL EXPOSURE:
+ * - Makes key functions available to inline event handlers
+ * - Ensures compatibility with HTML onclick attributes
+ * 
+ * @returns {void} Fully initializes the application interface
+ * 
+ * @example
+ * // Automatically called when DOM is ready
+ * document.addEventListener('DOMContentLoaded', initFunction);
  */
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize DOM elements after DOM is loaded
