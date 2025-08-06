@@ -1,0 +1,1205 @@
+// INVENTORY FUNCTIONS
+// =============================================================================
+
+/**
+ * Saves current inventory to localStorage
+ */
+const saveInventory = () => saveData(LS_KEY, inventory);
+
+/**
+ * Loads inventory from localStorage with data migration
+ * 
+ * Handles legacy data by adding missing fields and calculating defaults
+ */
+const loadInventory = () => {
+  const data = loadData(LS_KEY, []);
+  // Migrate legacy data to include new fields
+  inventory = data.map(item => {
+    // Handle legacy data that might not have all fields
+    if (item.premiumPerOz === undefined) {
+      // For legacy items, calculate premium if possible
+      const metalConfig = Object.values(METALS).find(m => m.name === item.metal) || METALS.SILVER;
+      const spotPrice = spotPrices[metalConfig.key];
+
+      const premiumPerOz = spotPrice > 0 ? (item.price / item.weight) - spotPrice : 0;
+      const totalPremium = premiumPerOz * item.qty * item.weight;
+
+      return {
+        ...item,
+        purchaseLocation: item.purchaseLocation || "Unknown",
+        spotPriceAtPurchase: spotPrice,
+        premiumPerOz,
+        totalPremium,
+        isCollectable: item.isCollectable !== undefined ? item.isCollectable : false
+      };
+    }
+    // Ensure all items have isCollectable property
+    return {
+      ...item,
+      isCollectable: item.isCollectable !== undefined ? item.isCollectable : false
+    };
+  });
+};
+
+/**
+ * Renders inventory table with current sorting, pagination, and filtering
+ */
+const renderTable = () => {
+  const filteredInventory = filterInventory();
+  const sortedInventory = sortInventory(filteredInventory);
+  const totalPages = calculateTotalPages(sortedInventory);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, sortedInventory.length);
+
+  const rows = [];
+
+  for (let i = startIndex; i < endIndex; i++) {
+    const item = sortedInventory[i];
+    const originalIdx = inventory.indexOf(item);
+
+    rows.push(`
+      <tr>
+        <td>${i + 1}</td>
+        <td>${item.metal || 'Silver'}</td>
+        <td>${item.qty}</td>
+        <td>${item.type}</td>
+        <td>${item.name.replace(/[<>"']/g, '')}</td>
+        <td>${parseFloat(item.weight).toFixed(2)}</td>
+        <td>${formatDollar(item.price)}</td>
+        <td>${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
+        <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.premiumPerOz > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
+        <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
+        <td>${item.purchaseLocation}</td>
+        <td>${item.date}</td>
+        <td>
+          <label class="switch">
+            <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)">
+            <span class="slider"></span>
+          </label>
+        </td>
+        <td><button class="btn premium" onclick="editItem(${originalIdx})" aria-label="Edit item">Edit</button></td>
+        <td><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
+      </tr>
+    `);
+  }
+
+  elements.inventoryTable.innerHTML = rows.join('');
+
+  // Update sort indicators
+  const headers = document.querySelectorAll('#inventoryTable th');
+  headers.forEach(header => {
+    const indicator = header.querySelector('.sort-indicator');
+    if (indicator) header.removeChild(indicator);
+  });
+
+  if (sortColumn !== null && sortColumn < headers.length) {
+    const header = headers[sortColumn];
+    const indicator = document.createElement('span');
+    indicator.className = 'sort-indicator';
+    indicator.textContent = sortDirection === 'asc' ? '↑' : '↓';
+    header.appendChild(indicator);
+  }
+
+  renderPagination(sortedInventory);
+  updateSummary();
+};
+
+/**
+ * Updates all summary/totals displays based on current inventory
+ */
+const updateSummary = () => {
+  /**
+   * Calculates financial metrics for specified metal type
+   * 
+   * @param {string} metal - Metal type to calculate ('Silver', 'Gold', 'Platinum', or 'Palladium')
+   * @returns {Object} Calculated metrics
+   */
+  const calculateTotals = (metal) => {
+    let totalItems = 0;
+    let totalWeight = 0;
+    let currentSpotValue = 0;
+    let totalPurchased = 0;
+    let totalPremium = 0;
+    let lossProfit = 0;
+
+    // Track collectable and non-collectable metrics separately
+    let collectableWeight = 0;
+    let collectableValue = 0;
+    let nonCollectableWeight = 0;
+    let nonCollectableValue = 0;
+
+    for (const item of inventory) {
+      if (item.metal === metal) {
+        totalItems += Number(item.qty);
+
+        // Total Weight calculation (for both regular and collectible items)
+        const itemWeight = Number(item.qty) * parseFloat(item.weight);
+        totalWeight += itemWeight;
+
+        // Current Value calculation
+        if (item.isCollectable) {
+          // For collectible items: Current Value = Current spot price × weight
+          const currentSpot = spotPrices[item.metal.toLowerCase()];
+          currentSpotValue += currentSpot * itemWeight;
+
+          // Track collectable metrics
+          collectableWeight += itemWeight;
+          collectableValue += Number(item.qty) * parseFloat(item.price);
+        } else {
+          // For regular items: Current Value = Weight × Current Spot Price
+          const currentSpot = spotPrices[item.metal.toLowerCase()];
+          currentSpotValue += currentSpot * itemWeight;
+
+          // Track non-collectable metrics
+          nonCollectableWeight += itemWeight;
+          nonCollectableValue += Number(item.qty) * parseFloat(item.price);
+        }
+
+        // Total Purchase Price calculation (for both regular and collectible items)
+        totalPurchased += Number(item.qty) * parseFloat(item.price);
+
+        // Premium Paid calculation
+        if (!item.isCollectable) {
+          // For regular items: Premium Paid = (Purchase Price per oz - Spot Price at Purchase) × Weight
+          const pricePerOz = item.price / item.weight;
+          const premiumPerOz = pricePerOz - item.spotPriceAtPurchase;
+          totalPremium += premiumPerOz * itemWeight;
+        }
+        // For collectible items: Premium Paid = N/A
+
+        // Loss/Profit calculation
+        if (!item.isCollectable) {
+          // For regular items: Loss/Profit = Current Value - Purchase Price
+          const currentSpot = spotPrices[item.metal.toLowerCase()];
+          const currentValue = currentSpot * itemWeight;
+          const purchaseValue = item.price * item.qty;
+          lossProfit += currentValue - purchaseValue;
+        }
+        // For collectible items: Loss/Profit = Omitted from calculation
+      }
+    }
+
+    // Calculate averages
+    const avgPrice = totalWeight > 0 ? totalPurchased / totalWeight : 0;
+    const avgPremium = totalWeight > 0 ? totalPremium / totalWeight : 0;
+
+    // Calculate collectable/non-collectable averages
+    const avgCollectablePrice = collectableWeight > 0 ? collectableValue / collectableWeight : 0;
+    const avgNonCollectablePrice = nonCollectableWeight > 0 ? nonCollectableValue / nonCollectableWeight : 0;
+
+    return { 
+      totalItems, 
+      totalWeight, 
+      currentSpotValue, 
+      totalPurchased, 
+      totalPremium,
+      lossProfit,
+      avgPrice,
+      avgPremium,
+      avgCollectablePrice,
+      avgNonCollectablePrice,
+      collectableWeight,      // Needed for proper weighted averaging
+      nonCollectableWeight,   // Needed for proper weighted averaging
+      collectableValue,       // CRITICAL: Now returning these values
+      nonCollectableValue     // CRITICAL: Now returning these values
+    };
+  };
+
+  // Calculate totals for each metal
+  const metalTotals = {};
+  Object.values(METALS).forEach(metalConfig => {
+    metalTotals[metalConfig.key] = calculateTotals(metalConfig.name);
+  });
+
+  // Update DOM elements with weight rounded to 2 decimal places
+  Object.values(METALS).forEach(metalConfig => {
+    const totals = metalTotals[metalConfig.key];
+    const metalKey = metalConfig.key;
+
+    elements.totals[metalKey].items.textContent = totals.totalItems;
+    elements.totals[metalKey].weight.textContent = totals.totalWeight.toFixed(2);
+    elements.totals[metalKey].value.innerHTML = formatDollar(totals.currentSpotValue);
+    elements.totals[metalKey].purchased.innerHTML = formatDollar(totals.totalPurchased);
+    elements.totals[metalKey].premium.innerHTML = formatDollar(totals.totalPremium);
+    elements.totals[metalKey].lossProfit.innerHTML = formatLossProfit(totals.lossProfit);
+    elements.totals[metalKey].avgPrice.innerHTML = formatDollar(totals.avgPrice);
+    elements.totals[metalKey].avgPremium.innerHTML = formatDollar(totals.avgPremium);
+    // Add the new collectable/non-collectable averages
+    elements.totals[metalKey].avgCollectablePrice.innerHTML = formatDollar(totals.avgCollectablePrice);
+    elements.totals[metalKey].avgNonCollectablePrice.innerHTML = formatDollar(totals.avgNonCollectablePrice);
+  });
+
+  // Calculate combined totals for all metals
+  const allTotals = {
+    totalItems: 0,
+    totalWeight: 0,
+    currentSpotValue: 0,
+    totalPurchased: 0,
+    totalPremium: 0,
+    lossProfit: 0,
+    collectableWeight: 0,
+    collectableValue: 0,
+    nonCollectableWeight: 0,
+    nonCollectableValue: 0
+  };
+
+  Object.values(metalTotals).forEach(totals => {
+    allTotals.totalItems += totals.totalItems;
+    allTotals.totalWeight += totals.totalWeight;
+    allTotals.currentSpotValue += totals.currentSpotValue;
+    allTotals.totalPurchased += totals.totalPurchased;
+    allTotals.totalPremium += totals.totalPremium;
+    allTotals.lossProfit += totals.lossProfit;
+    allTotals.collectableWeight += totals.collectableWeight;
+    allTotals.collectableValue += totals.collectableValue;
+    allTotals.nonCollectableWeight += totals.nonCollectableWeight;
+    allTotals.nonCollectableValue += totals.nonCollectableValue;
+  });
+
+  // Calculate weighted averages for collectable and non-collectable prices
+  const avgCollectablePriceAll = allTotals.collectableWeight > 0 ? 
+    allTotals.collectableValue / allTotals.collectableWeight : 0;
+  const avgNonCollectablePriceAll = allTotals.nonCollectableWeight > 0 ? 
+    allTotals.nonCollectableValue / allTotals.nonCollectableWeight : 0;
+
+  // Update "All" totals display if elements exist
+  if (elements.totals.all.items.textContent !== undefined) {
+    elements.totals.all.items.textContent = allTotals.totalItems;
+    elements.totals.all.weight.textContent = allTotals.totalWeight.toFixed(2);
+    elements.totals.all.value.innerHTML = formatDollar(allTotals.currentSpotValue);
+    elements.totals.all.purchased.innerHTML = formatDollar(allTotals.totalPurchased);
+    elements.totals.all.premium.innerHTML = formatDollar(allTotals.totalPremium);
+    elements.totals.all.lossProfit.innerHTML = formatLossProfit(allTotals.lossProfit);
+    elements.totals.all.avgPrice.innerHTML = formatDollar(allTotals.totalPurchased / allTotals.totalWeight || 0);
+    elements.totals.all.avgPremium.innerHTML = formatDollar(allTotals.totalPremium / allTotals.totalWeight || 0);
+    elements.totals.all.avgCollectablePrice.innerHTML = formatDollar(avgCollectablePriceAll);
+    elements.totals.all.avgNonCollectablePrice.innerHTML = formatDollar(avgNonCollectablePriceAll);
+  }
+};
+
+/**
+ * Deletes inventory item at specified index after confirmation
+ * 
+ * @param {number} idx - Index of item to delete
+ */
+const deleteItem = (idx) => {
+  if (confirm("Delete this item?")) {
+    inventory.splice(idx, 1);
+    saveInventory();
+    renderTable();
+  }
+};
+
+/**
+ * Prepares and displays edit modal for specified inventory item
+ * 
+ * @param {number} idx - Index of item to edit
+ */
+const editItem = (idx) => {
+  editingIndex = idx;
+  const item = inventory[idx];
+
+  // Populate edit form
+  elements.editMetal.value = item.metal;
+  elements.editName.value = item.name;
+  elements.editQty.value = item.qty;
+  elements.editType.value = item.type;
+  elements.editWeight.value = item.weight;
+  elements.editPrice.value = item.price;
+  elements.editPurchaseLocation.value = item.purchaseLocation;
+  elements.editDate.value = item.date;
+  elements.editSpotPrice.value = item.spotPriceAtPurchase;
+  document.getElementById("editCollectable").checked = item.isCollectable;
+
+  // Show modal
+  elements.editModal.style.display = 'flex';
+};
+
+/**
+ * Toggles collectable status for inventory item
+ * 
+ * @param {number} idx - Index of item to update
+ * @param {HTMLInputElement} checkbox - Checkbox element triggering the change
+ */
+const toggleCollectable = (idx, checkbox) => {
+  const item = inventory[idx];
+  const wasCollectable = item.isCollectable;
+  const isCollectable = checkbox.checked;
+
+  // If toggling from collectable to non-collectable
+  if (wasCollectable && !isCollectable) {
+    // Use the stored spotPriceAtPurchase if available and valid
+    let spotPrice = item.spotPriceAtPurchase;
+
+    // If spotPriceAtPurchase is invalid (<= 0), use current spot price
+    if (spotPrice <= 0) {
+      spotPrice = spotPrices[item.metal.toLowerCase()];
+      // Update spotPriceAtPurchase for future reference
+      item.spotPriceAtPurchase = spotPrice;
+    }
+
+    // Recalculate premium
+    const pricePerOz = item.price / item.weight;
+    item.premiumPerOz = pricePerOz - spotPrice;
+    item.totalPremium = item.premiumPerOz * item.qty * item.weight;
+  } 
+  // If toggling from non-collectable to collectable
+  else if (!wasCollectable && isCollectable) {
+    // Preserve the current spotPriceAtPurchase (it should already be set)
+    // No need to change it, just make sure we keep it
+
+    // Set premiums to 0 for collectable items
+    item.premiumPerOz = 0;
+    item.totalPremium = 0;
+  }
+
+  // Update collectable status
+  item.isCollectable = isCollectable;
+
+  saveInventory();
+  renderTable();
+};
+
+// =============================================================================
+// IMPORT/EXPORT FUNCTIONS
+// =============================================================================
+
+/**
+ * Imports inventory data from CSV file
+ * 
+ * @param {File} file - CSV file to import
+ */
+const importCsv = (file) => {
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      let imported = [];
+      let skipped = 0;
+
+      for (let row of results.data) {
+        const metal = row['Metal'] || 'Silver';
+        const name = row['Name'] || row['name'];
+        const qty = parseInt(row['Qty'] || row['qty'] || 1, 10);
+        const type = row['Type'] || row['type'] || 'Other';
+        const weight = parseFloat(row['Weight(oz)'] || row['weight']);
+        const priceStr = row['Purchase Price'] || row['price'];
+        const price = parseFloat(typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g,"") : priceStr);
+        const purchaseLocation = row['Purchase Location'] || "Unknown";
+        const date = parseDate(row['Date']); // Using the new date parser
+
+        // Get collectable status
+        const isCollectable = row['Collectable'] === 'Yes' || row['Collectable'] === 'true' || row['isCollectable'] === 'true';
+
+        // Get spot price from CSV if available
+        let spotPriceAtPurchase;
+        if (row['Spot Price ($/oz)']) {
+          // Extract numeric value from formatted string like "$1,234.56"
+          const spotStr = row['Spot Price ($/oz)'].toString();
+          spotPriceAtPurchase = parseFloat(spotStr.replace(/[^0-9.-]+/g, ""));
+        } else if (row['spotPriceAtPurchase']) {
+          spotPriceAtPurchase = parseFloat(row['spotPriceAtPurchase']);
+        } else {
+          // Fall back to current spot price if not in CSV and not collectable
+          const metalKey = metal.toLowerCase();
+          spotPriceAtPurchase = isCollectable ? 0 : spotPrices[metalKey];
+        }
+
+        // Calculate premium per ounce (only for non-collectible items)
+        let premiumPerOz = 0;
+        let totalPremium = 0;
+
+        if (!isCollectable) {
+          const pricePerOz = price / weight;
+          premiumPerOz = pricePerOz - spotPriceAtPurchase;
+          totalPremium = premiumPerOz * qty * weight;
+        }
+
+        if (!name || isNaN(qty) || isNaN(weight) || isNaN(price) || qty < 1 || !Number.isInteger(qty)) {
+          skipped++;
+          continue;
+        }
+
+        imported.push({ 
+          metal, 
+          name, 
+          qty, 
+          type, 
+          weight, 
+          price, 
+          date,
+          purchaseLocation,
+          spotPriceAtPurchase,
+          premiumPerOz,
+          totalPremium,
+          isCollectable
+        });
+      }
+
+      if (imported.length === 0) return alert("No valid items to import.");
+
+      let msg = "Replace current inventory with imported file?";
+      if (skipped > 0) msg += `\n(Skipped ${skipped} invalid rows)`;
+
+      if (confirm(msg)) {
+        inventory = imported;
+        saveInventory();
+        renderTable();
+      }
+
+      this.value = "";
+    }
+  });
+};
+
+/**
+ * Exports current inventory to CSV format
+ */
+const exportCsv = () => {
+  const timestamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
+  const headers = ["Metal","Name","Qty","Type","Weight(oz)","Purchase Price","Spot Price ($/oz)","Premium ($/oz)","Total Premium","Purchase Location","Date","Collectable"];
+
+  // Sort inventory by date (newest first) for export
+  const sortedInventory = sortInventoryByDateNewestFirst();
+
+  const rows = [];
+
+  for (const i of sortedInventory) {
+    // For collectable items, use current spot price (at time of export)
+    // This ensures the value is preserved if the item is later changed back to standard
+    const exportSpotPrice = i.isCollectable ? 
+      spotPrices[i.metal.toLowerCase()] : 
+      i.spotPriceAtPurchase;
+
+    rows.push([
+      i.metal || 'Silver',
+      i.name,
+      i.qty,
+      i.type,
+      parseFloat(i.weight).toFixed(4),
+      formatDollar(i.price),
+      exportSpotPrice > 0 ? formatDollar(exportSpotPrice) : 'N/A',
+      i.isCollectable ? 'N/A' : formatDollar(i.premiumPerOz),
+      i.isCollectable ? 'N/A' : formatDollar(i.totalPremium),
+      i.purchaseLocation,
+      i.date,
+      i.isCollectable ? 'Yes' : 'No'
+    ]);
+  }
+
+  const csv = Papa.unparse([headers, ...rows]);
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `metal_inventory_${timestamp}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+};
+
+/**
+ * Imports inventory data from JSON file
+ * 
+ * @param {File} file - JSON file to import
+ */
+const importJson = (file) => {
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      // Validate data structure
+      if (!Array.isArray(data)) {
+        return alert("Invalid JSON format. Expected an array of inventory items.");
+      }
+
+      // Process each item
+      const imported = [];
+      let skipped = 0;
+
+      for (const item of data) {
+        // Basic validation
+        if (!item.name || !item.metal || isNaN(item.qty) || isNaN(item.weight) || isNaN(item.price)) {
+          skipped++;
+          continue;
+        }
+
+        // Ensure required fields with defaults
+        const processedItem = {
+          metal: item.metal || 'Silver',
+          name: item.name,
+          qty: parseInt(item.qty, 10),
+          type: item.type || 'Other',
+          weight: parseFloat(item.weight),
+          price: parseFloat(item.price),
+          date: parseDate(item.date || todayStr()),
+          purchaseLocation: item.purchaseLocation || "Unknown",
+          spotPriceAtPurchase: item.spotPriceAtPurchase || spotPrices[item.metal.toLowerCase()],
+          isCollectable: item.isCollectable === true,
+          premiumPerOz: item.premiumPerOz || 0,
+          totalPremium: item.totalPremium || 0
+        };
+
+        // Recalculate premium if needed
+        if (!processedItem.isCollectable && processedItem.spotPriceAtPurchase > 0) {
+          const pricePerOz = processedItem.price / processedItem.weight;
+          processedItem.premiumPerOz = pricePerOz - processedItem.spotPriceAtPurchase;
+          processedItem.totalPremium = processedItem.premiumPerOz * processedItem.qty * processedItem.weight;
+        }
+
+        imported.push(processedItem);
+      }
+
+      if (imported.length === 0) {
+        return alert("No valid items found in JSON file.");
+      }
+
+      let msg = `Import ${imported.length} items?`;
+      if (skipped > 0) {
+        msg += `\n(Skipped ${skipped} invalid items)`;
+      }
+
+      if (confirm(msg)) {
+        inventory = imported;
+        saveInventory();
+        renderTable();
+      }
+    } catch (error) {
+      alert("Error parsing JSON file: " + error.message);
+    }
+  };
+
+  reader.readAsText(file);
+};
+
+/**
+ * Exports current inventory to JSON format
+ */
+const exportJson = () => {
+  const timestamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
+
+  // Sort inventory by date (newest first) for export
+  const sortedInventory = sortInventoryByDateNewestFirst();
+
+  const exportData = sortedInventory.map(item => ({
+    metal: item.metal,
+    name: item.name,
+    qty: item.qty,
+    type: item.type,
+    weight: item.weight,
+    price: item.price,
+    date: item.date,
+    purchaseLocation: item.purchaseLocation,
+    spotPriceAtPurchase: item.spotPriceAtPurchase,
+    isCollectable: item.isCollectable,
+    premiumPerOz: item.premiumPerOz,
+    totalPremium: item.totalPremium
+  }));
+
+  const json = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `metal_inventory_${timestamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+};
+
+/**
+ * Imports inventory data from Excel file
+ * 
+ * @param {File} file - Excel file to import
+ */
+const importExcel = (file) => {
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+
+      // Get first sheet
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+
+      // Convert to JSON
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+      // Process data
+      const imported = [];
+      let skipped = 0;
+
+      for (const row of jsonData) {
+        const metal = row['Metal'] || 'Silver';
+        const name = row['Name'] || row['name'];
+        const qty = parseInt(row['Qty'] || row['qty'] || 1, 10);
+        const type = row['Type'] || row['type'] || 'Other';
+        const weight = parseFloat(row['Weight(oz)'] || row['weight']);
+        const priceStr = row['Purchase Price'] || row['price'];
+        const price = parseFloat(typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g,"") : priceStr);
+        const purchaseLocation = row['Purchase Location'] || "Unknown";
+        const date = parseDate(row['Date']); // Using the new date parser
+
+        // Get collectable status
+        const isCollectable = row['Collectable'] === 'Yes' || row['Collectable'] === 'true' || row['isCollectable'] === 'true';
+
+        // Get spot price from Excel if available
+        let spotPriceAtPurchase;
+        if (row['Spot Price ($/oz)']) {
+          // Extract numeric value from formatted string like "$1,234.56"
+          const spotStr = row['Spot Price ($/oz)'].toString();
+          spotPriceAtPurchase = parseFloat(spotStr.replace(/[^0-9.-]+/g, ""));
+        } else if (row['spotPriceAtPurchase']) {
+          spotPriceAtPurchase = parseFloat(row['spotPriceAtPurchase']);
+        } else {
+          // Fall back to current spot price if not in Excel and not collectable
+          const metalKey = metal.toLowerCase();
+          spotPriceAtPurchase = isCollectable ? 0 : spotPrices[metalKey];
+        }
+
+        // Calculate premium per ounce (only for non-collectible items)
+        let premiumPerOz = 0;
+        let totalPremium = 0;
+
+        if (!isCollectable) {
+          const pricePerOz = price / weight;
+          premiumPerOz = pricePerOz - spotPriceAtPurchase;
+          totalPremium = premiumPerOz * qty * weight;
+        }
+
+        if (!name || isNaN(qty) || isNaN(weight) || isNaN(price) || qty < 1 || !Number.isInteger(qty)) {
+          skipped++;
+          continue;
+        }
+
+        imported.push({ 
+          metal, 
+          name, 
+          qty, 
+          type, 
+          weight, 
+          price, 
+          date,
+          purchaseLocation,
+          spotPriceAtPurchase,
+          premiumPerOz,
+          totalPremium,
+          isCollectable
+        });
+      }
+
+      if (imported.length === 0) return alert("No valid items to import.");
+
+      let msg = "Replace current inventory with imported file?";
+      if (skipped > 0) msg += `\n(Skipped ${skipped} invalid rows)`;
+
+      if (confirm(msg)) {
+        inventory = imported;
+        saveInventory();
+        renderTable();
+      }
+    } catch (error) {
+      alert("Error importing Excel file: " + error.message);
+    }
+  };
+
+  reader.readAsArrayBuffer(file);
+};
+
+/**
+ * Exports current inventory to Excel format
+ */
+const exportExcel = () => {
+  const timestamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
+
+  // Sort inventory by date (newest first) for export
+  const sortedInventory = sortInventoryByDateNewestFirst();
+
+  // Create worksheet data
+  const wsData = [
+    ["Metal", "Name", "Qty", "Type", "Weight(oz)", "Purchase Price", "Spot Price ($/oz)", 
+     "Premium ($/oz)", "Total Premium", "Purchase Location", "Date", "Collectable"]
+  ];
+
+  for (const i of sortedInventory) {
+    // For collectable items, use current spot price (at time of export)
+    const exportSpotPrice = i.isCollectable ? 
+      spotPrices[i.metal.toLowerCase()] : 
+      i.spotPriceAtPurchase;
+
+    wsData.push([
+      i.metal || 'Silver',
+      i.name,
+      i.qty,
+      i.type,
+      parseFloat(i.weight).toFixed(4),
+      i.price,
+      exportSpotPrice,
+      i.isCollectable ? null : i.premiumPerOz,
+      i.isCollectable ? null : i.totalPremium,
+      i.purchaseLocation,
+      i.date,
+      i.isCollectable ? 'Yes' : 'No'
+    ]);
+  }
+
+  // Create worksheet
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Create workbook
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Inventory");
+
+  // Export
+  XLSX.writeFile(wb, `metal_inventory_${timestamp}.xlsx`);
+};
+
+/**
+ * Exports current inventory to PDF format
+ */
+const exportPdf = () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Sort inventory by date (newest first) for export
+  const sortedInventory = sortInventoryByDateNewestFirst();
+
+  // Add title
+  doc.setFontSize(16);
+  doc.text("Precious Metals Inventory", 14, 15);
+
+  // Add date
+  doc.setFontSize(10);
+  doc.text(`Exported: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 14, 22);
+
+  // Prepare table data
+  const tableData = sortedInventory.map(item => [
+    item.metal,
+    item.name,
+    item.qty,
+    item.type,
+    parseFloat(item.weight).toFixed(2),
+    formatDollar(item.price),
+    item.isCollectable ? 'N/A' : formatDollar(item.spotPriceAtPurchase),
+    item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz),
+    item.isCollectable ? 'N/A' : formatDollar(item.totalPremium),
+    item.purchaseLocation,
+    item.date,
+    item.isCollectable ? 'Yes' : 'No'
+  ]);
+
+  // Add table
+  doc.autoTable({
+    head: [['Metal', 'Name', 'Qty', 'Type', 'Weight(oz)', 'Purchase Price', 
+            'Spot Price ($/oz)', 'Premium ($/oz)', 'Total Premium', 
+            'Purchase Location', 'Date', 'Collectable']],
+    body: tableData,
+    startY: 30,
+    theme: 'striped',
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [25, 118, 210] }
+  });
+
+  // Add totals
+  const finalY = doc.lastAutoTable.finalY || 30;
+
+  // Add totals section
+  doc.setFontSize(12);
+  doc.text("Totals", 14, finalY + 10);
+
+  // Silver Totals
+  doc.setFontSize(10);
+  doc.text("Silver:", 14, finalY + 16);
+  doc.text(`Total Items: ${elements.totals.silver.items.textContent}`, 25, finalY + 22);
+  doc.text(`Total Weight: ${elements.totals.silver.weight.textContent} oz`, 25, finalY + 28);
+  doc.text(`Purchase Price: ${elements.totals.silver.purchased.textContent}`, 25, finalY + 34);
+  doc.text(`Current Value: ${elements.totals.silver.value.textContent}`, 25, finalY + 40);
+
+  // Gold Totals
+  doc.text("Gold:", 100, finalY + 16);
+  doc.text(`Total Items: ${elements.totals.gold.items.textContent}`, 111, finalY + 22);
+  doc.text(`Total Weight: ${elements.totals.gold.weight.textContent} oz`, 111, finalY + 28);
+  doc.text(`Purchase Price: ${elements.totals.gold.purchased.textContent}`, 111, finalY + 34);
+  doc.text(`Current Value: ${elements.totals.gold.value.textContent}`, 111, finalY + 40);
+
+  // Platinum Totals
+  doc.text("Platinum:", 14, finalY + 46);
+  doc.text(`Total Items: ${elements.totals.platinum.items.textContent}`, 25, finalY + 52);
+  doc.text(`Total Weight: ${elements.totals.platinum.weight.textContent} oz`, 25, finalY + 58);
+  doc.text(`Purchase Price: ${elements.totals.platinum.purchased.textContent}`, 25, finalY + 64);
+  doc.text(`Current Value: ${elements.totals.platinum.value.textContent}`, 25, finalY + 70);
+
+  // Palladium Totals
+  doc.text("Palladium:", 100, finalY + 46);
+  doc.text(`Total Items: ${elements.totals.palladium.items.textContent}`, 111, finalY + 52);
+  doc.text(`Total Weight: ${elements.totals.palladium.weight.textContent} oz`, 111, finalY + 58);
+  doc.text(`Purchase Price: ${elements.totals.palladium.purchased.textContent}`, 111, finalY + 64);
+  doc.text(`Current Value: ${elements.totals.palladium.value.textContent}`, 111, finalY + 70);
+
+  // All Totals (only if elements exist)
+  if (elements.totals.all.items.textContent !== undefined) {
+    doc.setFontSize(11);
+    doc.text("All Metals:", 14, finalY + 76);
+    doc.text(`Total Items: ${elements.totals.all.items.textContent}`, 25, finalY + 82);
+    doc.text(`Total Weight: ${elements.totals.all.weight.textContent} oz`, 25, finalY + 88);
+    doc.text(`Purchase Price: ${elements.totals.all.purchased.textContent}`, 25, finalY + 94);
+    doc.text(`Current Value: ${elements.totals.all.value.textContent}`, 25, finalY + 100);
+  }
+
+  // Save PDF
+  doc.save(`metal_inventory_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.pdf`);
+};
+
+/**
+ * Exports current inventory to HTML format with embedded styles
+ */
+const exportHtml = () => {
+  const timestamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
+
+  // Sort inventory by date (newest first) for export
+  const sortedInventory = sortInventoryByDateNewestFirst();
+
+  // Create HTML content with inline styles for portability
+  const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precious Metals Inventory</title>
+  
+</head>
+<style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #0d6efd;
+      margin-bottom: 10px;
+    }
+    .export-date {
+      text-align: center;
+      color: #6c757d;
+      margin-bottom: 25px;
+      font-size: 0.9rem;
+    }
+    .totals-section {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 25px;
+      border: 1px solid #dee2e6;
+    }
+    .totals-title {
+      font-weight: 600;
+      color: #0d6efd;
+      margin-bottom: 10px;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    .totals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .total-card {
+      background: white;
+      border-radius: 6px;
+      padding: 12px;
+      border: 1px solid #e9ecef;
+    }
+    .total-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed #dee2e6;
+    }
+    .total-item:last-child {
+      border-bottom: none;
+    }
+    .total-label {
+      font-weight: 500;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+    }
+    th {
+      background-color: #e9ecef;
+      color: #212529;
+      font-weight: 600;
+      padding: 10px;
+      text-align: left;
+    }
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #6c757d;
+      font-size: 0.85rem;
+      border-top: 1px solid #dee2e6;
+      padding-top: 15px;
+    }
+  </style>
+    
+<body>
+  <h1>Precious Metals Inventory</h1>
+  <div class="export-date">Exported: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</div>
+
+  <div class="totals-section">
+    <div class="totals-title">Inventory Totals</div>
+    <div class="totals-grid">
+      <div class="total-card">
+        <div style="font-weight: 600; margin-bottom: 12px; color: var(--silver, #a8a8a8);">Silver Totals</div>
+        <div class="total-item">
+          <span class="total-label">Total Items:</span>
+          <span class="total-value">${elements.totals.silver.items.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Weight:</span>
+          <span class="total-value">${elements.totals.silver.weight.textContent} oz</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Purchase Price:</span>
+          <span class="total-value">${elements.totals.silver.purchased.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Current Value:</span>
+          <span class="total-value">${elements.totals.silver.value.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Price (oz):</span>
+          <span class="total-value">${elements.totals.silver.avgPrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Collectable Price (oz):</span>
+          <span class="total-value">${elements.totals.silver.avgCollectablePrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Non-collectable Price (oz):</span>
+          <span class="total-value">${elements.totals.silver.avgNonCollectablePrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Premium (oz):</span>
+          <span class="total-value">${elements.totals.silver.avgPremium.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Premium Paid:</span>
+          <span class="total-value">${elements.totals.silver.premium.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Loss/Profit:</span>
+          <span class="total-value">${elements.totals.silver.lossProfit.textContent}</span>
+        </div>
+      </div>
+
+      <div class="total-card">
+        <div style="font-weight: 600; margin-bottom: 12px; color: var(--gold, #ffd700);">Gold Totals</div>
+        <div class="total-item">
+          <span class="total-label">Total Items:</span>
+          <span class="total-value">${elements.totals.gold.items.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Weight:</span>
+          <span class="total-value">${elements.totals.gold.weight.textContent} oz</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Purchase Price:</span>
+          <span class="total-value">${elements.totals.gold.purchased.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Current Value:</span>
+          <span class="total-value">${elements.totals.gold.value.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Price (oz):</span>
+          <span class="total-value">${elements.totals.gold.avgPrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Collectable Price (oz):</span>
+          <span class="total-value">${elements.totals.gold.avgCollectablePrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Non-collectable Price (oz):</span>
+          <span class="total-value">${elements.totals.gold.avgNonCollectablePrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Premium (oz):</span>
+          <span class="total-value">${elements.totals.gold.avgPremium.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Premium Paid:</span>
+          <span class="total-value">${elements.totals.gold.premium.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Loss/Profit:</span>
+          <span class="total-value">${elements.totals.gold.lossProfit.textContent}</span>
+        </div>
+      </div>
+
+      <div class="total-card">
+        <div style="font-weight: 600; margin-bottom: 12px; color: var(--platinum, #e5e4e2);">Platinum Totals</div>
+        <div class="total-item">
+          <span class="total-label">Total Items:</span>
+          <span class="total-value">${elements.totals.platinum.items.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Weight:</span>
+          <span class="total-value">${elements.totals.platinum.weight.textContent} oz</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Purchase Price:</span>
+          <span class="total-value">${elements.totals.platinum.purchased.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Current Value:</span>
+          <span class="total-value">${elements.totals.platinum.value.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Price (oz):</span>
+          <span class="total-value">${elements.totals.platinum.avgPrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Collectable Price (oz):</span>
+          <span class="total-value">${elements.totals.platinum.avgCollectablePrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Non-collectable Price (oz):</span>
+          <span class="total-value">${elements.totals.platinum.avgNonCollectablePrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Premium (oz):</span>
+          <span class="total-value">${elements.totals.platinum.avgPremium.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Premium Paid:</span>
+          <span class="total-value">${elements.totals.platinum.premium.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Loss/Profit:</span>
+          <span class="total-value">${elements.totals.platinum.lossProfit.textContent}</span>
+        </div>
+      </div>
+
+      <div class="total-card">
+        <div style="font-weight: 600; margin-bottom: 12px; color: var(--palladium, #c0c0ee);">Palladium Totals</div>
+        <div class="total-item">
+          <span class="total-label">Total Items:</span>
+          <span class="total-value">${elements.totals.palladium.items.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Weight:</span>
+          <span class="total-value">${elements.totals.palladium.weight.textContent} oz</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Purchase Price:</span>
+          <span class="total-value">${elements.totals.palladium.purchased.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Current Value:</span>
+          <span class="total-value">${elements.totals.palladium.value.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Price (oz):</span>
+          <span class="total-value">${elements.totals.palladium.avgPrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Collectable Price (oz):</span>
+          <span class="total-value">${elements.totals.palladium.avgCollectablePrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Non-collectable Price (oz):</span>
+          <span class="total-value">${elements.totals.palladium.avgNonCollectablePrice.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Average Premium (oz):</span>
+          <span class="total-value">${elements.totals.palladium.avgPremium.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Premium Paid:</span>
+          <span class="total-value">${elements.totals.palladium.premium.textContent}</span>
+        </div>
+        <div class="total-item">
+          <span class="total-label">Total Loss/Profit:</span>
+          <span class="total-value">${elements.totals.palladium.lossProfit.textContent}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Metal</th>
+        <th>Name</th>
+        <th>Qty</th>
+        <th>Type</th>
+        <th>Weight (oz)</th>
+        <th>Purchase Price</th>
+        <th>Spot Price ($/oz)</th>
+        <th>Premium ($/oz)</th>
+        <th>Total Premium</th>
+        <th>Purchase Location</th>
+        <th>Date</th>
+        <th>Collectable</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${sortedInventory.map(item => `
+      <tr>
+        <td>${item.metal}</td>
+        <td>${item.name}</td>
+        <td>${item.qty}</td>
+        <td>${item.type}</td>
+        <td>${parseFloat(item.weight).toFixed(2)}</td>
+        <td>${formatDollar(item.price)}</td>
+        <td>${item.isCollectable ? 'N/A' : formatDollar(item.spotPriceAtPurchase)}</td>
+        <td>${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
+        <td>${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
+        <td>${item.purchaseLocation}</td>
+        <td>${item.date}</td>
+        <td>${item.isCollectable ? 'Yes' : 'No'}</td>
+      </tr>
+      `).join('')}
+    </tbody>
+  </table>
+
+  <div class="footer">
+    Precious Metals Tool Inventory Report
+  </div>
+</body>
+</html>
+  `;
+
+  // Create and download HTML file
+  const blob = new Blob([htmlContent], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `metal_inventory_${timestamp}.html`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+};
+
+// =============================================================================
