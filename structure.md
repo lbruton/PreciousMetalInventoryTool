@@ -1,6 +1,6 @@
 # Precious Metals Inventory Tool - Project Structure
 
-## Current Structure (Version 3.0.3)
+## Current Structure (Version 3.0.4)
 
 ```text
 ├── STRUCTURE.md
@@ -9,19 +9,19 @@
         ├── styles.css
     ├── index.html
     ├── js
-        ├── charts.js
-        ├── constants.js
-        ├── detailsModal.js
-        ├── events.js
-        ├── init.js
-        ├── inventory.js
-        ├── pagination.js
-        ├── search.js
-        ├── sorting.js
-        ├── spot.js
-        ├── state.js
-        ├── theme.js
-        ├── utils.js
+        ├── charts.js            # Chart.js utilities and pie chart rendering
+        ├── constants.js         # Global constants and configuration
+        ├── detailsModal.js      # Analytics modal with breakdown charts
+        ├── events.js            # DOM event listener setup and management
+        ├── init.js              # Application bootstrap and initialization
+        ├── inventory.js         # CRUD operations, calculations, and import/export
+        ├── pagination.js        # Table pagination controls and logic
+        ├── search.js            # Search and filtering functionality
+        ├── sorting.js           # Table column sorting utilities
+        ├── spot.js              # Spot price handling and history
+        ├── state.js             # Global application state and DOM caching
+        ├── theme.js             # Dark/light theme management
+        ├── utils.js             # Utility functions, validation, and helpers
     ├── structure.md
 ├── docs
     ├── CHANGELOG.md
@@ -75,8 +75,8 @@
 
 ### Core JavaScript Modules
 - **constants.js**: Configuration, metal definitions, storage keys, version
-- **state.js**: Global application state variables
-- **inventory.js**: CRUD operations, calculations, data management
+- **state.js**: Global application state variables and DOM element caching
+- **inventory.js**: CRUD operations, calculations, data management, and import/export
 - **spot.js**: Spot price handling and history
 - **theme.js**: Dark/light mode toggle and persistence
 - **search.js**: Inventory search and filtering
@@ -84,10 +84,9 @@
 - **pagination.js**: Table pagination controls
 - **detailsModal.js**: Analytics modal with Chart.js pie charts
 - **charts.js**: Chart.js utilities and configuration
-- **importExport.js**: CSV, JSON, Excel, PDF, HTML import/export
 - **events.js**: All DOM event listener setup
 - **init.js**: Application bootstrap and initialization
-- **utils.js**: Shared utility functions
+- **utils.js**: Shared utility functions, validation, and error handling
 
 ### Styling (`css/styles.css`)
 - Complete theming with CSS custom properties

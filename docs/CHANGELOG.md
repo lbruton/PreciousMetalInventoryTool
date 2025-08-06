@@ -8,6 +8,34 @@
 
 ## 📋 Version History
 
+### Version 3.0.4 – Security & Performance Enhancements (2025-08-06)
+- **Enhanced Security**: Added comprehensive input sanitization to prevent XSS attacks
+  - Implemented `sanitizeHtml()` function for safe HTML content insertion
+  - Applied sanitization to all user-generated content in table rendering
+  - Enhanced form validation with `validateInventoryItem()` function
+- **Improved Date Parsing**: Completely rewritten date parsing logic
+  - Intelligent disambiguation between US (MM/DD/YYYY) and European (DD/MM/YYYY) formats
+  - Better handling of ambiguous dates with logical fallbacks
+  - Added validation and error logging for unparseable dates
+- **Performance Monitoring**: Added performance tracking for critical functions
+  - Implemented `monitorPerformance()` utility for bottleneck identification
+  - Added monitoring to `renderTable()` function with console warnings for slow operations
+- **Enhanced Error Handling**: Comprehensive error management system
+  - Added `handleError()` and `getUserFriendlyMessage()` functions
+  - Improved error messages for better user experience
+  - Enhanced CSV import with detailed validation and error logging
+- **Fixed Missing DOM Elements**: Corrected state.js element caching
+  - Added missing `premium` and `lossProfit` DOM element references
+  - Ensured all totals elements are properly cached for performance
+- **Code Quality Improvements**:
+  - Added comprehensive JSDoc documentation for all new functions
+  - Enhanced input validation with detailed error messages
+  - Improved modular architecture with better separation of concerns
+- **Documentation Updates**: Corrected version references and structural information
+  - Updated LLM.md, STRUCTURE.md to reflect actual codebase
+  - Removed references to non-existent files
+  - Enhanced code documentation and architectural guidelines
+
 ### Version 3.0.3 – Documentation Restructure (2025-08-06)
 - **Moved docs** to `/docs/`
 - Updated `STRUCTURE.md` & `docs/README.md`

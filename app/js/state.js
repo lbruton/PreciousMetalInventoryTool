@@ -117,7 +117,9 @@ const elements = {
       avgPrice: null,    // Average price per ounce
       avgPremium: null,  // Average premium per ounce
       avgCollectablePrice: null,    // Average collectable price per ounce
-      avgNonCollectablePrice: null // Average non-collectable price per ounce
+      avgNonCollectablePrice: null, // Average non-collectable price per ounce
+      premium: null,     // Total premium paid
+      lossProfit: null   // Total loss/profit
     },
     gold: {
       // Same structure as silver
@@ -128,7 +130,9 @@ const elements = {
       avgPrice: null,
       avgPremium: null,
       avgCollectablePrice: null,
-      avgNonCollectablePrice: null
+      avgNonCollectablePrice: null,
+      premium: null,     // Total premium paid
+      lossProfit: null   // Total loss/profit
     },
     platinum: {
       items: null,
@@ -138,7 +142,9 @@ const elements = {
       avgPrice: null,
       avgPremium: null,
       avgCollectablePrice: null,
-      avgNonCollectablePrice: null
+      avgNonCollectablePrice: null,
+      premium: null,     // Total premium paid
+      lossProfit: null   // Total loss/profit
     },
     palladium: {
       items: null,
@@ -148,7 +154,9 @@ const elements = {
       avgPrice: null,
       avgPremium: null,
       avgCollectablePrice: null,
-      avgNonCollectablePrice: null
+      avgNonCollectablePrice: null,
+      premium: null,     // Total premium paid
+      lossProfit: null   // Total loss/profit
     },
     all: {
       // Combined totals for all metals
@@ -159,7 +167,9 @@ const elements = {
       avgPrice: null,
       avgPremium: null,
       avgCollectablePrice: null,
-      avgNonCollectablePrice: null
+      avgNonCollectablePrice: null,
+      premium: null,     // Total premium paid
+      lossProfit: null   // Total loss/profit
     }
   }
 };
