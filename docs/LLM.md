@@ -7,29 +7,34 @@ You are working on the **Precious Metals Inventory Tool v3.0.2+**, a comprehensi
 ## 📁 Project Structure
 
 ```
-PreciousMetalInventoryTool/
-├── app/                          # Main application directory
-│   ├── app/index.html               # Primary application interface
-│   ├── css/
-│   │   └── app/css/styles.css           # Complete application styling
-│   └── js/                      # Modular JavaScript architecture
-│       ├── app/js/constants.js         # App version, storage keys, metal configs
-│       ├── state.js            # Global state variables and DOM references
-│       ├── utils.js            # Utility functions, formatters, date handling
-│       ├── inventory.js        # Core inventory CRUD operations
-│       ├── events.js           # Event listeners and user interactions
-│       ├── sorting.js          # Table sorting functionality
-│       ├── search.js           # Search and filtering logic
-│       ├── pagination.js       # Table pagination controls
-│       ├── spot.js            # Spot price management
-│       ├── theme.js           # Dark/light mode theme switching
-│       ├── charts.js          # Chart.js integration for analytics
-│       ├── detailsModal.js    # Details modal with breakdowns
-│       └── init.js            # Application initialization
-├── app/index.html                   # Landing page with version selector
-├── sample.csv                   # Sample data for testing/import
-├── changelog.md                 # Version history and feature tracking
-└── docs/structure.md                 # Project documentation
+├── STRUCTURE.md
+├── app
+    ├── css
+        ├── styles.css
+    ├── index.html
+    ├── js
+        ├── charts.js
+        ├── constants.js
+        ├── detailsModal.js
+        ├── events.js
+        ├── init.js
+        ├── inventory.js
+        ├── pagination.js
+        ├── search.js
+        ├── sorting.js
+        ├── spot.js
+        ├── state.js
+        ├── theme.js
+        ├── utils.js
+    ├── structure.md
+├── docs
+    ├── CHANGELOG.md
+    ├── LLM.md
+    ├── README.md
+    ├── SOURCES.md
+    ├── VERSIONING.md
+├── index.html
+├── sample.csv
 ```
 
 ## 🏗️ Architecture Overview
@@ -49,6 +54,7 @@ PreciousMetalInventoryTool/
 ## 📊 Data Structure
 
 ### **Inventory Item Object**
+
 ```javascript
 {
   metal: "Silver|Gold|Platinum|Palladium",
