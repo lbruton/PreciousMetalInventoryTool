@@ -38,7 +38,7 @@ Detailed modal views with Chart.js visualizations
 
 Architecture
 Version Evolution
-The tool has evolved from version 1.0 to 2.8, with the latest version (2.8) featuring:
+The tool has evolved from version 1.0 to 3.0, with the latest version (3.0) featuring:
 
 Modular JavaScript architecture - Code split into specialized modules:
 

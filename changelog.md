@@ -2,10 +2,10 @@
 
 ## 🚀 Roadmap (Future Versions)
 
-### Version 2.9 (Planned)
+### Version 3.x (Planned)
 - Introduce item storage location fields for improved inventory organization
 
-### Version 3.1 (Planned)
+### Version 3.x (Planned)
 - Implement live updates for precious metals spot prices
 - Add automated spot price fetching from external APIs
 

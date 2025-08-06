@@ -461,7 +461,7 @@
   
   <div class="container">
     <div class="card">
-      <h1 class="title" id="page-title">Lonnie's Precious Metals Tool</h1>
+      <h1 class="title" id="page-title">Lonnie's Precious Metals Tool v3.0</h1>
       <p class="description">
         Track your precious metal investments with spot price tracking, premium calculations, and comprehensive reporting. 
         Add items to your inventory, monitor current values, and export your data in multiple formats.
@@ -471,24 +471,7 @@
         <strong>Important Notice:</strong> All data is stored locally in your browser and never transmitted to any server. Your information remains private but will be lost if you clear browser history or use private browsing mode. Use this tool at your own risk - the developer assumes no responsibility for any financial decisions made based on this application.
       </div>
       
-      <div class="form-group">
-        <label class="form-label" for="version-select">Select Version</label>
-        <select class="form-select" id="version-select">
-          <option value="1.0">Version 1.0</option>
-          <option value="2.0">Version 2.0</option>
-          <option value="2.1">Version 2.1</option>
-          <option value="2.2">Version 2.2</option>
-          <option value="2.3">Version 2.3</option>
-          <option value="2.4">Version 2.4</option>
-          <option value="2.5">Version 2.5</option>
-          <option value="2.6">Version 2.6</option>
-          <option value="2.7">Version 2.7</option>
-          <option value="2.8">Version 2.8</option>
-          <option selected="" value="3.0">Version 3.0</option>
-        </select>
-      </div>
-      
-      <a class="btn btn-primary btn-block" href="https://lonniebruton.com/pmtools/2.7/index.html" id="continue-btn">
+      <a class="btn btn-primary btn-block" href="app/index.html" id="continue-btn">
         Accept and Continue →
       </a>
     </div>
@@ -528,20 +511,8 @@
       }
     }
 
-    // Version Management
-    const versionSelect = document.getElementById('version-select');
-    const continueBtn = document.getElementById('continue-btn');
-    const pageTitle = document.getElementById('page-title');
-
-    function updateVersion() {
-      const selectedVersion = versionSelect.value;
-      continueBtn.href = `https://lonniebruton.com/pmtools/${selectedVersion}/`;
-      pageTitle.textContent = `Lonnie's Precious Metals Tool v${selectedVersion}`;
-    }
-
     // Event Listeners
     themeToggle.addEventListener('click', toggleTheme);
-    versionSelect.addEventListener('change', updateVersion);
 
     // System theme change listener
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
@@ -552,7 +523,6 @@
 
     // Initialize
     initTheme();
-    updateVersion();
   </script>
 </body>
 </html>
