@@ -924,8 +924,7 @@ input:disabled + .slider {
    ACTION BUTTON GRIDS
    ============================================================================= */
 
-.action-buttons,
-.spot-history-buttons {
+.action-buttons {
   display: grid;
   gap: var(--spacing-sm);
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -1036,8 +1035,7 @@ input:disabled + .slider {
     grid-template-columns: 1fr;
   }
 
-  .action-buttons,
-  .spot-history-buttons {
+  .action-buttons {
     grid-template-columns: 1fr;
   }
 
@@ -1083,8 +1081,7 @@ input:disabled + .slider {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .action-buttons,
-  .spot-history-buttons {
+  .action-buttons {
     grid-template-columns: repeat(2, 1fr);
   }
 }

@@ -36,8 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.itemPrice = document.getElementById('itemPrice');
   elements.purchaseLocation = document.getElementById('purchaseLocation');
   elements.itemDate = document.getElementById('itemDate');
-  elements.showSpotHistoryBtn = document.getElementById('showSpotHistoryBtn');
-  elements.clearSpotHistoryBtn = document.getElementById('clearSpotHistoryBtn');
+
   elements.importCsvFile = document.getElementById('importCsvFile');
   elements.importJsonFile = document.getElementById('importJsonFile');
   elements.importExcelFile = document.getElementById('importExcelFile');

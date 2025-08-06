@@ -47,9 +47,7 @@ const elements = {
   resetSpotBtnSilver: null,
   resetSpotBtnGold: null,
 
-  // Spot history elements
-  showSpotHistoryBtn: null,
-  clearSpotHistoryBtn: null,
+
 
   // Import elements
   importCsvFile: null,
