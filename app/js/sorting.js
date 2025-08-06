@@ -24,9 +24,10 @@ const sortInventory = (data = inventory) => {
       case 7: valA = a.spotPriceAtPurchase; valB = b.spotPriceAtPurchase; break; // Spot Price
       case 8: valA = a.premiumPerOz; valB = b.premiumPerOz; break; // Premium per oz
       case 9: valA = a.totalPremium; valB = b.totalPremium; break; // Total Premium
-      case 10: valA = a.purchaseLocation; valB = b.purchaseLocation; break; // Location
-      case 11: valA = a.date; valB = b.date; break; // Date
-      case 12: valA = a.isCollectable; valB = b.isCollectable; break; // Collectable
+      case 10: valA = a.purchaseLocation; valB = b.purchaseLocation; break; // Purchase Location
+      case 11: valA = a.storageLocation || 'Unknown'; valB = b.storageLocation || 'Unknown'; break; // Storage Location
+      case 12: valA = a.date; valB = b.date; break; // Date
+      case 13: valA = a.isCollectable; valB = b.isCollectable; break; // Collectable
       default: return 0;
     }
 

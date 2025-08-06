@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes" name="viewport"/>
 <meta content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;" http-equiv="Content-Security-Policy"/>
-<title>Precious Metals Inventory Tool</title>
+<title>Precious Metals Inventory Tool 3.0.1</title>
 <!-- External libraries for data import/export functionality -->
 <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -19,7 +19,7 @@
 <body>
 <!-- Application Header -->
 <div class="app-header">
-<h1>Precious Metals Inventory Tool</h1>
+<h1>Precious Metals Inventory Tool 3.0.1</h1>
 <div style="margin-left: auto;">
 <button class="btn" id="themeToggle">Dark Mode</button>
 </div>
@@ -349,6 +349,13 @@
 <input id="purchaseLocation" required="" type="text"/>
 </div>
 <div>
+<label for="storageLocation">Storage Location</label>
+<input id="storageLocation" type="text" placeholder="Vault A, Safe B, etc..."/>
+</div>
+</div>
+<!-- Third row of form fields -->
+<div class="grid grid-2">
+<div>
 <label for="itemPrice">Purchase Price ($)</label>
 <div class="currency-input">
 <input id="itemPrice" min="0" required="" step="0.01" type="number"/>
@@ -370,7 +377,7 @@
          ============================================================================= -->
 <section class="search-section">
 <div class="search-container">
-<input id="searchInput" placeholder="Search inventory by metal, name, type, location, date..." type="text"/>
+<input id="searchInput" placeholder="Search inventory by metal, name, type, purchase location, storage location, date..." type="text"/>
 <button class="btn" id="clearSearchBtn">Clear</button>
 </div>
 <div class="search-results-info" id="searchResultsInfo"></div>
@@ -393,6 +400,7 @@
 <th>Premium Paid ($/oz)</th>
 <th>Total Premium Paid ($)</th>
 <th>Purchase Location</th>
+<th>Storage Location</th>
 <th>Date</th>
 <th>Collectable</th>
 <th>Edit</th>
@@ -507,6 +515,13 @@
 <label for="editPurchaseLocation">Purchase Location</label>
 <input id="editPurchaseLocation" required="" type="text"/>
 </div>
+<div>
+<label for="editStorageLocation">Storage Location</label>
+<input id="editStorageLocation" type="text" placeholder="Vault A, Safe B, etc..."/>
+</div>
+</div>
+<!-- Third row of edit form fields -->
+<div class="grid grid-2">
 <div>
 <label for="editPrice">Purchase Price ($)</label>
 <div class="currency-input">

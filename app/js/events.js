@@ -8,7 +8,7 @@ const setupEventListeners = () => {
   // Table header sorting
   const headers = document.querySelectorAll('#inventoryTable th');
   headers.forEach((header, index) => {
-    // Skip # column (0) and Edit/Delete columns (13-14)
+    // Skip # column (0) and Edit/Delete columns (14-15)
     if (index === 0 || index >= headers.length - 2) {
       return;
     }
@@ -38,6 +38,7 @@ const setupEventListeners = () => {
     const weight = parseFloat(elements.itemWeight.value);
     const price = parseFloat(elements.itemPrice.value);
     const purchaseLocation = elements.purchaseLocation.value.trim() || "Unknown";
+    const storageLocation = elements.storageLocation.value.trim() || "Unknown";
     const date = elements.itemDate.value || todayStr();
 
     if (isNaN(qty) || qty < 1 || !Number.isInteger(qty) ||
@@ -72,6 +73,7 @@ const setupEventListeners = () => {
       price, 
       date,
       purchaseLocation,
+      storageLocation,
       spotPriceAtPurchase,
       premiumPerOz,
       totalPremium,
@@ -97,6 +99,7 @@ const setupEventListeners = () => {
     const weight = parseFloat(elements.editWeight.value);
     const price = parseFloat(elements.editPrice.value);
     const purchaseLocation = elements.editPurchaseLocation.value.trim() || "Unknown";
+    const storageLocation = elements.editStorageLocation.value.trim() || "Unknown";
     const date = elements.editDate.value;
 
     // Use the checkbox state the user just set
@@ -141,6 +144,7 @@ const setupEventListeners = () => {
       price,
       date,
       purchaseLocation,
+      storageLocation,
       spotPriceAtPurchase: isCollectable ? 0 : spotPriceAtPurchase,
       premiumPerOz,
       totalPremium,

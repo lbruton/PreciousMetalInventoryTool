@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.itemWeight = document.getElementById('itemWeight');
   elements.itemPrice = document.getElementById('itemPrice');
   elements.purchaseLocation = document.getElementById('purchaseLocation');
+  elements.storageLocation = document.getElementById('storageLocation');
   elements.itemDate = document.getElementById('itemDate');
 
   elements.importCsvFile = document.getElementById('importCsvFile');
@@ -56,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.editWeight = document.getElementById('editWeight');
   elements.editPrice = document.getElementById('editPrice');
   elements.editPurchaseLocation = document.getElementById('editPurchaseLocation');
+  elements.editStorageLocation = document.getElementById('editStorageLocation');
   elements.editDate = document.getElementById('editDate');
   elements.editSpotPrice = document.getElementById('editSpotPrice');
   elements.itemsPerPage = document.getElementById('itemsPerPage');

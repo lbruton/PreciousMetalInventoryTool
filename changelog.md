@@ -2,18 +2,22 @@
 
 ## 🚀 Roadmap (Future Versions)
 
-### Version 3.x (Planned)
-- Introduce item storage location fields for improved inventory organization
-
-### Version 3.x (Planned)
-- Implement live updates for precious metals spot prices
-- Add automated spot price fetching from external APIs
+*All major planned features have been implemented! The tool now includes comprehensive inventory management with storage location tracking, multi-format import/export, advanced analytics, and a modern modular architecture.*
 
 ---
 
 ## 📋 Version History
 
-### Version 3.0.1 - Dynamic Version Management
+### Version 3.0.1 - Storage Location Tracking
+- **New feature**: Added storage location field to track where each item is physically stored
+- **Enhanced forms**: Updated both add and edit item forms with storage location input
+- **Improved organization**: Optional storage location field with "Vault A, Safe B, etc..." placeholder guidance
+- **Full table integration**: New "Storage Location" column added between "Purchase Location" and "Date"
+- **Search enhancement**: Storage location now included in search functionality
+- **Complete import/export support**: All formats (CSV, JSON, Excel, PDF, HTML) updated to include storage location
+- **Backwards compatibility**: Existing data automatically migrated with "Unknown" default values
+- **Sample data updated**: Enhanced sample.csv with realistic storage location examples
+- **Sorting capability**: Storage location column fully sortable like all other columns
 - **Dynamic version loading**: Version numbers now automatically load from APP_VERSION constant in constants.js
 - **Single source of truth**: Only need to update version in one place (constants.js) and it propagates everywhere
 - **Version utility functions**: Added `getVersionString()` and `getAppTitle()` helper functions in utils.js
