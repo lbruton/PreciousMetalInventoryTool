@@ -10,7 +10,7 @@ let editingIndex = null;
 
 /** @type {Object} Pagination state */
 let currentPage = 1;          // Current page number (1-based)
-let itemsPerPage = 10;        // Number of items to display per page
+let itemsPerPage = 25;        // Number of items to display per page
 
 /** @type {string} Current search query */
 let searchQuery = '';

@@ -1,3 +1,88 @@
+/**
+ * Sets up column resizing functionality for the inventory table
+ */
+const setupColumnResizing = () => {
+  const table = document.getElementById('inventoryTable');
+  if (!table) return;
+
+  // Clear any existing resize handles
+  const existingHandles = table.querySelectorAll('.resize-handle');
+  existingHandles.forEach(handle => handle.remove());
+
+  let isResizing = false;
+  let currentColumn = null;
+  let startX = 0;
+  let startWidth = 0;
+
+  // Add resize handles to table headers
+  const headers = table.querySelectorAll('th');
+  headers.forEach((header, index) => {
+    // Skip the last column (delete button)
+    if (index === headers.length - 1) return;
+
+    const resizeHandle = document.createElement('div');
+    resizeHandle.className = 'resize-handle';
+    resizeHandle.style.cssText = `
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 6px;
+      height: 100%;
+      background: transparent;
+      cursor: col-resize;
+      z-index: 10;
+      transition: background-color 0.2s;
+    `;
+
+    header.style.position = 'relative';
+    header.appendChild(resizeHandle);
+
+    resizeHandle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      currentColumn = header;
+      startX = e.clientX;
+      startWidth = parseInt(document.defaultView.getComputedStyle(header).width, 10);
+      
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Prevent header click event from firing
+      header.style.pointerEvents = 'none';
+      setTimeout(() => {
+        header.style.pointerEvents = 'auto';
+      }, 100);
+    });
+  });
+
+  // Handle mouse move for resizing
+  document.addEventListener('mousemove', (e) => {
+    if (!isResizing || !currentColumn) return;
+
+    const width = startWidth + e.clientX - startX;
+    const minWidth = 40; // Minimum column width
+    const maxWidth = 300; // Maximum column width
+    
+    if (width >= minWidth && width <= maxWidth) {
+      currentColumn.style.width = width + 'px';
+    }
+  });
+
+  // Handle mouse up to stop resizing
+  document.addEventListener('mouseup', () => {
+    if (isResizing) {
+      isResizing = false;
+      currentColumn = null;
+    }
+  });
+
+  // Prevent text selection during resize
+  document.addEventListener('selectstart', (e) => {
+    if (isResizing) {
+      e.preventDefault();
+    }
+  });
+};
+
 // EVENT LISTENERS
 // =============================================================================
 

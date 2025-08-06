@@ -147,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPagination();
   setupSearch();
   setupThemeToggle();
+  setupColumnResizing();
 });
 
 // Make functions available globally for inline event handlers

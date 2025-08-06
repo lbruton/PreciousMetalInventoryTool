@@ -105,6 +105,9 @@ const renderTable = () => {
 
   renderPagination(sortedInventory);
   updateSummary();
+  
+  // Re-setup column resizing after table re-render
+  setupColumnResizing();
 };
 
 /**
