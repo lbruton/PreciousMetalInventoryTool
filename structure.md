@@ -1,33 +1,36 @@
 # Precious Metals Inventory Tool - Project Structure
 
-## Current Structure (Version 3.0.1)
+## Current Structure (Version 3.0.3)
 
-```
-PreciousMetalInventoryTool/
-├── index.html              # Landing page (simplified, no version dropdown)
-├── app/                    # Main application folder (renamed from 3.0/)
-│   ├── index.html         # Main application interface
-│   ├── css/
-│   │   └── styles.css     # All styling and theming
-│   └── js/                # Modular JavaScript files
-│       ├── constants.js   # Global constants including APP_VERSION
-│       ├── state.js       # Application state management
-│       ├── utils.js       # Utility functions
-│       ├── charts.js      # Chart.js integration
-│       ├── theme.js       # Dark/light mode management
-│       ├── search.js      # Search functionality
-│       ├── sorting.js     # Table sorting
-│       ├── pagination.js  # Table pagination
-│       ├── detailsModal.js # Analytics modal with pie charts
-│       ├── spot.js        # Spot price handling
-│       ├── inventory.js   # Core inventory operations
-│       ├── importExport.js # Data import/export functionality
-│       ├── events.js      # Event listeners
-│       └── init.js        # Application initialization
-├── sample.csv             # Sample data for download
-├── README.md              # Project documentation
-├── changelog.md           # Version history
-└── .gitignore
+```text
+├── STRUCTURE.md
+├── app
+    ├── css
+        ├── styles.css
+    ├── index.html
+    ├── js
+        ├── charts.js
+        ├── constants.js
+        ├── detailsModal.js
+        ├── events.js
+        ├── init.js
+        ├── inventory.js
+        ├── pagination.js
+        ├── search.js
+        ├── sorting.js
+        ├── spot.js
+        ├── state.js
+        ├── theme.js
+        ├── utils.js
+    ├── structure.md
+├── docs
+    ├── CHANGELOG.md
+    ├── LLM.md
+    ├── README.md
+    ├── SOURCES.md
+    ├── VERSIONING.md
+├── index.html
+├── sample.csv
 ```
 
 ## Key Changes in Version 3.0+ Structure 

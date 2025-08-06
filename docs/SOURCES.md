@@ -3,17 +3,17 @@
 
 ## Table of Contents
 
-1. PreciousMetalInventoryTool/VERSIONING.md
-2. PreciousMetalInventoryTool/STRUCTURE.md
-3. PreciousMetalInventoryTool/index.html
-4. PreciousMetalInventoryTool/CHANGELOG.md
+1. PreciousMetalInventoryTool/docs/VERSIONING.md
+2. PreciousMetalInventoryTool/docs/STRUCTURE.md
+3. PreciousMetalInventoryTool/app/index.html
+4. PreciousMetalInventoryTool/docs/CHANGELOG.md
 5. PreciousMetalInventoryTool/sample.csv
 6. PreciousMetalInventoryTool/README.md
 7. PreciousMetalInventoryTool/LLM.md
-8. PreciousMetalInventoryTool/app/structure.md
-9. PreciousMetalInventoryTool/app/index.html
-10. PreciousMetalInventoryTool/app/css/styles.css
-11. PreciousMetalInventoryTool/app/js/constants.js
+8. PreciousMetalInventoryTool/app/docs/structure.md
+9. PreciousMetalInventoryTool/app/app/index.html
+10. PreciousMetalInventoryTool/app/css/app/css/styles.css
+11. PreciousMetalInventoryTool/app/js/app/js/constants.js
 12. PreciousMetalInventoryTool/app/js/events.js
 13. PreciousMetalInventoryTool/app/js/sorting.js
 14. PreciousMetalInventoryTool/app/js/theme.js
@@ -29,7 +29,7 @@
 
 ================================================================================
 
-## 1. File: PreciousMetalInventoryTool/VERSIONING.md
+## 1. File: PreciousMetalInventoryTool/docs/VERSIONING.md
 --------------------------------------------------------------------------------
 # Dynamic Version Management System
 
@@ -40,12 +40,12 @@ The Precious Metals Inventory Tool now uses a dynamic version management system 
 ## How It Works
 
 ### Single Source of Truth
-- Version is defined once in `app/js/constants.js` as `APP_VERSION = '3.0.1'`
+- Version is defined once in `app/js/app/js/constants.js` as `APP_VERSION = '3.0.1'`
 - This is the ONLY place you need to update the version number
 
 ### Automatic Propagation
-- **Root Landing Page** (`index.html`): JavaScript automatically updates the page title and heading
-- **Main Application** (`app/index.html`): JavaScript automatically updates the page title and heading  
+- **Root Landing Page** (`app/index.html`): JavaScript automatically updates the page title and heading
+- **Main Application** (`app/app/index.html`): JavaScript automatically updates the page title and heading  
 - **Browser Tab Title**: Dynamically updated with current version
 - **Application Header**: Shows current version in the main app interface
 
@@ -60,7 +60,7 @@ To release a new version:
 
 1. **Update ONLY the constants file:**
    ```javascript
-   // In app/js/constants.js
+   // In app/js/app/js/constants.js
    const APP_VERSION = '3.1.0';  // Change this line only
    ```
 
@@ -74,14 +74,14 @@ To release a new version:
 
 ## Technical Implementation
 
-### Root Page (index.html)
+### Root Page (app/index.html)
 ```javascript
-// Loads constants.js and utils.js
+// Loads app/js/constants.js and utils.js
 // Updates title and heading via DOM manipulation
 document.title = `Lonnie's Precious Metals Tool ${getVersionString()}`;
 ```
 
-### Main App (app/index.html)
+### Main App (app/app/index.html)
 ```javascript
 // In init.js - runs on DOM load
 document.title = getAppTitle();
@@ -121,7 +121,7 @@ This system ensures version consistency and makes maintenance much easier!
 
 ================================================================================
 
-## 2. File: PreciousMetalInventoryTool/STRUCTURE.md
+## 2. File: PreciousMetalInventoryTool/docs/STRUCTURE.md
 --------------------------------------------------------------------------------
 # Precious Metals Inventory Tool - Project Structure
 
@@ -129,13 +129,13 @@ This system ensures version consistency and makes maintenance much easier!
 
 ```
 PreciousMetalInventoryTool/
-├── index.html              # Landing page (simplified, no version dropdown)
+├── app/index.html              # Landing page (simplified, no version dropdown)
 ├── app/                    # Main application folder (renamed from 3.0/)
-│   ├── index.html         # Main application interface
+│   ├── app/index.html         # Main application interface
 │   ├── css/
-│   │   └── styles.css     # All styling and theming
+│   │   └── app/css/styles.css     # All styling and theming
 │   └── js/                # Modular JavaScript files
-│       ├── constants.js   # Global constants including APP_VERSION
+│       ├── app/js/constants.js   # Global constants including APP_VERSION
 │       ├── state.js       # Application state management
 │       ├── utils.js       # Utility functions
 │       ├── charts.js      # Chart.js integration
@@ -169,7 +169,7 @@ PreciousMetalInventoryTool/
 - More intuitive folder naming
 
 ### Version Management
-- Version constant added to `constants.js` as `APP_VERSION = '3.0.1'`
+- Version constant added to `app/js/constants.js` as `APP_VERSION = '3.0.1'`
 - Application title shows current version
 - Version tracking centralized in code rather than folder structure
 
@@ -181,13 +181,13 @@ PreciousMetalInventoryTool/
 
 ## File Purposes
 
-### Landing Page (`index.html`)
+### Landing Page (`app/index.html`)
 - Entry point for users
 - Theme toggle functionality
 - Direct link to main application
 - Download link for sample data
 
-### Main Application (`app/index.html`)
+### Main Application (`app/app/index.html`)
 - Full inventory management interface
 - Spot price controls for all metals
 - Data entry forms
@@ -196,7 +196,7 @@ PreciousMetalInventoryTool/
 - Modal dialogs for editing and analytics
 
 ### Core JavaScript Modules
-- **constants.js**: Configuration, metal definitions, storage keys, version
+- **app/js/constants.js**: Configuration, metal definitions, storage keys, version
 - **state.js**: Global application state variables
 - **inventory.js**: CRUD operations, calculations, data management
 - **spot.js**: Spot price handling and history
@@ -211,7 +211,7 @@ PreciousMetalInventoryTool/
 - **init.js**: Application bootstrap and initialization
 - **utils.js**: Shared utility functions
 
-### Styling (`css/styles.css`)
+### Styling (`css/app/css/styles.css`)
 - Complete theming with CSS custom properties
 - Dark and light mode support
 - Responsive design for all screen sizes
@@ -223,7 +223,7 @@ This structure provides better maintainability, clearer separation of concerns, 
 
 ================================================================================
 
-## 3. File: PreciousMetalInventoryTool/index.html
+## 3. File: PreciousMetalInventoryTool/app/index.html
 --------------------------------------------------------------------------------
 <!DOCTYPE html>
 <html lang="en">
@@ -698,7 +698,7 @@ This structure provides better maintainability, clearer separation of concerns, 
         <strong>Important Notice:</strong> All data is stored locally in your browser and never transmitted to any server. Your information remains private but will be lost if you clear browser history or use private browsing mode. Use this tool at your own risk - the developer assumes no responsibility for any financial decisions made based on this application.
       </div>
       
-      <a class="btn btn-primary btn-block" href="app/index.html" id="continue-btn">
+      <a class="btn btn-primary btn-block" href="app/app/index.html" id="continue-btn">
         Accept and Continue →
       </a>
     </div>
@@ -713,7 +713,7 @@ This structure provides better maintainability, clearer separation of concerns, 
 </div>
 
 <!-- Load version from constants -->
-<script src="app/js/constants.js"></script>
+<script src="app/js/app/js/constants.js"></script>
 <script src="app/js/utils.js"></script>
 <script>
   // Update version numbers once constants are loaded
@@ -773,7 +773,7 @@ This structure provides better maintainability, clearer separation of concerns, 
 
 ================================================================================
 
-## 4. File: PreciousMetalInventoryTool/CHANGELOG.md
+## 4. File: PreciousMetalInventoryTool/docs/CHANGELOG.md
 --------------------------------------------------------------------------------
 # Precious Metals Inventory Tool - Changelog
 
@@ -805,8 +805,8 @@ This structure provides better maintainability, clearer separation of concerns, 
 - **Backwards compatibility**: Existing data automatically migrated with "Unknown" default values
 - **Sample data updated**: Enhanced sample.csv with realistic storage location examples
 - **Sorting capability**: Storage location column fully sortable like all other columns
-- **Dynamic version loading**: Version numbers now automatically load from APP_VERSION constant in constants.js
-- **Single source of truth**: Only need to update version in one place (constants.js) and it propagates everywhere
+- **Dynamic version loading**: Version numbers now automatically load from APP_VERSION constant in app/js/constants.js
+- **Single source of truth**: Only need to update version in one place (app/js/constants.js) and it propagates everywhere
 - **Version utility functions**: Added `getVersionString()` and `getAppTitle()` helper functions in utils.js
 - **Maintainability improvement**: Eliminates need to manually update version in multiple HTML files
 - **Future-proof**: Any part of the application can now easily access and display the current version
@@ -817,12 +817,12 @@ This structure provides better maintainability, clearer separation of concerns, 
 - **Code cleanup**: Removed associated event listeners, DOM references, and CSS styling for spot history buttons
 - **Maintained data collection**: Spot price history data collection continues in background for future use
 - **Preserved core functionality**: All inventory management, import/export, and analysis features remain intact
-- **Added repository documentation**: Created comprehensive root-level structure.md for better project navigation
+- **Added repository documentation**: Created comprehensive root-level docs/structure.md for better project navigation
 - **Created migration roadmap**: Added detailed plan for transitioning to git-based version control
 
 ### Version 2.8 - Modular Overhaul
 - **Major codebase refactor**: Extracted scripts into modular JS files for better separation of concerns
-- **CSS modularization**: Moved styles to external `styles.css`, enabling improved maintainability and theming
+- **CSS modularization**: Moved styles to external `app/css/styles.css`, enabling improved maintainability and theming
 - **Dark mode enhancements**: Full dark mode support via `theme.js` and CSS variables
 - **Data visualization**: Integrated Chart.js for pie chart visualization of inventory
 - **UI improvements**: Enhanced pagination, search, and sorting capabilities for inventory tables
@@ -967,12 +967,12 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 ## Installation
 
 1. Clone or download this repository
-2. Open `index.html` in a web browser
+2. Open `app/index.html` in a web browser
 3. Click "Accept and Continue" to access the application
 
 ## Version Management
 
-This application uses a dynamic version management system. The version is automatically updated throughout the application from `app/js/constants.js`. The HTML files now use this dynamic system instead of hardcoded version numbers. See [VERSIONING.md](VERSIONING.md) for details on how to update versions.
+This application uses a dynamic version management system. The version is automatically updated throughout the application from `app/js/app/js/constants.js`. The HTML files now use this dynamic system instead of hardcoded version numbers. See [docs/VERSIONING.md](docs/VERSIONING.md) for details on how to update versions.
 
 ## Version History
 
@@ -1011,11 +1011,11 @@ You are working on the **Precious Metals Inventory Tool v3.0.2+**, a comprehensi
 ```
 PreciousMetalInventoryTool/
 ├── app/                          # Main application directory
-│   ├── index.html               # Primary application interface
+│   ├── app/index.html               # Primary application interface
 │   ├── css/
-│   │   └── styles.css           # Complete application styling
+│   │   └── app/css/styles.css           # Complete application styling
 │   └── js/                      # Modular JavaScript architecture
-│       ├── constants.js         # App version, storage keys, metal configs
+│       ├── app/js/constants.js         # App version, storage keys, metal configs
 │       ├── state.js            # Global state variables and DOM references
 │       ├── utils.js            # Utility functions, formatters, date handling
 │       ├── inventory.js        # Core inventory CRUD operations
@@ -1028,10 +1028,10 @@ PreciousMetalInventoryTool/
 │       ├── charts.js          # Chart.js integration for analytics
 │       ├── detailsModal.js    # Details modal with breakdowns
 │       └── init.js            # Application initialization
-├── index.html                   # Landing page with version selector
+├── app/index.html                   # Landing page with version selector
 ├── sample.csv                   # Sample data for testing/import
 ├── changelog.md                 # Version history and feature tracking
-└── structure.md                 # Project documentation
+└── docs/structure.md                 # Project documentation
 ```
 
 ## 🏗️ Architecture Overview
@@ -1115,7 +1115,7 @@ let editingIndex = null;         // Index of item being edited
 - `getVersionString()` - Returns formatted version string
 - `getAppTitle()` - Returns full app title with version
 
-## 🎨 Styling System (`styles.css`)
+## 🎨 Styling System (`app/css/styles.css`)
 
 ### **CSS Architecture**
 - **CSS Custom Properties**: Comprehensive theming system with dark/light modes
@@ -1134,7 +1134,7 @@ let editingIndex = null;         // Index of item being edited
 ## 🔄 Development Workflow
 
 ### **Adding New Features**
-1. **Update constants.js**: Increment `APP_VERSION` if needed
+1. **Update app/js/constants.js**: Increment `APP_VERSION` if needed
 2. **Modify data structure**: Add new fields to inventory objects in `inventory.js`
 3. **Update forms**: Modify HTML forms and validation in `events.js`
 4. **Update table**: Modify `renderTable()` to display new fields
@@ -1161,7 +1161,7 @@ const processedItem = {
 ## 📝 Common Development Tasks
 
 ### **Adding a New Metal Type**
-1. Update `METALS` constant in `constants.js`
+1. Update `METALS` constant in `app/js/constants.js`
 2. Add spot price elements in HTML
 3. Update `initializeSpotPriceElements()` in `init.js`
 4. Add totals cards in HTML
@@ -1182,7 +1182,7 @@ const processedItem = {
 4. Test responsive behavior on mobile
 
 ### **Version Management**
-- Single source of truth: `APP_VERSION` in `constants.js`
+- Single source of truth: `APP_VERSION` in `app/js/constants.js`
 - Dynamic version loading using `getVersionString()` and `getAppTitle()`
 - Update changelog.md with detailed feature descriptions
 
@@ -1214,11 +1214,11 @@ const processedItem = {
 ## 🎯 Quick Start Commands
 
 When working on this project:
-1. **Main entry point**: `/app/index.html`
+1. **Main entry point**: `/app/app/index.html`
 2. **Key files to understand**: `state.js`, `inventory.js`, `events.js`
 3. **Add features**: Start with data structure, then UI, then persistence
 4. **Test imports/exports**: Use `sample.csv` for testing
-5. **Version updates**: Update `constants.js` → automatic propagation
+5. **Version updates**: Update `app/js/constants.js` → automatic propagation
 
 ## 💡 Pro Tips
 
@@ -1234,15 +1234,15 @@ When working on this project:
 
 ================================================================================
 
-## 8. File: PreciousMetalInventoryTool/app/structure.md
+## 8. File: PreciousMetalInventoryTool/app/docs/structure.md
 --------------------------------------------------------------------------------
 
 precious_metals_inventory_tool/
-├── index.html
+├── app/index.html
 ├── css/
-│   └── styles.css
+│   └── app/css/styles.css
 └── js/
-    ├── constants.js         # Global constants and configuration
+    ├── app/js/constants.js         # Global constants and configuration
     ├── state.js             # Application-wide state variables
     ├── utils.js             # Utility/helper functions
     ├── charts.js            # Chart.js utilities and helpers
@@ -1260,7 +1260,7 @@ precious_metals_inventory_tool/
 
 ================================================================================
 
-## 9. File: PreciousMetalInventoryTool/app/index.html
+## 9. File: PreciousMetalInventoryTool/app/app/index.html
 --------------------------------------------------------------------------------
 <!DOCTYPE html>
 <!--
@@ -1271,7 +1271,7 @@ precious_metals_inventory_tool/
   premium calculations, collectable item handling, and multi-format data import/export.
   
   All data is stored locally using localStorage - no server required.
-  Application version is managed dynamically via constants.js
+  Application version is managed dynamically via app/js/constants.js
 -->
 <html lang="en">
 <head>
@@ -1288,7 +1288,7 @@ precious_metals_inventory_tool/
 <!-- Chart.js for pie charts -->
 <script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/app/css/styles.css">
 </head>
 <body>
 <!-- Application Header -->
@@ -1970,7 +1970,7 @@ precious_metals_inventory_tool/
        JAVASCRIPT MODULE LOADING
        
        Modular architecture with proper dependency order:
-       1. constants.js - Global configuration and version
+       1. app/js/constants.js - Global configuration and version
        2. state.js - Application state and DOM element caching
        3. utils.js - Utility functions and formatters
        4. Feature modules - charts, theme, search, sorting, pagination, etc.
@@ -1982,7 +1982,7 @@ precious_metals_inventory_tool/
        External libraries (Chart.js, jsPDF, PapaParse, XLSX) loaded via CDN
        ============================================================================= -->
 
-<script defer src="js/constants.js"></script>
+<script defer src="js/app/js/constants.js"></script>
 <script defer src="js/state.js"></script>
 <script defer src="js/utils.js"></script>
 <script defer src="js/charts.js"></script>
@@ -2000,7 +2000,7 @@ precious_metals_inventory_tool/
 
 ================================================================================
 
-## 10. File: PreciousMetalInventoryTool/app/css/styles.css
+## 10. File: PreciousMetalInventoryTool/app/css/app/css/styles.css
 --------------------------------------------------------------------------------
 /* =============================================================================
    CSS CUSTOM PROPERTIES - THEME SYSTEM
@@ -3386,7 +3386,7 @@ input:disabled + .slider {
 
 ================================================================================
 
-## 11. File: PreciousMetalInventoryTool/app/js/constants.js
+## 11. File: PreciousMetalInventoryTool/app/js/app/js/constants.js
 --------------------------------------------------------------------------------
 // CONFIGURATION & GLOBAL CONSTANTS
 // =============================================================================
@@ -4181,7 +4181,7 @@ const destroyCharts = () => {
  * - Initializes totals display elements with null-safety for missing elements
  * 
  * VERSION MANAGEMENT:
- * - Updates page title and header with current version from constants.js
+ * - Updates page title and header with current version from app/js/constants.js
  * - Ensures consistent version display across application
  * 
  * DATA LOADING:

@@ -9,11 +9,11 @@ You are working on the **Precious Metals Inventory Tool v3.0.2+**, a comprehensi
 ```
 PreciousMetalInventoryTool/
 ├── app/                          # Main application directory
-│   ├── index.html               # Primary application interface
+│   ├── app/index.html               # Primary application interface
 │   ├── css/
-│   │   └── styles.css           # Complete application styling
+│   │   └── app/css/styles.css           # Complete application styling
 │   └── js/                      # Modular JavaScript architecture
-│       ├── constants.js         # App version, storage keys, metal configs
+│       ├── app/js/constants.js         # App version, storage keys, metal configs
 │       ├── state.js            # Global state variables and DOM references
 │       ├── utils.js            # Utility functions, formatters, date handling
 │       ├── inventory.js        # Core inventory CRUD operations
@@ -26,10 +26,10 @@ PreciousMetalInventoryTool/
 │       ├── charts.js          # Chart.js integration for analytics
 │       ├── detailsModal.js    # Details modal with breakdowns
 │       └── init.js            # Application initialization
-├── index.html                   # Landing page with version selector
+├── app/index.html                   # Landing page with version selector
 ├── sample.csv                   # Sample data for testing/import
 ├── changelog.md                 # Version history and feature tracking
-└── structure.md                 # Project documentation
+└── docs/structure.md                 # Project documentation
 ```
 
 ## 🏗️ Architecture Overview
@@ -113,7 +113,7 @@ let editingIndex = null;         // Index of item being edited
 - `getVersionString()` - Returns formatted version string
 - `getAppTitle()` - Returns full app title with version
 
-## 🎨 Styling System (`styles.css`)
+## 🎨 Styling System (`app/css/styles.css`)
 
 ### **CSS Architecture**
 - **CSS Custom Properties**: Comprehensive theming system with dark/light modes
@@ -132,7 +132,7 @@ let editingIndex = null;         // Index of item being edited
 ## 🔄 Development Workflow
 
 ### **Adding New Features**
-1. **Update constants.js**: Increment `APP_VERSION` if needed
+1. **Update app/js/constants.js**: Increment `APP_VERSION` if needed
 2. **Modify data structure**: Add new fields to inventory objects in `inventory.js`
 3. **Update forms**: Modify HTML forms and validation in `events.js`
 4. **Update table**: Modify `renderTable()` to display new fields
@@ -159,7 +159,7 @@ const processedItem = {
 ## 📝 Common Development Tasks
 
 ### **Adding a New Metal Type**
-1. Update `METALS` constant in `constants.js`
+1. Update `METALS` constant in `app/js/constants.js`
 2. Add spot price elements in HTML
 3. Update `initializeSpotPriceElements()` in `init.js`
 4. Add totals cards in HTML
@@ -180,7 +180,7 @@ const processedItem = {
 4. Test responsive behavior on mobile
 
 ### **Version Management**
-- Single source of truth: `APP_VERSION` in `constants.js`
+- Single source of truth: `APP_VERSION` in `app/js/constants.js`
 - Dynamic version loading using `getVersionString()` and `getAppTitle()`
 - Update changelog.md with detailed feature descriptions
 
@@ -212,11 +212,11 @@ const processedItem = {
 ## 🎯 Quick Start Commands
 
 When working on this project:
-1. **Main entry point**: `/app/index.html`
+1. **Main entry point**: `/app/app/index.html`
 2. **Key files to understand**: `state.js`, `inventory.js`, `events.js`
 3. **Add features**: Start with data structure, then UI, then persistence
 4. **Test imports/exports**: Use `sample.csv` for testing
-5. **Version updates**: Update `constants.js` → automatic propagation
+5. **Version updates**: Update `app/js/constants.js` → automatic propagation
 
 ## 💡 Pro Tips
 
