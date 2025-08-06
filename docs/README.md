@@ -26,7 +26,7 @@ This application uses a dynamic version management system. The version is automa
 
 ## Version History
 
-See [changelog.md](docs/CHANGELOG.md) for detailed version history and planned features.
+See [changelog.md](/CHANGELOG.md) for detailed version history and planned features.
 
 ## Code Quality
 
