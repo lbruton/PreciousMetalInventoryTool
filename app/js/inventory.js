@@ -82,63 +82,65 @@ const loadInventory = () => {
  * renderTable();
  */
 const renderTable = () => {
-  const filteredInventory = filterInventory();
-  const sortedInventory = sortInventory(filteredInventory);
-  const totalPages = calculateTotalPages(sortedInventory);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, sortedInventory.length);
+  return monitorPerformance(() => {
+    const filteredInventory = filterInventory();
+    const sortedInventory = sortInventory(filteredInventory);
+    const totalPages = calculateTotalPages(sortedInventory);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, sortedInventory.length);
 
-  const rows = [];
+    const rows = [];
 
-  for (let i = startIndex; i < endIndex; i++) {
-    const item = sortedInventory[i];
-    const originalIdx = inventory.indexOf(item);
+    for (let i = startIndex; i < endIndex; i++) {
+      const item = sortedInventory[i];
+      const originalIdx = inventory.indexOf(item);
 
-    rows.push(`
-    <tr>
-    <td>${i + 1}</td>
-    <td>${item.metal || 'Silver'}</td>
-    <td>${item.qty}</td>
-    <td>${item.type}</td>
-    <td class="clickable-name" onclick="editItem(${originalIdx})" title="Click to edit" tabindex="0" role="button" aria-label="Edit ${item.name.replace(/[<>"']/g, '')}" onkeydown="if(event.key==='Enter'||event.key===' ')editItem(${originalIdx})">${item.name.replace(/[<>"']/g, '')}</td>
-    <td>${parseFloat(item.weight).toFixed(2)}</td>
-    <td>${formatDollar(item.price)}</td>
-    <td>${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
-    <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.premiumPerOz > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
-    <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
-    <td>${item.purchaseLocation}</td>
-    <td>${item.storageLocation || 'Unknown'}</td>
-    <td>${item.date}</td>
-    <td class="checkbox-cell">
-    <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${item.name.replace(/[<>"']/g, '')} as collectable" title="Mark as collectable">
-    </td>
-    <td class="delete-cell"><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
-    </tr>
-    `);
-  }
+      rows.push(`
+      <tr>
+      <td>${i + 1}</td>
+      <td>${item.metal || 'Silver'}</td>
+      <td>${item.qty}</td>
+      <td>${item.type}</td>
+      <td class="clickable-name" onclick="editItem(${originalIdx})" title="Click to edit" tabindex="0" role="button" aria-label="Edit ${sanitizeHtml(item.name)}" onkeydown="if(event.key==='Enter'||event.key===' ')editItem(${originalIdx})">${sanitizeHtml(item.name)}</td>
+      <td>${parseFloat(item.weight).toFixed(2)}</td>
+      <td>${formatDollar(item.price)}</td>
+      <td>${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
+      <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.premiumPerOz > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
+      <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
+      <td>${sanitizeHtml(item.purchaseLocation)}</td>
+      <td>${sanitizeHtml(item.storageLocation || 'Unknown')}</td>
+      <td>${item.date}</td>
+      <td class="checkbox-cell">
+      <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${sanitizeHtml(item.name)} as collectable" title="Mark as collectable">
+      </td>
+      <td class="delete-cell"><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
+      </tr>
+      `);
+    }
 
-  elements.inventoryTable.innerHTML = rows.join('');
+    elements.inventoryTable.innerHTML = rows.join('');
 
-  // Update sort indicators
-  const headers = document.querySelectorAll('#inventoryTable th');
-  headers.forEach(header => {
-    const indicator = header.querySelector('.sort-indicator');
-    if (indicator) header.removeChild(indicator);
-  });
+    // Update sort indicators
+    const headers = document.querySelectorAll('#inventoryTable th');
+    headers.forEach(header => {
+      const indicator = header.querySelector('.sort-indicator');
+      if (indicator) header.removeChild(indicator);
+    });
 
-  if (sortColumn !== null && sortColumn < headers.length) {
-    const header = headers[sortColumn];
-    const indicator = document.createElement('span');
-    indicator.className = 'sort-indicator';
-    indicator.textContent = sortDirection === 'asc' ? '↑' : '↓';
-    header.appendChild(indicator);
-  }
+    if (sortColumn !== null && sortColumn < headers.length) {
+      const header = headers[sortColumn];
+      const indicator = document.createElement('span');
+      indicator.className = 'sort-indicator';
+      indicator.textContent = sortDirection === 'asc' ? '↑' : '↓';
+      header.appendChild(indicator);
+    }
 
-  renderPagination(sortedInventory);
-  updateSummary();
-  
-  // Re-setup column resizing after table re-render
-  setupColumnResizing();
+    renderPagination(sortedInventory);
+    updateSummary();
+    
+    // Re-setup column resizing after table re-render
+    setupColumnResizing();
+  }, 'renderTable');
 };
 
 /**
@@ -454,10 +456,11 @@ const toggleCollectable = (idx, checkbox) => {
  * });
  */
 const importCsv = (file) => {
-  Papa.parse(file, {
-    header: true,
-    skipEmptyLines: true,
-    complete: function(results) {
+  try {
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
       let imported = [];
       let skipped = 0;
 
@@ -500,18 +503,14 @@ const importCsv = (file) => {
           totalPremium = premiumPerOz * qty * weight;
         }
 
-        if (!name || isNaN(qty) || isNaN(weight) || isNaN(price) || qty < 1 || !Number.isInteger(qty)) {
-          skipped++;
-          continue;
-        }
-
-        imported.push({ 
-          metal, 
-          name, 
-          qty, 
-          type, 
-          weight, 
-          price, 
+        // Create item object for validation
+        const itemToValidate = {
+          metal,
+          name,
+          qty,
+          type,
+          weight,
+          price,
           date,
           purchaseLocation,
           storageLocation,
@@ -519,7 +518,17 @@ const importCsv = (file) => {
           premiumPerOz,
           totalPremium,
           isCollectable
-        });
+        };
+
+        // Validate the item
+        const validation = validateInventoryItem(itemToValidate);
+        if (!validation.isValid) {
+          console.warn('Skipping invalid CSV row:', validation.errors.join(', '));
+          skipped++;
+          continue;
+        }
+
+        imported.push(itemToValidate);
       }
 
       if (imported.length === 0) return alert("No valid items to import.");
@@ -533,9 +542,15 @@ const importCsv = (file) => {
         renderTable();
       }
 
-      this.value = "";
-    }
-  });
+        this.value = "";
+      },
+      error: function(error) {
+        handleError(error, 'CSV import');
+      }
+    });
+  } catch (error) {
+    handleError(error, 'CSV import initialization');
+  }
 };
 
 /**

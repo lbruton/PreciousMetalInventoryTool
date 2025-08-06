@@ -15,6 +15,29 @@ const getVersionString = (prefix = 'v') => `${prefix}${APP_VERSION}`;
  */
 const getAppTitle = (baseTitle = 'Precious Metals Inventory Tool') => `${baseTitle} ${getVersionString()}`;
 
+/**
+ * Performance monitoring utility
+ * 
+ * @param {Function} fn - Function to monitor
+ * @param {string} name - Name for logging
+ * @param {...any} args - Arguments to pass to function
+ * @returns {any} Result of function execution
+ */
+const monitorPerformance = (fn, name, ...args) => {
+  const startTime = performance.now();
+  const result = fn(...args);
+  const endTime = performance.now();
+  
+  const duration = endTime - startTime;
+  if (duration > 100) {
+    console.warn(`Performance warning: ${name} took ${duration.toFixed(2)}ms`);
+  } else {
+    console.debug(`Performance: ${name} took ${duration.toFixed(2)}ms`);
+  }
+  
+  return result;
+};
+
 // =============================================================================
 
 /**
@@ -45,64 +68,90 @@ const todayStr = () => {
  * - European format (DD/MM/YYYY)
  * - Year-first format (YYYY/MM/DD)
  * 
+ * Uses intelligent parsing to distinguish between US and European formats
+ * based on date values and context clues.
+ * 
  * @param {string} dateStr - Date string in any supported format
  * @returns {string} Date in YYYY-MM-DD format, or today's date if parsing fails
  */
 function parseDate(dateStr) {
   if (!dateStr) return todayStr();
 
-  // Try ISO format (YYYY-MM-DD) first
-  let date = new Date(dateStr);
-  if (!isNaN(date) && date.toString() !== 'Invalid Date') {
-    return date.toISOString().split('T')[0];
-  }
+  // Clean the input string
+  const cleanDateStr = dateStr.trim();
 
-  // Try common US format MM/DD/YYYY
-  const usMatch = dateStr.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-  if (usMatch) {
-    const month = parseInt(usMatch[1], 10) - 1;
-    const day = parseInt(usMatch[2], 10);
-    const year = parseInt(usMatch[3], 10);
-
-    if (month >= 0 && month <= 11 && day >= 1 && day <= 31) {
-      date = new Date(year, month, day);
-      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
-        return date.toISOString().split('T')[0];
-      }
+  // Try ISO format (YYYY-MM-DD) first - most reliable
+  if (/^\d{4}-\d{2}-\d{2}$/.test(cleanDateStr)) {
+    const date = new Date(cleanDateStr);
+    if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+      return cleanDateStr;
     }
   }
 
-  // Try common European format DD/MM/YYYY
-  const euMatch = dateStr.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-  if (euMatch) {
-    const day = parseInt(euMatch[1], 10);
-    const month = parseInt(euMatch[2], 10) - 1;
-    const year = parseInt(euMatch[3], 10);
-
-    if (month >= 0 && month <= 11 && day >= 1 && day <= 31) {
-      date = new Date(year, month, day);
-      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
-        return date.toISOString().split('T')[0];
-      }
-    }
-  }
-
-  // Try YYYY/MM/DD format
-  const ymdMatch = dateStr.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+  // Try YYYY/MM/DD format (unambiguous)
+  const ymdMatch = cleanDateStr.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
   if (ymdMatch) {
     const year = parseInt(ymdMatch[1], 10);
     const month = parseInt(ymdMatch[2], 10) - 1;
     const day = parseInt(ymdMatch[3], 10);
 
     if (month >= 0 && month <= 11 && day >= 1 && day <= 31) {
-      date = new Date(year, month, day);
+      const date = new Date(year, month, day);
       if (!isNaN(date) && date.toString() !== 'Invalid Date') {
         return date.toISOString().split('T')[0];
       }
     }
   }
 
+  // Handle ambiguous MM/DD/YYYY vs DD/MM/YYYY formats
+  const ambiguousMatch = cleanDateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (ambiguousMatch) {
+    const first = parseInt(ambiguousMatch[1], 10);
+    const second = parseInt(ambiguousMatch[2], 10);
+    const year = parseInt(ambiguousMatch[3], 10);
+
+    // If first number > 12, it must be DD/MM/YYYY (European)
+    if (first > 12 && second <= 12) {
+      const date = new Date(year, second - 1, first);
+      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+        return date.toISOString().split('T')[0];
+      }
+    }
+    // If second number > 12, it must be MM/DD/YYYY (US)
+    else if (second > 12 && first <= 12) {
+      const date = new Date(year, first - 1, second);
+      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+        return date.toISOString().split('T')[0];
+      }
+    }
+    // Both numbers <= 12, ambiguous - default to US format (MM/DD/YYYY)
+    else if (first <= 12 && second <= 12) {
+      // Try US format first
+      let date = new Date(year, first - 1, second);
+      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+        return date.toISOString().split('T')[0];
+      }
+      
+      // Fallback to European format
+      date = new Date(year, second - 1, first);
+      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+        return date.toISOString().split('T')[0];
+      }
+    }
+  }
+
+  // Try parsing as a general date string (fallback)
+  try {
+    const date = new Date(cleanDateStr);
+    if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+      return date.toISOString().split('T')[0];
+    }
+  } catch (e) {
+    // Continue to fallback
+  }
+
   // If all parsing fails, return today's date
+  console.warn(`Could not parse date: "${dateStr}", using today's date`);
   return todayStr();
 }
 
@@ -128,6 +177,20 @@ const formatLossProfit = (value) => {
     return `<span style="color: var(--danger);">${formatted}</span>`;
   }
   return formatted;
+};
+
+/**
+ * Sanitizes text input for safe HTML display
+ * Prevents XSS attacks by encoding HTML special characters
+ * 
+ * @param {string} text - Text to sanitize
+ * @returns {string} Sanitized text safe for HTML insertion
+ */
+const sanitizeHtml = (text) => {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text.toString();
+  return div.innerHTML;
 };
 
 /**
@@ -165,6 +228,91 @@ const sortInventoryByDateNewestFirst = (data = inventory) => {
     const dateB = new Date(b.date);
     return dateB - dateA; // Descending order (newest first)
   });
+};
+
+/**
+ * Validates inventory item data
+ * 
+ * @param {Object} item - Inventory item to validate
+ * @returns {Object} Validation result with isValid flag and errors array
+ */
+const validateInventoryItem = (item) => {
+  const errors = [];
+  
+  // Required fields
+  if (!item.name || typeof item.name !== 'string' || item.name.trim().length === 0) {
+    errors.push('Name is required');
+  } else if (item.name.length > 100) {
+    errors.push('Name must be 100 characters or less');
+  }
+  
+  if (!item.metal || !['Silver', 'Gold', 'Platinum', 'Palladium'].includes(item.metal)) {
+    errors.push('Valid metal type is required');
+  }
+  
+  // Numeric validations
+  if (!item.qty || !Number.isInteger(Number(item.qty)) || Number(item.qty) < 1) {
+    errors.push('Quantity must be a positive integer');
+  }
+  
+  if (!item.weight || isNaN(Number(item.weight)) || Number(item.weight) <= 0) {
+    errors.push('Weight must be a positive number');
+  }
+  
+  if (!item.price || isNaN(Number(item.price)) || Number(item.price) <= 0) {
+    errors.push('Price must be a positive number');
+  }
+  
+  // Optional field validations
+  if (item.storageLocation && item.storageLocation.length > 50) {
+    errors.push('Storage location must be 50 characters or less');
+  }
+  
+  if (item.purchaseLocation && item.purchaseLocation.length > 100) {
+    errors.push('Purchase location must be 100 characters or less');
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+};
+
+/**
+ * Handles errors with user-friendly messaging
+ * 
+ * @param {Error|string} error - Error to handle
+ * @param {string} context - Context where error occurred
+ */
+const handleError = (error, context = '') => {
+  const errorMessage = error instanceof Error ? error.message : error.toString();
+  
+  console.error(`Error in ${context}:`, error);
+  
+  // Show user-friendly message
+  const userMessage = getUserFriendlyMessage(errorMessage);
+  alert(`Error: ${userMessage}`);
+};
+
+/**
+ * Converts technical error messages to user-friendly ones
+ * 
+ * @param {string} errorMessage - Technical error message
+ * @returns {string} User-friendly error message
+ */
+const getUserFriendlyMessage = (errorMessage) => {
+  if (errorMessage.includes('localStorage')) {
+    return 'Unable to save data. Please check your browser settings.';
+  }
+  if (errorMessage.includes('parse') || errorMessage.includes('JSON')) {
+    return 'The file format is not supported or corrupted.';
+  }
+  if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+    return 'Network connection issue. Please check your internet connection.';
+  }
+  
+  // Default fallback
+  return errorMessage || 'An unexpected error occurred.';
 };
 
 // =============================================================================

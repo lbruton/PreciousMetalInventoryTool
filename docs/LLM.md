@@ -2,7 +2,7 @@
 
 ## 🎯 Project Context Prompt
 
-You are working on the **Precious Metals Inventory Tool v3.0.2+**, a comprehensive client-side web application for tracking precious metal investments. This tool helps users manage their gold, silver, platinum, and palladium inventory with detailed analytics, import/export capabilities, and storage location tracking.
+You are working on the **Precious Metals Inventory Tool v3.0.4**, a comprehensive client-side web application for tracking precious metal investments. This tool helps users manage their gold, silver, platinum, and palladium inventory with detailed analytics, import/export capabilities, and storage location tracking.
 
 ## 📁 Project Structure
 
