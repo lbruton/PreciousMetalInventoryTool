@@ -13,6 +13,13 @@
 
 ## 📋 Version History
 
+### Version 3.0.1 - Dynamic Version Management
+- **Dynamic version loading**: Version numbers now automatically load from APP_VERSION constant in constants.js
+- **Single source of truth**: Only need to update version in one place (constants.js) and it propagates everywhere
+- **Version utility functions**: Added `getVersionString()` and `getAppTitle()` helper functions in utils.js
+- **Maintainability improvement**: Eliminates need to manually update version in multiple HTML files
+- **Future-proof**: Any part of the application can now easily access and display the current version
+
 ### Version 3.0 - UI Streamlining
 - **Removed spot price history UI**: Eliminated "Show Spot History" and "Clear Spot History" buttons from the interface
 - **Simplified user experience**: Streamlined interface by removing spot price history viewing functionality

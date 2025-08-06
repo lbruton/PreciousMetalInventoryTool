@@ -80,6 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.typeChart = document.getElementById('typeChart');
   elements.locationChart = document.getElementById('locationChart');
 
+  // Update version numbers dynamically
+  document.title = getAppTitle();
+  const appHeader = document.querySelector('.app-header h1');
+  if (appHeader) {
+    appHeader.textContent = getAppTitle();
+  }
+
   // Initialize spot price elements for all metals
   Object.values(METALS).forEach(metalConfig => {
     const metalKey = metalConfig.key;

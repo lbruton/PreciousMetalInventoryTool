@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lonnie's Precious Metals Tool 3</title>
+  <title>Lonnie's Precious Metals Tool</title>
 <style>
     /* CSS Custom Properties */
     :root {
@@ -461,7 +461,7 @@
   
   <div class="container">
     <div class="card">
-      <h1 class="title" id="page-title">Lonnie's Precious Metals Tool v3.0</h1>
+      <h1 class="title" id="page-title">Lonnie's Precious Metals Tool</h1>
       <p class="description">
         Track your precious metal investments with spot price tracking, premium calculations, and comprehensive reporting. 
         Add items to your inventory, monitor current values, and export your data in multiple formats.
@@ -484,6 +484,23 @@
 
 </div>
 </div>
+
+<!-- Load version from constants -->
+<script src="app/js/constants.js"></script>
+<script src="app/js/utils.js"></script>
+<script>
+  // Update version numbers once constants are loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    // Update page title
+    document.title = `Lonnie's Precious Metals Tool ${getVersionString()}`;
+    // Update page heading
+    const pageTitle = document.getElementById('page-title');
+    if (pageTitle) {
+      pageTitle.textContent = `Lonnie's Precious Metals Tool ${getVersionString()}`;
+    }
+  });
+</script>
+
 <script>
     // Theme Management
     const themeToggle = document.getElementById('theme-toggle');
