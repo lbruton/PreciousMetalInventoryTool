@@ -93,8 +93,8 @@ const setupEventListeners = () => {
   // Table header sorting
   const headers = document.querySelectorAll('#inventoryTable th');
   headers.forEach((header, index) => {
-    // Skip # column (0) and Edit/Delete columns (14-15)
-    if (index === 0 || index >= headers.length - 2) {
+    // Skip # column (0) and Delete column (last column)
+    if (index === 0 || index >= headers.length - 1) {
       return;
     }
 

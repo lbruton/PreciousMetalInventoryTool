@@ -8,6 +8,16 @@
 
 ## 📋 Version History
 
+### Version 3.0.2 - Enhanced Table UX
+- **Clickable item names**: Item names are now clickable links to open the edit modal (removed separate Edit column)
+- **Simplified collectable toggle**: Changed from toggle switch to clean checkbox in table for better space efficiency
+- **Centered delete buttons**: Delete buttons are now properly centered in their cells
+- **Visual edit indicators**: Clickable names show edit icon (✎) on hover/focus for better discoverability
+- **Improved accessibility**: Added keyboard navigation support (Enter/Space) and ARIA labels for screen readers
+- **Streamlined table**: Removed redundant Edit column, making the table more compact and easier to scan
+- **Enhanced styling**: Better focus states and hover effects for improved user interaction feedback
+- **Maintained functionality**: Edit modal toggle switch preserved for detailed editing experience
+
 ### Version 3.0.1 - Storage Location Tracking
 - **New feature**: Added storage location field to track where each item is physically stored
 - **Enhanced forms**: Updated both add and edit item forms with storage location input

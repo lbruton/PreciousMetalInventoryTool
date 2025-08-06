@@ -60,29 +60,25 @@ const renderTable = () => {
     const originalIdx = inventory.indexOf(item);
 
     rows.push(`
-      <tr>
-        <td>${i + 1}</td>
-        <td>${item.metal || 'Silver'}</td>
-        <td>${item.qty}</td>
-        <td>${item.type}</td>
-        <td>${item.name.replace(/[<>"']/g, '')}</td>
-        <td>${parseFloat(item.weight).toFixed(2)}</td>
-        <td>${formatDollar(item.price)}</td>
-        <td>${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
-        <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.premiumPerOz > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
-        <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
-        <td>${item.purchaseLocation}</td>
-        <td>${item.storageLocation || 'Unknown'}</td>
-        <td>${item.date}</td>
-        <td>
-          <label class="switch">
-            <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)">
-            <span class="slider"></span>
-          </label>
-        </td>
-        <td><button class="btn premium" onclick="editItem(${originalIdx})" aria-label="Edit item">Edit</button></td>
-        <td><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
-      </tr>
+    <tr>
+    <td>${i + 1}</td>
+    <td>${item.metal || 'Silver'}</td>
+    <td>${item.qty}</td>
+    <td>${item.type}</td>
+    <td class="clickable-name" onclick="editItem(${originalIdx})" title="Click to edit" tabindex="0" role="button" aria-label="Edit ${item.name.replace(/[<>"']/g, '')}" onkeydown="if(event.key==='Enter'||event.key===' ')editItem(${originalIdx})">${item.name.replace(/[<>"']/g, '')}</td>
+    <td>${parseFloat(item.weight).toFixed(2)}</td>
+    <td>${formatDollar(item.price)}</td>
+    <td>${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
+    <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.premiumPerOz > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
+    <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
+    <td>${item.purchaseLocation}</td>
+    <td>${item.storageLocation || 'Unknown'}</td>
+    <td>${item.date}</td>
+    <td class="checkbox-cell">
+    <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${item.name.replace(/[<>"']/g, '')} as collectable" title="Mark as collectable">
+    </td>
+    <td class="delete-cell"><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
+    </tr>
     `);
   }
 
