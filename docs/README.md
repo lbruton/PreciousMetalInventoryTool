@@ -22,7 +22,7 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 
 ## Version Management
 
-This application uses a dynamic version management system. The version is automatically updated throughout the application from `app/js/app/js/constants.js`. The HTML files now use this dynamic system instead of hardcoded version numbers. See [docs/VERSIONING.md](docs/VERSIONING.md) for details on how to update versions.
+This application uses a dynamic version management system. The version is automatically updated throughout the application from `app/js/constants.js`. The HTML files now use this dynamic system instead of hardcoded version numbers. See [docs/VERSIONING.md](docs/VERSIONING.md) for details on how to update versions.
 
 ## Version History
 

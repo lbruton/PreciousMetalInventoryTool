@@ -7,17 +7,17 @@ The Precious Metals Inventory Tool now uses a dynamic version management system 
 ## How It Works
 
 ### Single Source of Truth
-- Version is defined once in `app/js/app/js/constants.js` as `APP_VERSION = '3.0.1'`
+- Version is defined once in `/app/js/constants.js` as `APP_VERSION = '3.0.3'`
 - This is the ONLY place you need to update the version number
 
 ### Automatic Propagation
-- **Root Landing Page** (`app/index.html`): JavaScript automatically updates the page title and heading
-- **Main Application** (`app/app/index.html`): JavaScript automatically updates the page title and heading  
+- **Root Landing Page** (`/index.html`): JavaScript automatically updates the page title and heading
+- **Main Application** (`/app/index.html`): JavaScript automatically updates the page title and heading  
 - **Browser Tab Title**: Dynamically updated with current version
 - **Application Header**: Shows current version in the main app interface
 
 ### Utility Functions
-Two helper functions are available in `utils.js`:
+Two helper functions are available in `/app/js/utils.js`:
 - `getVersionString(prefix)`: Returns formatted version (e.g., "v3.0.1")
 - `getAppTitle(baseTitle)`: Returns full app title with version
 
@@ -27,8 +27,8 @@ To release a new version:
 
 1. **Update ONLY the constants file:**
    ```javascript
-   // In app/js/app/js/constants.js
-   const APP_VERSION = '3.1.0';  // Change this line only
+   // In /app/js/constants.js
+   const APP_VERSION = '3.0.3';  // Change this line only
    ```
 
 2. **All these will automatically update:**
@@ -37,7 +37,7 @@ To release a new version:
    - App page title: "Precious Metals Inventory Tool v3.1.0"
    - App header: "Precious Metals Inventory Tool v3.1.0"
 
-3. **Update changelog:** Add entry to `changelog.md` for documentation
+3. **Update changelog:** Add entry to `/docs/CHANGELOG.md` for documentation
 
 ## Technical Implementation
 
@@ -72,15 +72,15 @@ Use semantic versioning: `MAJOR.MINOR.PATCH`
 ## Example Usage in Code
 ```javascript
 // Get just the version number
-const version = APP_VERSION; // "3.0.1"
+const version = APP_VERSION; // "3.0.3"
 
 // Get formatted version string
-const versionString = getVersionString(); // "v3.0.1"
-const customVersion = getVersionString('version '); // "version 3.0.1"
+const versionString = getVersionString(); // "v3.0.3"
+const customVersion = getVersionString('version '); // "version 3.0.3"
 
 // Get full app title
-const title = getAppTitle(); // "Precious Metals Inventory Tool v3.0.1"
-const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.0.1"
+const title = getAppTitle(); // "Precious Metals Inventory Tool v3.0.3"
+const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.0.3"
 ```
 
 This system ensures version consistency and makes maintenance much easier!
