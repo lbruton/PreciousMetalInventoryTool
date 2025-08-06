@@ -10,7 +10,7 @@ let editingIndex = null;
 
 /** @type {Object} Pagination state */
 let currentPage = 1;          // Current page number (1-based)
-let itemsPerPage = 10;        // Number of items to display per page
+let itemsPerPage = 25;        // Number of items to display per page
 
 /** @type {string} Current search query */
 let searchQuery = '';
@@ -39,6 +39,7 @@ const elements = {
   itemWeight: null,
   itemPrice: null,
   purchaseLocation: null,
+  storageLocation: null,
   itemDate: null,
 
   // Spot price buttons
@@ -75,6 +76,7 @@ const elements = {
   editWeight: null,
   editPrice: null,
   editPurchaseLocation: null,
+  editStorageLocation: null,
   editDate: null,
   editSpotPrice: null,
 

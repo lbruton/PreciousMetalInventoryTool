@@ -1,6 +1,6 @@
 # Precious Metals Inventory Tool - Project Structure
 
-## Current Structure (Version 3.0)
+## Current Structure (Version 3.0.1)
 
 ```
 PreciousMetalInventoryTool/
@@ -30,12 +30,12 @@ PreciousMetalInventoryTool/
 └── .gitignore
 ```
 
-## Key Changes in Version 3.0 Structure
+## Key Changes in Version 3.0+ Structure
 
 ### Simplified Landing Page
 - Removed version dropdown selector
 - Direct navigation to application
-- Fixed title showing "v3.0"
+- Fixed title showing current version
 - Streamlined user experience
 
 ### Renamed Application Folder
@@ -44,8 +44,8 @@ PreciousMetalInventoryTool/
 - More intuitive folder naming
 
 ### Version Management
-- Version constant added to `constants.js` as `APP_VERSION = '3.0'`
-- Application title shows version 3.0
+- Version constant added to `constants.js` as `APP_VERSION = '3.0.1'`
+- Application title shows current version
 - Version tracking centralized in code rather than folder structure
 
 ### Modular Architecture

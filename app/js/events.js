@@ -1,15 +1,155 @@
+/**
+ * Implements dynamic column resizing for the inventory table
+ * 
+ * This function adds interactive resize handles to table headers that allow users to:
+ * - Drag column borders to adjust width
+ * - Maintain minimum and maximum column widths
+ * - Provide visual feedback during resize operations
+ * - Prevent text selection during drag operations
+ * - Clean up existing handles before re-adding (for table re-renders)
+ * 
+ * Technical implementation:
+ * - Adds resize handles as DOM elements positioned on column borders
+ * - Uses mouse event listeners for drag detection and movement
+ * - Calculates new widths based on mouse position changes
+ * - Applies width constraints to prevent unusable column sizes
+ * - Temporarily disables other interactions during resize
+ * 
+ * @returns {void} Modifies DOM to add resize functionality
+ * 
+ * @example
+ * // Called after table re-render to restore resize capability
+ * renderTable();
+ * setupColumnResizing(); // Re-establish resize handles
+ */
+const setupColumnResizing = () => {
+  const table = document.getElementById('inventoryTable');
+  if (!table) return;
+
+  // Clear any existing resize handles
+  const existingHandles = table.querySelectorAll('.resize-handle');
+  existingHandles.forEach(handle => handle.remove());
+
+  let isResizing = false;
+  let currentColumn = null;
+  let startX = 0;
+  let startWidth = 0;
+
+  // Add resize handles to table headers
+  const headers = table.querySelectorAll('th');
+  headers.forEach((header, index) => {
+    // Skip the last column (delete button)
+    if (index === headers.length - 1) return;
+
+    const resizeHandle = document.createElement('div');
+    resizeHandle.className = 'resize-handle';
+    resizeHandle.style.cssText = `
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 6px;
+      height: 100%;
+      background: transparent;
+      cursor: col-resize;
+      z-index: 10;
+      transition: background-color 0.2s;
+    `;
+
+    header.style.position = 'relative';
+    header.appendChild(resizeHandle);
+
+    resizeHandle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      currentColumn = header;
+      startX = e.clientX;
+      startWidth = parseInt(document.defaultView.getComputedStyle(header).width, 10);
+      
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Prevent header click event from firing
+      header.style.pointerEvents = 'none';
+      setTimeout(() => {
+        header.style.pointerEvents = 'auto';
+      }, 100);
+    });
+  });
+
+  // Handle mouse move for resizing
+  document.addEventListener('mousemove', (e) => {
+    if (!isResizing || !currentColumn) return;
+
+    const width = startWidth + e.clientX - startX;
+    const minWidth = 40; // Minimum column width
+    const maxWidth = 300; // Maximum column width
+    
+    if (width >= minWidth && width <= maxWidth) {
+      currentColumn.style.width = width + 'px';
+    }
+  });
+
+  // Handle mouse up to stop resizing
+  document.addEventListener('mouseup', () => {
+    if (isResizing) {
+      isResizing = false;
+      currentColumn = null;
+    }
+  });
+
+  // Prevent text selection during resize
+  document.addEventListener('selectstart', (e) => {
+    if (isResizing) {
+      e.preventDefault();
+    }
+  });
+};
+
 // EVENT LISTENERS
 // =============================================================================
 
 /**
- * Sets up all primary event listeners for the application
+ * Initializes all primary event listeners for the application interface
+ * 
+ * This comprehensive setup function establishes event handlers for:
+ * 
+ * TABLE INTERACTIONS:
+ * - Column header clicks for sorting (skips # and Delete columns)
+ * - Toggle direction on repeated clicks (asc/desc)
+ * 
+ * FORM SUBMISSIONS:
+ * - Main inventory form with validation and premium calculation
+ * - Edit form with historical spot price handling
+ * - Input validation for quantity, weight, and price fields
+ * 
+ * SPOT PRICE MANAGEMENT:
+ * - Save/reset buttons for all four metal types
+ * - Enter key support for quick spot price updates
+ * 
+ * IMPORT/EXPORT OPERATIONS:
+ * - File input change events for CSV, JSON, Excel imports
+ * - Export button clicks for all supported formats
+ * - File input reset after processing
+ * 
+ * UTILITY FUNCTIONS:
+ * - Modal close handlers (cancel edit, ESC key support)
+ * - "Boating Accident" data reset with confirmation
+ * - Theme toggle and persistence
+ * 
+ * @returns {void} Attaches event listeners to DOM elements
+ * 
+ * @example
+ * // Called once during application initialization
+ * document.addEventListener('DOMContentLoaded', () => {
+ *   // ... other initialization
+ *   setupEventListeners();
+ * });
  */
 const setupEventListeners = () => {
   // Table header sorting
   const headers = document.querySelectorAll('#inventoryTable th');
   headers.forEach((header, index) => {
-    // Skip # column (0) and Edit/Delete columns (13-14)
-    if (index === 0 || index >= headers.length - 2) {
+    // Skip # column (0) and Delete column (last column)
+    if (index === 0 || index >= headers.length - 1) {
       return;
     }
 
@@ -38,6 +178,7 @@ const setupEventListeners = () => {
     const weight = parseFloat(elements.itemWeight.value);
     const price = parseFloat(elements.itemPrice.value);
     const purchaseLocation = elements.purchaseLocation.value.trim() || "Unknown";
+    const storageLocation = elements.storageLocation.value.trim() || "Unknown";
     const date = elements.itemDate.value || todayStr();
 
     if (isNaN(qty) || qty < 1 || !Number.isInteger(qty) ||
@@ -72,6 +213,7 @@ const setupEventListeners = () => {
       price, 
       date,
       purchaseLocation,
+      storageLocation,
       spotPriceAtPurchase,
       premiumPerOz,
       totalPremium,
@@ -97,6 +239,7 @@ const setupEventListeners = () => {
     const weight = parseFloat(elements.editWeight.value);
     const price = parseFloat(elements.editPrice.value);
     const purchaseLocation = elements.editPurchaseLocation.value.trim() || "Unknown";
+    const storageLocation = elements.editStorageLocation.value.trim() || "Unknown";
     const date = elements.editDate.value;
 
     // Use the checkbox state the user just set
@@ -141,6 +284,7 @@ const setupEventListeners = () => {
       price,
       date,
       purchaseLocation,
+      storageLocation,
       spotPriceAtPurchase: isCollectable ? 0 : spotPriceAtPurchase,
       premiumPerOz,
       totalPremium,

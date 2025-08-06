@@ -2,16 +2,37 @@
 
 ## 🚀 Roadmap (Future Versions)
 
-### Version 3.x (Planned)
-- Introduce item storage location fields for improved inventory organization
-
-### Version 3.x (Planned)
-- Implement live updates for precious metals spot prices
-- Add automated spot price fetching from external APIs
+*All major planned features have been implemented! The tool now includes comprehensive inventory management with storage location tracking, multi-format import/export, advanced analytics, and a modern modular architecture.*
 
 ---
 
 ## 📋 Version History
+
+### Version 3.0.2 - Enhanced Table UX
+- **Clickable item names**: Item names are now clickable links to open the edit modal (removed separate Edit column)
+- **Simplified collectable toggle**: Changed from toggle switch to clean checkbox in table for better space efficiency
+- **Centered delete buttons**: Delete buttons are now properly centered in their cells
+- **Visual edit indicators**: Clickable names show edit icon (✎) on hover/focus for better discoverability
+- **Improved accessibility**: Added keyboard navigation support (Enter/Space) and ARIA labels for screen readers
+- **Streamlined table**: Removed redundant Edit column, making the table more compact and easier to scan
+- **Enhanced styling**: Better focus states and hover effects for improved user interaction feedback
+- **Maintained functionality**: Edit modal toggle switch preserved for detailed editing experience
+
+### Version 3.0.1 - Storage Location Tracking
+- **New feature**: Added storage location field to track where each item is physically stored
+- **Enhanced forms**: Updated both add and edit item forms with storage location input
+- **Improved organization**: Optional storage location field with "Vault A, Safe B, etc..." placeholder guidance
+- **Full table integration**: New "Storage Location" column added between "Purchase Location" and "Date"
+- **Search enhancement**: Storage location now included in search functionality
+- **Complete import/export support**: All formats (CSV, JSON, Excel, PDF, HTML) updated to include storage location
+- **Backwards compatibility**: Existing data automatically migrated with "Unknown" default values
+- **Sample data updated**: Enhanced sample.csv with realistic storage location examples
+- **Sorting capability**: Storage location column fully sortable like all other columns
+- **Dynamic version loading**: Version numbers now automatically load from APP_VERSION constant in constants.js
+- **Single source of truth**: Only need to update version in one place (constants.js) and it propagates everywhere
+- **Version utility functions**: Added `getVersionString()` and `getAppTitle()` helper functions in utils.js
+- **Maintainability improvement**: Eliminates need to manually update version in multiple HTML files
+- **Future-proof**: Any part of the application can now easily access and display the current version
 
 ### Version 3.0 - UI Streamlining
 - **Removed spot price history UI**: Eliminated "Show Spot History" and "Clear Spot History" buttons from the interface

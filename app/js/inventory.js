@@ -7,9 +7,22 @@
 const saveInventory = () => saveData(LS_KEY, inventory);
 
 /**
- * Loads inventory from localStorage with data migration
+ * Loads inventory from localStorage with comprehensive data migration
  * 
- * Handles legacy data by adding missing fields and calculating defaults
+ * This function handles backwards compatibility by:
+ * - Loading existing inventory data from localStorage
+ * - Migrating legacy records that may be missing newer fields
+ * - Calculating premiums for older records that lack this data
+ * - Ensuring all records have required fields with sensible defaults
+ * - Preserving existing user data while adding new functionality
+ * 
+ * @returns {void} Updates the global inventory array with migrated data
+ * @throws {Error} Logs errors to console if localStorage access fails
+ * 
+ * @example
+ * // Called during app initialization to restore saved data
+ * loadInventory();
+ * console.log(inventory); // Array of properly formatted inventory items
  */
 const loadInventory = () => {
   const data = loadData(LS_KEY, []);
@@ -27,22 +40,46 @@ const loadInventory = () => {
       return {
         ...item,
         purchaseLocation: item.purchaseLocation || "Unknown",
+        storageLocation: item.storageLocation || "Unknown",
         spotPriceAtPurchase: spotPrice,
         premiumPerOz,
         totalPremium,
         isCollectable: item.isCollectable !== undefined ? item.isCollectable : false
       };
     }
-    // Ensure all items have isCollectable property
+    // Ensure all items have required properties
     return {
       ...item,
+      storageLocation: item.storageLocation || "Unknown",
       isCollectable: item.isCollectable !== undefined ? item.isCollectable : false
     };
   });
 };
 
 /**
- * Renders inventory table with current sorting, pagination, and filtering
+ * Renders the main inventory table with all current display settings
+ * 
+ * This is the primary display function that:
+ * - Applies current search filters to inventory data
+ * - Sorts data according to user-selected column and direction
+ * - Implements pagination to show only current page items
+ * - Generates HTML table rows with interactive elements
+ * - Updates sort indicators in column headers
+ * - Refreshes pagination controls and summary totals
+ * - Re-establishes column resizing functionality
+ * 
+ * Called whenever inventory data changes or display settings update
+ * 
+ * @returns {void} Updates DOM elements with fresh inventory display
+ * 
+ * @example
+ * // Refresh table after adding new item
+ * inventory.push(newItem);
+ * renderTable();
+ * 
+ * // Update display after search
+ * searchQuery = 'silver';
+ * renderTable();
  */
 const renderTable = () => {
   const filteredInventory = filterInventory();
@@ -58,28 +95,25 @@ const renderTable = () => {
     const originalIdx = inventory.indexOf(item);
 
     rows.push(`
-      <tr>
-        <td>${i + 1}</td>
-        <td>${item.metal || 'Silver'}</td>
-        <td>${item.qty}</td>
-        <td>${item.type}</td>
-        <td>${item.name.replace(/[<>"']/g, '')}</td>
-        <td>${parseFloat(item.weight).toFixed(2)}</td>
-        <td>${formatDollar(item.price)}</td>
-        <td>${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
-        <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.premiumPerOz > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
-        <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
-        <td>${item.purchaseLocation}</td>
-        <td>${item.date}</td>
-        <td>
-          <label class="switch">
-            <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)">
-            <span class="slider"></span>
-          </label>
-        </td>
-        <td><button class="btn premium" onclick="editItem(${originalIdx})" aria-label="Edit item">Edit</button></td>
-        <td><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
-      </tr>
+    <tr>
+    <td>${i + 1}</td>
+    <td>${item.metal || 'Silver'}</td>
+    <td>${item.qty}</td>
+    <td>${item.type}</td>
+    <td class="clickable-name" onclick="editItem(${originalIdx})" title="Click to edit" tabindex="0" role="button" aria-label="Edit ${item.name.replace(/[<>"']/g, '')}" onkeydown="if(event.key==='Enter'||event.key===' ')editItem(${originalIdx})">${item.name.replace(/[<>"']/g, '')}</td>
+    <td>${parseFloat(item.weight).toFixed(2)}</td>
+    <td>${formatDollar(item.price)}</td>
+    <td>${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
+    <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.premiumPerOz > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
+    <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
+    <td>${item.purchaseLocation}</td>
+    <td>${item.storageLocation || 'Unknown'}</td>
+    <td>${item.date}</td>
+    <td class="checkbox-cell">
+    <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${item.name.replace(/[<>"']/g, '')} as collectable" title="Mark as collectable">
+    </td>
+    <td class="delete-cell"><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
+    </tr>
     `);
   }
 
@@ -102,10 +136,35 @@ const renderTable = () => {
 
   renderPagination(sortedInventory);
   updateSummary();
+  
+  // Re-setup column resizing after table re-render
+  setupColumnResizing();
 };
 
 /**
- * Updates all summary/totals displays based on current inventory
+ * Calculates and updates all financial summary displays across the application
+ * 
+ * This comprehensive function:
+ * - Processes entire inventory to calculate metal-specific totals
+ * - Handles collectable vs non-collectable item calculations separately
+ * - Updates DOM elements for all metal types (Silver, Gold, Platinum, Palladium)
+ * - Calculates weighted averages for prices and premiums
+ * - Formats currency and profit/loss values with appropriate styling
+ * - Handles edge cases like division by zero and missing data
+ * 
+ * Key calculations performed:
+ * - Total items, weight, purchase price, current value
+ * - Average prices per ounce (overall, collectable, non-collectable)
+ * - Premium analysis and profit/loss calculations
+ * - Current market value based on spot prices
+ * 
+ * @returns {void} Updates DOM elements in totals cards and summary sections
+ * 
+ * @example
+ * // Recalculate totals after inventory change
+ * inventory[0].price = 150.00;
+ * saveInventory();
+ * updateSummary(); // Refreshes all totals displays
  */
 const updateSummary = () => {
   /**
@@ -307,6 +366,7 @@ const editItem = (idx) => {
   elements.editWeight.value = item.weight;
   elements.editPrice.value = item.price;
   elements.editPurchaseLocation.value = item.purchaseLocation;
+  elements.editStorageLocation.value = item.storageLocation || '';
   elements.editDate.value = item.date;
   elements.editSpotPrice.value = item.spotPriceAtPurchase;
   document.getElementById("editCollectable").checked = item.isCollectable;
@@ -365,9 +425,33 @@ const toggleCollectable = (idx, checkbox) => {
 // =============================================================================
 
 /**
- * Imports inventory data from CSV file
+ * Imports inventory data from CSV file with comprehensive validation and error handling
  * 
- * @param {File} file - CSV file to import
+ * This function:
+ * - Uses PapaParse library for robust CSV parsing
+ * - Maps CSV columns to inventory object properties
+ * - Validates data types and required fields
+ * - Handles various date formats automatically
+ * - Calculates premiums and totals for imported items
+ * - Provides user feedback on import success/failure
+ * - Offers replacement or append options (currently replacement only)
+ * 
+ * Supported CSV columns:
+ * - Metal, Name, Qty, Type, Weight(oz), Purchase Price
+ * - Purchase Location, Storage Location, Date, Collectable
+ * - Spot Price ($/oz) for historical premium calculations
+ * 
+ * @param {File} file - CSV file selected by user through file input
+ * @returns {void} Updates inventory array if import successful
+ * 
+ * @example
+ * // Typically called from file input change event
+ * const fileInput = document.getElementById('importCsvFile');
+ * fileInput.addEventListener('change', (e) => {
+ *   if (e.target.files.length > 0) {
+ *     importCsv(e.target.files[0]);
+ *   }
+ * });
  */
 const importCsv = (file) => {
   Papa.parse(file, {
@@ -386,6 +470,7 @@ const importCsv = (file) => {
         const priceStr = row['Purchase Price'] || row['price'];
         const price = parseFloat(typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g,"") : priceStr);
         const purchaseLocation = row['Purchase Location'] || "Unknown";
+        const storageLocation = row['Storage Location'] || "Unknown";
         const date = parseDate(row['Date']); // Using the new date parser
 
         // Get collectable status
@@ -429,6 +514,7 @@ const importCsv = (file) => {
           price, 
           date,
           purchaseLocation,
+          storageLocation,
           spotPriceAtPurchase,
           premiumPerOz,
           totalPremium,
@@ -457,7 +543,7 @@ const importCsv = (file) => {
  */
 const exportCsv = () => {
   const timestamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const headers = ["Metal","Name","Qty","Type","Weight(oz)","Purchase Price","Spot Price ($/oz)","Premium ($/oz)","Total Premium","Purchase Location","Date","Collectable"];
+  const headers = ["Metal","Name","Qty","Type","Weight(oz)","Purchase Price","Spot Price ($/oz)","Premium ($/oz)","Total Premium","Purchase Location","Storage Location","Date","Collectable"];
 
   // Sort inventory by date (newest first) for export
   const sortedInventory = sortInventoryByDateNewestFirst();
@@ -482,6 +568,7 @@ const exportCsv = () => {
       i.isCollectable ? 'N/A' : formatDollar(i.premiumPerOz),
       i.isCollectable ? 'N/A' : formatDollar(i.totalPremium),
       i.purchaseLocation,
+      i.storageLocation || 'Unknown',
       i.date,
       i.isCollectable ? 'Yes' : 'No'
     ]);
@@ -537,6 +624,7 @@ const importJson = (file) => {
           price: parseFloat(item.price),
           date: parseDate(item.date || todayStr()),
           purchaseLocation: item.purchaseLocation || "Unknown",
+          storageLocation: item.storageLocation || "Unknown",
           spotPriceAtPurchase: item.spotPriceAtPurchase || spotPrices[item.metal.toLowerCase()],
           isCollectable: item.isCollectable === true,
           premiumPerOz: item.premiumPerOz || 0,
@@ -593,6 +681,7 @@ const exportJson = () => {
     price: item.price,
     date: item.date,
     purchaseLocation: item.purchaseLocation,
+    storageLocation: item.storageLocation,
     spotPriceAtPurchase: item.spotPriceAtPurchase,
     isCollectable: item.isCollectable,
     premiumPerOz: item.premiumPerOz,
@@ -644,6 +733,7 @@ const importExcel = (file) => {
         const priceStr = row['Purchase Price'] || row['price'];
         const price = parseFloat(typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g,"") : priceStr);
         const purchaseLocation = row['Purchase Location'] || "Unknown";
+        const storageLocation = row['Storage Location'] || "Unknown";
         const date = parseDate(row['Date']); // Using the new date parser
 
         // Get collectable status
@@ -687,6 +777,7 @@ const importExcel = (file) => {
           price, 
           date,
           purchaseLocation,
+          storageLocation,
           spotPriceAtPurchase,
           premiumPerOz,
           totalPremium,
@@ -724,7 +815,7 @@ const exportExcel = () => {
   // Create worksheet data
   const wsData = [
     ["Metal", "Name", "Qty", "Type", "Weight(oz)", "Purchase Price", "Spot Price ($/oz)", 
-     "Premium ($/oz)", "Total Premium", "Purchase Location", "Date", "Collectable"]
+     "Premium ($/oz)", "Total Premium", "Purchase Location", "Storage Location", "Date", "Collectable"]
   ];
 
   for (const i of sortedInventory) {
@@ -744,6 +835,7 @@ const exportExcel = () => {
       i.isCollectable ? null : i.premiumPerOz,
       i.isCollectable ? null : i.totalPremium,
       i.purchaseLocation,
+      i.storageLocation || 'Unknown',
       i.date,
       i.isCollectable ? 'Yes' : 'No'
     ]);
@@ -790,6 +882,7 @@ const exportPdf = () => {
     item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz),
     item.isCollectable ? 'N/A' : formatDollar(item.totalPremium),
     item.purchaseLocation,
+    item.storageLocation || 'Unknown',
     item.date,
     item.isCollectable ? 'Yes' : 'No'
   ]);
@@ -798,7 +891,7 @@ const exportPdf = () => {
   doc.autoTable({
     head: [['Metal', 'Name', 'Qty', 'Type', 'Weight(oz)', 'Purchase Price', 
             'Spot Price ($/oz)', 'Premium ($/oz)', 'Total Premium', 
-            'Purchase Location', 'Date', 'Collectable']],
+            'Purchase Location', 'Storage Location', 'Date', 'Collectable']],
     body: tableData,
     startY: 30,
     theme: 'striped',
@@ -1159,6 +1252,7 @@ const exportHtml = () => {
         <th>Premium ($/oz)</th>
         <th>Total Premium</th>
         <th>Purchase Location</th>
+        <th>Storage Location</th>
         <th>Date</th>
         <th>Collectable</th>
       </tr>
@@ -1176,6 +1270,7 @@ const exportHtml = () => {
         <td>${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
         <td>${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
         <td>${item.purchaseLocation}</td>
+        <td>${item.storageLocation || 'Unknown'}</td>
         <td>${item.date}</td>
         <td>${item.isCollectable ? 'Yes' : 'No'}</td>
       </tr>

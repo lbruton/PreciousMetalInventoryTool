@@ -1,4 +1,20 @@
 // UTILITY FUNCTIONS
+/**
+ * Returns formatted version string
+ * 
+ * @param {string} [prefix='v'] - Prefix to add before version
+ * @returns {string} Formatted version string (e.g., "v3.0.1")
+ */
+const getVersionString = (prefix = 'v') => `${prefix}${APP_VERSION}`;
+
+/**
+ * Returns full application title with version
+ * 
+ * @param {string} [baseTitle='Precious Metals Inventory Tool'] - Base application title
+ * @returns {string} Full title with version
+ */
+const getAppTitle = (baseTitle = 'Precious Metals Inventory Tool') => `${baseTitle} ${getVersionString()}`;
+
 // =============================================================================
 
 /**
