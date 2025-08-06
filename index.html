@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Lonnie's Precious Metals Tool</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lonnie's Precious Metals Tool</title>
 <style>
     /* CSS Custom Properties */
     :root {
@@ -458,133 +457,47 @@
   </style>
 </head>
 <body>
-<div class="theme-toggle" id="theme-toggle" title="Toggle theme"></div>
-<div class="container">
-<div class="card">
-<h1 class="title" id="page-title">Lonnie's Precious Metals Tool</h1>
-<p class="description">
-        Track your precious metal investments with spot price tracking, premium calculations, and comprehensive reporting. Add items to your inventory, monitor current values, and export your data in multiple formats.
+  <div class="theme-toggle" id="theme-toggle" title="Toggle theme"></div>
+  
+  <div class="container">
+    <div class="card">
+      <h1 class="title" id="page-title">Lonnie's Precious Metals Tool</h1>
+      <p class="description">
+        Track your precious metal investments with spot price tracking, premium calculations, and comprehensive reporting. 
+        Add items to your inventory, monitor current values, and export your data in multiple formats.
       </p>
-<div class="alert">
-<strong>Important Notice:</strong> All data is stored locally in your browser and never transmitted to any server. Your information remains private but will be lost if you clear browser history or use private browsing mode. Use this tool at your own risk - the developer assumes no responsibility for any financial decisions made based on this application.
+      
+      <div class="alert">
+        <strong>Important Notice:</strong> All data is stored locally in your browser and never transmitted to any server. Your information remains private but will be lost if you clear browser history or use private browsing mode. Use this tool at your own risk - the developer assumes no responsibility for any financial decisions made based on this application.
       </div>
-<div class="form-group">
-<label class="form-label" for="version-select">Select Version</label>
-<select class="form-select" id="version-select">
-<option value="1.0">Version 1.0</option>
-<option value="2.0">Version 2.0</option>
-<option value="2.1">Version 2.1</option>
-<option value="2.2">Version 2.2</option>
-<option value="2.3">Version 2.3</option>
-<option value="2.4">Version 2.4</option>
-<option value="2.5">Version 2.5</option>
-<option value="2.6">Version 2.6</option>
-<option value="2.7">Version 2.7</option>
-<option selected="" value="2.8">Version 2.8</option>
-</select>
-</div>
-<a class="btn btn-primary btn-block" href="https://lonniebruton.com/pmtools/2.7/index.html" id="continue-btn">
+      
+      <div class="form-group">
+        <label class="form-label" for="version-select">Select Version</label>
+        <select class="form-select" id="version-select">
+          <option value="1.0">Version 1.0</option>
+          <option value="2.0">Version 2.0</option>
+          <option value="2.1">Version 2.1</option>
+          <option value="2.2">Version 2.2</option>
+          <option value="2.3">Version 2.3</option>
+          <option value="2.4">Version 2.4</option>
+          <option value="2.5">Version 2.5</option>
+          <option value="2.6">Version 2.6</option>
+          <option value="2.7">Version 2.7</option>
+          <option selected="" value="2.8">Version 2.8</option>
+        </select>
+      </div>
+      
+      <a class="btn btn-primary btn-block" href="https://lonniebruton.com/pmtools/2.7/index.html" id="continue-btn">
         Accept and Continue →
       </a>
-</div>
-<div class="card">
-<h2 class="subtitle">Resources</h2>
-<a class="btn btn-secondary btn-block" download="sample.csv" href="sample.csv">
-        📄 Download Sample Data
+    </div>
+    
+    <div class="card">
+      <h2 class="subtitle">Resources</h2>
+      <a class="btn btn-secondary btn-block" download="sample.csv" href="sample.csv">
+        📄 Download Sample Data (CSV)
       </a>
-<button class="btn btn-secondary btn-block" id="showChangelog">
-        📜 View Changelog &amp; Roadmap
-      </button>
-</div>
-</div>
-<!-- Changelog Modal -->
-<div aria-labelledby="modal-title" aria-modal="true" class="modal" id="changelogModal" role="dialog">
-<div class="modal-content">
-<div class="modal-header">
-<h2 class="modal-title" id="modal-title">📜 Changelog &amp; Roadmap</h2>
-<button aria-label="Close modal" class="modal-close" id="closeChangelog">×</button>
-</div>
-<div class="modal-body">
-<div class="roadmap-section">
-<div class="section-title">🚀 Roadmap</div>
-<ul class="changelog-list">
 
-<li><strong>2.9:</strong> Introduce item storage location fields for improved inventory organization.</li>
-<li><strong>3.0:</strong> Implement live updates for precious metals spot prices.</li>
-</ul>
-</div>
-<!-- Reordered changelog versions start here -->
-<div class="version-section">
-<div class="section-title">Version 2.8 - Modular Overhaul</div>
-<ul class="changelog-list">
-<li>Major codebase refactor: extracted scripts into modular JS files for better separation of concerns.</li>
-<li>CSS moved to external <code>styles.css</code>, enabling improved maintainability and theming.</li>
-<li>Full dark mode support via <code>theme.js</code> and CSS variables.</li>
-<li>Integrated Chart.js for pie chart visualization of inventory.</li>
-<li>Improved pagination, search, and sorting capabilities for inventory tables.</li>
-<li>Improved UI structure with deferred script loading and performance tweaks.</li>
-</ul>
-</div>
-<div class="version-section">
-<div class="section-title">Version 2.6-2.7 - Details &amp; Analytics</div>
-<ul class="changelog-list">
-<li>Minor updates and maintenance (most changes under-the-hood).</li>
-<li>Added "View Details" button on all metal summary cards.</li>
-<li>Introduced breakdown reports by type and by purchase location.</li>
-<li>Enhanced navigation, interface organization, and information visibility.</li>
-<li>Core feature set and detailed inventory management preserved.</li>
-</ul>
-</div>
-<div class="version-section">
-<div class="section-title">Version 2.4-2.5 - Multi-Metal Support</div>
-<ul class="changelog-list">
-<li>Support introduced for Platinum and Palladium metals throughout the tool.</li>
-<li>All entry fields, summaries, and calculation logic expanded for four metals.</li>
-<li>Exported data now includes Platinum and Palladium records.</li>
-<li>Enhanced UI to integrate new metals into inventory and reporting.</li>
-<li>Interface and calculation consistency improvements for all metals.</li>
-<li>Price and premium breakdowns standardized for collectable/non-collectable.</li>
-</ul>
-</div>
-<div class="version-section">
-<div class="section-title">Version 2.1-2.3 - Collectables &amp; Polish</div>
-<ul class="changelog-list">
-<li>Introduced marking items as "Collectable" with enhanced price breakdowns.</li>
-<li>Average collectable and non-collectable price per oz calculations.</li>
-<li>Inventory and report tables updated to show collectable status.</li>
-<li>Added clarifying notes for collectable items and improved edit interface.</li>
-<li>Refined summary sections with breakdowns by collectable status.</li>
-<li>Usability and layout improvements for summary, import/export, and inventory actions.</li>
-</ul>
-</div>
-<div class="version-section">
-<div class="section-title">Version 2.0 - Major Update</div>
-<ul class="changelog-list">
-<li>Expanded tracking for Silver and Gold (type, quantity, weight, and name fields).</li>
-<li>Added individual and combined totals with calculations for weight, purchase price, value, average price per oz, premium per oz, total premiums, and profit/loss.</li>
-<li>Enhanced inventory table with editable, deletable entries and sorting.</li>
-<li>Introduced support for different types: Round, Bar, Coin, Note, Other.</li>
-<li>Import and export options for CSV, JSON, Excel, PDF, and HTML formats.</li>
-<li>Added "Spot Price History" to track historical changes.</li>
-<li>Implemented "Dark Mode" for the UI.</li>
-<li>Annotation for "Collectable" items in inventory.</li>
-<li>Introduced the "Boating Accident" reset feature.</li>
-<li>Pagination controls for large inventories and improved layout clarity.</li>
-</ul>
-</div>
-<div class="version-section">
-<div class="section-title">Version 1.0 - Initial Release</div>
-<ul class="changelog-list">
-<li>Track inventory for Silver and Gold.</li>
-<li>Add items with details: type, quantity, weight (oz), name, purchase location, purchase price, and date.</li>
-<li>See total item count, total weight, total purchase price, and current value for each metal.</li>
-<li>Calculate average price per ounce and show basic profit/loss per metal.</li>
-<li>Edit or delete items from inventory.</li>
-<li>Basic, clean interface with inventory listing and summary sections.</li>
-</ul>
-</div>
-<!-- Reordered changelog versions end here -->
-</div>
 </div>
 </div>
 <script>
@@ -625,34 +538,9 @@
       pageTitle.textContent = `Lonnie's Precious Metals Tool v${selectedVersion}`;
     }
 
-    // Modal Management
-    const showChangelogBtn = document.getElementById('showChangelog');
-    const changelogModal = document.getElementById('changelogModal');
-    const closeChangelogBtn = document.getElementById('closeChangelog');
-
-    function showModal() {
-      changelogModal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-
-    function hideModal() {
-      changelogModal.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-
     // Event Listeners
     themeToggle.addEventListener('click', toggleTheme);
     versionSelect.addEventListener('change', updateVersion);
-    showChangelogBtn.addEventListener('click', showModal);
-    closeChangelogBtn.addEventListener('click', hideModal);
-
-    changelogModal.addEventListener('click', (e) => {
-      if (e.target === changelogModal) hideModal();
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') hideModal();
-    });
 
     // System theme change listener
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {

@@ -1,0 +1,104 @@
+# Precious Metals Inventory Tool - Changelog
+
+## 🚀 Roadmap (Future Versions)
+
+### Version 2.9 (Planned)
+- Introduce item storage location fields for improved inventory organization
+
+### Version 3.0 (Planned)
+- Implement live updates for precious metals spot prices
+
+---
+
+## 📋 Version History
+
+### Version 2.8 - Modular Overhaul
+- **Major codebase refactor**: Extracted scripts into modular JS files for better separation of concerns
+- **CSS modularization**: Moved styles to external `styles.css`, enabling improved maintainability and theming
+- **Dark mode enhancements**: Full dark mode support via `theme.js` and CSS variables
+- **Data visualization**: Integrated Chart.js for pie chart visualization of inventory
+- **UI improvements**: Enhanced pagination, search, and sorting capabilities for inventory tables
+- **Performance optimizations**: Improved UI structure with deferred script loading
+
+### Version 2.7 - Details & Analytics
+- Added "View Details" button on all metal summary cards
+- Introduced breakdown reports by type and by purchase location
+- Enhanced navigation, interface organization, and information visibility
+- Core feature set and detailed inventory management preserved
+- Minor updates and maintenance improvements
+
+### Version 2.6 - Maintenance Update
+- Minor bug fixes and performance improvements
+- Code cleanup and optimization
+- Maintained all features from version 2.5
+
+### Version 2.5 - Multi-Metal Support Completion
+- Completed full support for Platinum and Palladium metals
+- Refined UI elements for all four metals
+- Improved export functionality for multi-metal inventories
+- Enhanced calculation consistency across all metals
+
+### Version 2.4 - Multi-Metal Support Introduction
+- **New metals added**: Support introduced for Platinum and Palladium throughout the tool
+- **Expanded functionality**: All entry fields, summaries, and calculation logic expanded for four metals
+- **Export enhancements**: Exported data now includes Platinum and Palladium records
+- **UI updates**: Enhanced interface to integrate new metals into inventory and reporting
+- **Standardization**: Price and premium breakdowns standardized for collectable/non-collectable items
+
+### Version 2.3 - Collectables Polish
+- Refined summary sections with detailed breakdowns by collectable status
+- Improved edit interface for collectable items
+- Added clarifying notes and tooltips for collectable functionality
+- Usability and layout improvements for summary, import/export, and inventory actions
+
+### Version 2.2 - Collectables Enhancement
+- Enhanced collectable item handling with improved price breakdowns
+- Added average collectable and non-collectable price per oz calculations
+- Updated inventory and report tables to prominently display collectable status
+
+### Version 2.1 - Collectables Introduction
+- **New feature**: Introduced ability to mark items as "Collectable"
+- **Enhanced calculations**: Added separate tracking for collectable vs non-collectable items
+- **UI updates**: Modified interface to support collectable designation
+
+### Version 2.0 - Major Update
+- **Expanded tracking**: Enhanced Silver and Gold tracking with type, quantity, weight, and name fields
+- **Comprehensive totals**: Added individual and combined totals with calculations for:
+  - Total weight
+  - Purchase price
+  - Current value
+  - Average price per oz
+  - Premium per oz
+  - Total premiums
+  - Profit/loss
+- **Enhanced inventory table**: Added editable and deletable entries with sorting capabilities
+- **Import/Export features**: Introduced support for multiple formats:
+  - CSV
+  - JSON
+  - Excel
+  - PDF
+  - HTML
+- **Spot Price History**: Added tracking for historical spot price changes
+- **Dark Mode**: Implemented dark/light theme toggle
+- **Boating Accident**: Introduced the "Boating Accident" reset feature (data wipe)
+- **Pagination**: Added pagination controls for large inventories
+
+### Version 1.0 - Initial Release
+- Basic inventory tracking for Silver and Gold
+- Add items with core details:
+  - Type
+  - Quantity
+  - Weight (oz)
+  - Name
+  - Purchase location
+  - Purchase price
+  - Date
+- View totals for each metal:
+  - Total item count
+  - Total weight
+  - Total purchase price
+  - Current value
+- Calculate average price per ounce
+- Basic profit/loss calculations per metal
+- Edit and delete functionality for inventory items
+- Clean, simple interface with inventory listing and summary sections
