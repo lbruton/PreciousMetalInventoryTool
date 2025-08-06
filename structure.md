@@ -30,7 +30,7 @@ PreciousMetalInventoryTool/
 └── .gitignore
 ```
 
-## Key Changes in Version 3.0+ Structure
+## Key Changes in Version 3.0+ Structure 
 
 ### Simplified Landing Page
 - Removed version dropdown selector
