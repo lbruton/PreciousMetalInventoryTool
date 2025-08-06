@@ -1,3 +1,4 @@
+// =============================================================================
 // SPOT PRICE FUNCTIONS
 // =============================================================================
 
@@ -7,12 +8,20 @@
 const saveSpotHistory = () => saveData(SPOT_HISTORY_KEY, spotHistory);
 
 /**
- * Loads spot history from localStorage
+ * Loads spot history from localStorage and ensures only last 12 entries
  */
-const loadSpotHistory = () => spotHistory = loadData(SPOT_HISTORY_KEY, []);
+const loadSpotHistory = () => {
+  spotHistory = loadData(SPOT_HISTORY_KEY, []);
+  
+  // Ensure we only keep the last 12 entries
+  if (spotHistory.length > 12) {
+    spotHistory = spotHistory.slice(-12);
+    saveSpotHistory();
+  }
+};
 
 /**
- * Records a new spot price entry in history
+ * Records a new spot price entry in history (limited to last 12 entries)
  * 
  * @param {number} newSpot - New spot price value
  * @param {string} source - Source of spot price ('manual' or other)
@@ -26,6 +35,12 @@ const recordSpot = (newSpot, source, metal) => {
       source,
       timestamp: new Date().toISOString().replace('T',' ').slice(0,19)
     });
+    
+    // Limit to last 12 entries
+    if (spotHistory.length > 12) {
+      spotHistory = spotHistory.slice(-12);
+    }
+    
     saveSpotHistory();
   }
 };
@@ -64,19 +79,18 @@ const updateManualSpot = (metalKey) => {
   if (!value) return;
 
   const num = parseFloat(value);
-  if (isNaN(num) || num <= 0) return alert(`Invalid ${metalConfig.name.toLowerCase()} spot price.`);
+  if (isNaN(num) || num <= 0) return alert(`Invalid ${metalConfig.name} spot price.`);
 
-  localStorage.setItem(metalConfig.spotKey, num);
   spotPrices[metalKey] = num;
-
+  localStorage.setItem(metalConfig.spotKey, num.toString());
   elements.spotPriceDisplay[metalKey].textContent = formatDollar(num);
   recordSpot(num, 'manual', metalConfig.name);
-
   updateSummary();
+  input.value = '';
 };
 
 /**
- * Resets spot price for specified metal to default (removes from localStorage)
+ * Resets spot price for specified metal
  * 
  * @param {string} metalKey - Key of metal to reset ('silver', 'gold', 'platinum', 'palladium')
  */
@@ -84,8 +98,10 @@ const resetSpot = (metalKey) => {
   const metalConfig = Object.values(METALS).find(m => m.key === metalKey);
   if (!metalConfig) return;
 
-  localStorage.removeItem(metalConfig.spotKey);
-  fetchSpotPrice();
+  if (confirm(`Reset ${metalConfig.name} spot price?`)) {
+    localStorage.removeItem(metalConfig.spotKey);
+    spotPrices[metalKey] = 0;
+    elements.spotPriceDisplay[metalKey].textContent = 'N/A';
+    updateSummary();
+  }
 };
-
-// =============================================================================
