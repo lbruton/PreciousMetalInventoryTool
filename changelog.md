@@ -5,12 +5,22 @@
 ### Version 2.9 (Planned)
 - Introduce item storage location fields for improved inventory organization
 
-### Version 3.0 (Planned)
+### Version 3.1 (Planned)
 - Implement live updates for precious metals spot prices
+- Add automated spot price fetching from external APIs
 
 ---
 
 ## 📋 Version History
+
+### Version 3.0 - UI Streamlining
+- **Removed spot price history UI**: Eliminated "Show Spot History" and "Clear Spot History" buttons from the interface
+- **Simplified user experience**: Streamlined interface by removing spot price history viewing functionality
+- **Code cleanup**: Removed associated event listeners, DOM references, and CSS styling for spot history buttons
+- **Maintained data collection**: Spot price history data collection continues in background for future use
+- **Preserved core functionality**: All inventory management, import/export, and analysis features remain intact
+- **Added repository documentation**: Created comprehensive root-level structure.md for better project navigation
+- **Created migration roadmap**: Added detailed plan for transitioning to git-based version control
 
 ### Version 2.8 - Modular Overhaul
 - **Major codebase refactor**: Extracted scripts into modular JS files for better separation of concerns
