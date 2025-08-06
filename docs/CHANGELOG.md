@@ -8,6 +8,12 @@
 
 ## 📋 Version History
 
+### Version 3.0.3 – Documentation Restructure (2025-08-06)
+- **Moved docs** to `/docs/`
+- Updated `STRUCTURE.md` & `docs/README.md`
+- Fixed broken internal links
+- No functional changes
+
 ### Version 3.0.2 - Enhanced Table UX
 - **Clickable item names**: Item names are now clickable links to open the edit modal (removed separate Edit column)
 - **Simplified collectable toggle**: Changed from toggle switch to clean checkbox in table for better space efficiency
@@ -28,8 +34,8 @@
 - **Backwards compatibility**: Existing data automatically migrated with "Unknown" default values
 - **Sample data updated**: Enhanced sample.csv with realistic storage location examples
 - **Sorting capability**: Storage location column fully sortable like all other columns
-- **Dynamic version loading**: Version numbers now automatically load from APP_VERSION constant in constants.js
-- **Single source of truth**: Only need to update version in one place (constants.js) and it propagates everywhere
+- **Dynamic version loading**: Version numbers now automatically load from APP_VERSION constant in app/js/constants.js
+- **Single source of truth**: Only need to update version in one place (app/js/constants.js) and it propagates everywhere
 - **Version utility functions**: Added `getVersionString()` and `getAppTitle()` helper functions in utils.js
 - **Maintainability improvement**: Eliminates need to manually update version in multiple HTML files
 - **Future-proof**: Any part of the application can now easily access and display the current version
@@ -40,12 +46,12 @@
 - **Code cleanup**: Removed associated event listeners, DOM references, and CSS styling for spot history buttons
 - **Maintained data collection**: Spot price history data collection continues in background for future use
 - **Preserved core functionality**: All inventory management, import/export, and analysis features remain intact
-- **Added repository documentation**: Created comprehensive root-level structure.md for better project navigation
+- **Added repository documentation**: Created comprehensive root-level docs/structure.md for better project navigation
 - **Created migration roadmap**: Added detailed plan for transitioning to git-based version control
 
 ### Version 2.8 - Modular Overhaul
 - **Major codebase refactor**: Extracted scripts into modular JS files for better separation of concerns
-- **CSS modularization**: Moved styles to external `styles.css`, enabling improved maintainability and theming
+- **CSS modularization**: Moved styles to external `app/css/styles.css`, enabling improved maintainability and theming
 - **Dark mode enhancements**: Full dark mode support via `theme.js` and CSS variables
 - **Data visualization**: Integrated Chart.js for pie chart visualization of inventory
 - **UI improvements**: Enhanced pagination, search, and sorting capabilities for inventory tables

@@ -2,7 +2,7 @@
 // =============================================================================
 
 /** @constant {string} APP_VERSION - Application version */
-const APP_VERSION = '3.0.2';
+const APP_VERSION = '3.0.3';
 
 /** @constant {string} LS_KEY - LocalStorage key for inventory data */
 const LS_KEY = 'metalInventory';

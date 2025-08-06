@@ -7,12 +7,12 @@ The Precious Metals Inventory Tool now uses a dynamic version management system 
 ## How It Works
 
 ### Single Source of Truth
-- Version is defined once in `app/js/constants.js` as `APP_VERSION = '3.0.1'`
+- Version is defined once in `app/js/app/js/constants.js` as `APP_VERSION = '3.0.1'`
 - This is the ONLY place you need to update the version number
 
 ### Automatic Propagation
-- **Root Landing Page** (`index.html`): JavaScript automatically updates the page title and heading
-- **Main Application** (`app/index.html`): JavaScript automatically updates the page title and heading  
+- **Root Landing Page** (`app/index.html`): JavaScript automatically updates the page title and heading
+- **Main Application** (`app/app/index.html`): JavaScript automatically updates the page title and heading  
 - **Browser Tab Title**: Dynamically updated with current version
 - **Application Header**: Shows current version in the main app interface
 
@@ -27,7 +27,7 @@ To release a new version:
 
 1. **Update ONLY the constants file:**
    ```javascript
-   // In app/js/constants.js
+   // In app/js/app/js/constants.js
    const APP_VERSION = '3.1.0';  // Change this line only
    ```
 
@@ -41,14 +41,14 @@ To release a new version:
 
 ## Technical Implementation
 
-### Root Page (index.html)
+### Root Page (app/index.html)
 ```javascript
-// Loads constants.js and utils.js
+// Loads app/js/constants.js and utils.js
 // Updates title and heading via DOM manipulation
 document.title = `Lonnie's Precious Metals Tool ${getVersionString()}`;
 ```
 
-### Main App (app/index.html)
+### Main App (app/app/index.html)
 ```javascript
 // In init.js - runs on DOM load
 document.title = getAppTitle();

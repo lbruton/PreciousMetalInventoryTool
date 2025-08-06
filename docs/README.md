@@ -17,12 +17,12 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 ## Installation
 
 1. Clone or download this repository
-2. Open `index.html` in a web browser
+2. Open `app/index.html` in a web browser
 3. Click "Accept and Continue" to access the application
 
 ## Version Management
 
-This application uses a dynamic version management system. The version is automatically updated throughout the application from `app/js/constants.js`. The HTML files now use this dynamic system instead of hardcoded version numbers. See [VERSIONING.md](VERSIONING.md) for details on how to update versions.
+This application uses a dynamic version management system. The version is automatically updated throughout the application from `app/js/app/js/constants.js`. The HTML files now use this dynamic system instead of hardcoded version numbers. See [docs/VERSIONING.md](docs/VERSIONING.md) for details on how to update versions.
 
 ## Version History
 
@@ -63,21 +63,34 @@ The Precious Metals Inventory Tool is a client-side web application for managing
 ### Project Structure
 
 ```
-PreciousMetalInventoryTool/
-├── app/                          # Main application code
-│   ├── css/                      # Styles (main: styles.css)
-│   ├── js/                       # Modular JavaScript files
-│   │   ├── inventory.js          # Core inventory logic
-│   │   ├── spot.js               # Spot price handlers
-│   │   ├── charts.js             # Charting/visualizations
-│   │   ├── search.js             # Search and filtering logic
-│   │   ├── utils.js              # Reusable helper functions
-│   │   └── ...                   # Other supporting modules
-│   └── index.html                # Main user interface
-├── README.md                     # Project documentation
-├── CHANGELOG.md                  # Version history
-├── VERSIONING.md                 # Versioning practices
-├── sample.csv                    # Example inventory input
+├── STRUCTURE.md
+├── app
+    ├── css
+        ├── styles.css
+    ├── index.html
+    ├── js
+        ├── charts.js
+        ├── constants.js
+        ├── detailsModal.js
+        ├── events.js
+        ├── init.js
+        ├── inventory.js
+        ├── pagination.js
+        ├── search.js
+        ├── sorting.js
+        ├── spot.js
+        ├── state.js
+        ├── theme.js
+        ├── utils.js
+    ├── structure.md
+├── docs
+    ├── CHANGELOG.md
+    ├── LLM.md
+    ├── README.md
+    ├── SOURCES.md
+    ├── VERSIONING.md
+├── index.html
+├── sample.csv
 ```
 
 ### Contribution Tips
@@ -165,7 +178,7 @@ The app uses a lightweight shared state file to centralize values like:
 - **UI interaction handlers**: Button click events, modals → `events.js`
 - **Helpers**: Format currency, clean strings, compute totals → `utils.js`
 
-### Styling System (`styles.css`)
+### Styling System (`app/css/styles.css`)
 
 The stylesheet uses semantic class names and CSS variables for easy theming:
 
@@ -180,7 +193,7 @@ The stylesheet uses semantic class names and CSS variables for easy theming:
 1. Write logic in a new or existing module under `js/`
 2. Bind events in `events.js`
 3. Update `state.js` if persistent data is needed
-4. Update UI in `index.html` and `styles.css`
+4. Update UI in `app/index.html` and `app/css/styles.css`
 
 #### Backwards Compatibility
 Legacy browser support is deprioritized. The app is optimized for Chromium/Firefox/modern Safari.
@@ -195,10 +208,10 @@ Adding a new table column requires updates to:
 ### Common Development Tasks
 
 #### Add a New Metal Type
-1. Add to dropdown in `index.html`
-2. Update metal constants in `constants.js`
+1. Add to dropdown in `app/index.html`
+2. Update metal constants in `app/js/constants.js`
 3. Update logic in `charts.js` and `inventory.js`
-4. Add new color tokens in `styles.css`
+4. Add new color tokens in `app/css/styles.css`
 
 #### Add New Table Columns
 Update HTML, JS (`inventory.js`, `search.js`, `export`), and styling.
@@ -207,7 +220,7 @@ Update HTML, JS (`inventory.js`, `search.js`, `export`), and styling.
 All interactive components are plain HTML+JS. Use semantic HTML and test across screen sizes.
 
 #### Version Management
-Versioning follows `MAJOR.MINOR.PATCH` format, documented in `VERSIONING.md`.
+Versioning follows `MAJOR.MINOR.PATCH` format, documented in `docs/VERSIONING.md`.
 
 ### Critical Considerations
 
@@ -222,11 +235,11 @@ No build tools required.
 
 ```bash
 # Launch locally
-open index.html
+open app/index.html
 ```
 
 ### Pro Tips
 
 - Use the browser console to inspect state: `console.log(state)`
-- Customize themes by modifying `styles.css` variables
+- Customize themes by modifying `app/css/styles.css` variables
 - Test with the provided `sample.csv` to validate import
