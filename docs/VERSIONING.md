@@ -7,7 +7,7 @@ The Precious Metals Inventory Tool now uses a dynamic version management system 
 ## How It Works
 
 ### Single Source of Truth
-- Version is defined once in `/app/js/constants.js` as `APP_VERSION = '3.0.3'`
+- Version is defined once in `/app/js/constants.js` as `APP_VERSION = '3.0.5'`
 - This is the ONLY place you need to update the version number
 
 ### Automatic Propagation
@@ -28,7 +28,7 @@ To release a new version:
 1. **Update ONLY the constants file:**
    ```javascript
    // In /app/js/constants.js
-   const APP_VERSION = '3.0.3';  // Change this line only
+   const APP_VERSION = '3.0.5';  // Change this line only
    ```
 
 2. **All these will automatically update:**
@@ -72,15 +72,15 @@ Use semantic versioning: `MAJOR.MINOR.PATCH`
 ## Example Usage in Code
 ```javascript
 // Get just the version number
-const version = APP_VERSION; // "3.0.3"
+const version = APP_VERSION; // "3.0.5"
 
 // Get formatted version string
-const versionString = getVersionString(); // "v3.0.3"
-const customVersion = getVersionString('version '); // "version 3.0.3"
+const versionString = getVersionString(); // "v3.0.5"
+const customVersion = getVersionString('version '); // "version 3.0.5"
 
 // Get full app title
-const title = getAppTitle(); // "Precious Metals Inventory Tool v3.0.3"
-const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.0.3"
+const title = getAppTitle(); // "Precious Metals Inventory Tool v3.0.5"
+const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.0.5"
 ```
 
 This system ensures version consistency and makes maintenance much easier!

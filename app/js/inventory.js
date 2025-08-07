@@ -41,6 +41,7 @@ const loadInventory = () => {
         ...item,
         purchaseLocation: item.purchaseLocation || "Unknown",
         storageLocation: item.storageLocation || "Unknown",
+        notes: item.notes || "",
         spotPriceAtPurchase: spotPrice,
         premiumPerOz,
         totalPremium,
@@ -51,6 +52,7 @@ const loadInventory = () => {
     return {
       ...item,
       storageLocation: item.storageLocation || "Unknown",
+      notes: item.notes || "",
       isCollectable: item.isCollectable !== undefined ? item.isCollectable : false
     };
   });
@@ -369,6 +371,7 @@ const editItem = (idx) => {
   elements.editPrice.value = item.price;
   elements.editPurchaseLocation.value = item.purchaseLocation;
   elements.editStorageLocation.value = item.storageLocation || '';
+  elements.editNotes.value = item.notes || '';
   elements.editDate.value = item.date;
   elements.editSpotPrice.value = item.spotPriceAtPurchase;
   document.getElementById("editCollectable").checked = item.isCollectable;
@@ -474,6 +477,7 @@ const importCsv = (file) => {
         const price = parseFloat(typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g,"") : priceStr);
         const purchaseLocation = row['Purchase Location'] || "Unknown";
         const storageLocation = row['Storage Location'] || "Unknown";
+        const notes = row['Notes'] || "";
         const date = parseDate(row['Date']); // Using the new date parser
 
         // Get collectable status
@@ -514,6 +518,7 @@ const importCsv = (file) => {
           date,
           purchaseLocation,
           storageLocation,
+          notes,
           spotPriceAtPurchase,
           premiumPerOz,
           totalPremium,
@@ -558,7 +563,7 @@ const importCsv = (file) => {
  */
 const exportCsv = () => {
   const timestamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const headers = ["Metal","Name","Qty","Type","Weight(oz)","Purchase Price","Spot Price ($/oz)","Premium ($/oz)","Total Premium","Purchase Location","Storage Location","Date","Collectable"];
+  const headers = ["Metal","Name","Qty","Type","Weight(oz)","Purchase Price","Spot Price ($/oz)","Premium ($/oz)","Total Premium","Purchase Location","Storage Location","Notes","Date","Collectable"];
 
   // Sort inventory by date (newest first) for export
   const sortedInventory = sortInventoryByDateNewestFirst();
@@ -584,6 +589,7 @@ const exportCsv = () => {
       i.isCollectable ? 'N/A' : formatDollar(i.totalPremium),
       i.purchaseLocation,
       i.storageLocation || 'Unknown',
+      i.notes || '',
       i.date,
       i.isCollectable ? 'Yes' : 'No'
     ]);
@@ -640,6 +646,7 @@ const importJson = (file) => {
           date: parseDate(item.date || todayStr()),
           purchaseLocation: item.purchaseLocation || "Unknown",
           storageLocation: item.storageLocation || "Unknown",
+          notes: item.notes || "",
           spotPriceAtPurchase: item.spotPriceAtPurchase || spotPrices[item.metal.toLowerCase()],
           isCollectable: item.isCollectable === true,
           premiumPerOz: item.premiumPerOz || 0,
@@ -697,6 +704,7 @@ const exportJson = () => {
     date: item.date,
     purchaseLocation: item.purchaseLocation,
     storageLocation: item.storageLocation,
+    notes: item.notes,
     spotPriceAtPurchase: item.spotPriceAtPurchase,
     isCollectable: item.isCollectable,
     premiumPerOz: item.premiumPerOz,
@@ -749,6 +757,7 @@ const importExcel = (file) => {
         const price = parseFloat(typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g,"") : priceStr);
         const purchaseLocation = row['Purchase Location'] || "Unknown";
         const storageLocation = row['Storage Location'] || "Unknown";
+        const notes = row['Notes'] || "";
         const date = parseDate(row['Date']); // Using the new date parser
 
         // Get collectable status
@@ -793,6 +802,7 @@ const importExcel = (file) => {
           date,
           purchaseLocation,
           storageLocation,
+          notes,
           spotPriceAtPurchase,
           premiumPerOz,
           totalPremium,
@@ -830,7 +840,7 @@ const exportExcel = () => {
   // Create worksheet data
   const wsData = [
     ["Metal", "Name", "Qty", "Type", "Weight(oz)", "Purchase Price", "Spot Price ($/oz)", 
-     "Premium ($/oz)", "Total Premium", "Purchase Location", "Storage Location", "Date", "Collectable"]
+     "Premium ($/oz)", "Total Premium", "Purchase Location", "Storage Location", "Notes", "Date", "Collectable"]
   ];
 
   for (const i of sortedInventory) {
@@ -851,6 +861,7 @@ const exportExcel = () => {
       i.isCollectable ? null : i.totalPremium,
       i.purchaseLocation,
       i.storageLocation || 'Unknown',
+      i.notes || '',
       i.date,
       i.isCollectable ? 'Yes' : 'No'
     ]);
@@ -898,6 +909,7 @@ const exportPdf = () => {
     item.isCollectable ? 'N/A' : formatDollar(item.totalPremium),
     item.purchaseLocation,
     item.storageLocation || 'Unknown',
+    item.notes || '',
     item.date,
     item.isCollectable ? 'Yes' : 'No'
   ]);
@@ -906,7 +918,7 @@ const exportPdf = () => {
   doc.autoTable({
     head: [['Metal', 'Name', 'Qty', 'Type', 'Weight(oz)', 'Purchase Price', 
             'Spot Price ($/oz)', 'Premium ($/oz)', 'Total Premium', 
-            'Purchase Location', 'Storage Location', 'Date', 'Collectable']],
+            'Purchase Location', 'Storage Location', 'Notes', 'Date', 'Collectable']],
     body: tableData,
     startY: 30,
     theme: 'striped',
@@ -1268,6 +1280,7 @@ const exportHtml = () => {
         <th>Total Premium</th>
         <th>Purchase Location</th>
         <th>Storage Location</th>
+        <th>Notes</th>
         <th>Date</th>
         <th>Collectable</th>
       </tr>
@@ -1286,6 +1299,7 @@ const exportHtml = () => {
         <td>${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
         <td>${item.purchaseLocation}</td>
         <td>${item.storageLocation || 'Unknown'}</td>
+        <td>${item.notes || ''}</td>
         <td>${item.date}</td>
         <td>${item.isCollectable ? 'Yes' : 'No'}</td>
       </tr>

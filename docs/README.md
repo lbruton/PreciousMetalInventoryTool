@@ -87,7 +87,6 @@ The Precious Metals Inventory Tool is a client-side web application for managing
     ├── CHANGELOG.md
     ├── LLM.md
     ├── README.md
-    ├── SOURCES.md
     ├── VERSIONING.md
 ├── index.html
 ├── sample.csv

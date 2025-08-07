@@ -40,6 +40,7 @@ const elements = {
   itemPrice: null,
   purchaseLocation: null,
   storageLocation: null,
+  itemNotes: null,
   itemDate: null,
 
   // Spot price buttons
@@ -77,6 +78,7 @@ const elements = {
   editPrice: null,
   editPurchaseLocation: null,
   editStorageLocation: null,
+  editNotes: null,
   editDate: null,
   editSpotPrice: null,
 
