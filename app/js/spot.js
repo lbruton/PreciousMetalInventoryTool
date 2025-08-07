@@ -36,7 +36,7 @@ const recordSpot = (newSpot, source, metal) => {
 const fetchSpotPrice = () => {
   // Load spot prices for all metals
   Object.values(METALS).forEach(metalConfig => {
-    const storedSpot = localStorage.getItem(metalConfig.spotKey);
+    const storedSpot = localStorage.getItem(metalConfig.localStorageKey);
     if (storedSpot) {
       spotPrices[metalConfig.key] = parseFloat(storedSpot);
       elements.spotPriceDisplay[metalConfig.key].textContent = formatDollar(spotPrices[metalConfig.key]);
@@ -70,7 +70,7 @@ const updateManualSpot = (metalKey) => {
   const num = parseFloat(value);
   if (isNaN(num) || num <= 0) return alert(`Invalid ${metalConfig.name.toLowerCase()} spot price.`);
 
-  localStorage.setItem(metalConfig.spotKey, num);
+  localStorage.setItem(metalConfig.localStorageKey, num);
   spotPrices[metalKey] = num;
 
   elements.spotPriceDisplay[metalKey].textContent = formatDollar(num);
@@ -80,10 +80,7 @@ const updateManualSpot = (metalKey) => {
   
   // Clear the input and hide the manual input section
   input.value = '';
-  const manualInput = document.getElementById(`manualInput${metalConfig.name}`);
-  if (manualInput) {
-    manualInput.style.display = 'none';
-  }
+  hideManualInput(metalConfig.name);
 };
 
 /**
@@ -105,7 +102,7 @@ const resetSpot = (metalKey) => {
   }
 
   // Update price
-  localStorage.setItem(metalConfig.spotKey, resetPrice.toString());
+  localStorage.setItem(metalConfig.localStorageKey, resetPrice.toString());
   spotPrices[metalKey] = resetPrice;
   
   // Update display
@@ -116,6 +113,22 @@ const resetSpot = (metalKey) => {
   
   // Update summary
   updateSummary();
+  
+  // Hide manual input if shown
+  hideManualInput(metalConfig.name);
+};
+
+/**
+ * Alternative reset function that works with metal name instead of key
+ * This provides compatibility with the API.js resetSpotPrice function
+ * 
+ * @param {string} metalName - Name of metal to reset ('Silver', 'Gold', etc.)
+ */
+const resetSpotByName = (metalName) => {
+  const metalConfig = Object.values(METALS).find(m => m.name === metalName);
+  if (metalConfig) {
+    resetSpot(metalConfig.key);
+  }
 };
 
 // =============================================================================

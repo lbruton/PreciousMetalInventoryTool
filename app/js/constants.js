@@ -68,7 +68,7 @@ const API_PROVIDERS = {
 // =============================================================================
 
 /** @constant {string} APP_VERSION - Application version */
-const APP_VERSION = '3.1.1';
+const APP_VERSION = '3.1.2';
 
 /** @constant {string} LS_KEY - LocalStorage key for inventory data */
 const LS_KEY = 'metalInventory';

@@ -1,3 +1,5 @@
+## 🆕 What's New in v3.1.2
+
 ## API Integration
 
 ### Supported Providers

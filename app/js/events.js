@@ -360,8 +360,9 @@ const setupEventListeners = () => {
     console.log('Setting up spot price event listeners...');
     Object.values(METALS).forEach(metalConfig => {
       const metalKey = metalConfig.key;
+      const metalName = metalConfig.name;
       
-      console.log(`Setting up listeners for ${metalConfig.name} (key: ${metalKey})`);
+      console.log(`Setting up listeners for ${metalName} (key: ${metalKey})`);
       
       // Check if elements exist before adding listeners
       const saveBtn = elements.saveSpotBtn ? elements.saveSpotBtn[metalKey] : null;
@@ -370,25 +371,71 @@ const setupEventListeners = () => {
       
       if (saveBtn) {
         saveBtn.addEventListener('click', () => updateManualSpot(metalKey));
-        console.log(`✓ Save button listener added for ${metalConfig.name}`);
+        console.log(`✓ Save button listener added for ${metalName}`);
       } else {
-        console.warn(`✗ Save button not found for ${metalConfig.name}`);
+        console.warn(`✗ Save button not found for ${metalName}`);
       }
       
       if (resetBtn) {
         resetBtn.addEventListener('click', () => resetSpot(metalKey));
-        console.log(`✓ Reset button listener added for ${metalConfig.name}`);
+        console.log(`✓ Reset button listener added for ${metalName}`);
       } else {
-        console.warn(`✗ Reset button not found for ${metalConfig.name}`);
+        console.warn(`✗ Reset button not found for ${metalName}`);
       }
       
       if (inputEl) {
         inputEl.addEventListener('keydown', (e) => {
           if (e.key === 'Enter') updateManualSpot(metalKey);
         });
-        console.log(`✓ Input listener added for ${metalConfig.name}`);
+        console.log(`✓ Input listener added for ${metalName}`);
       } else {
-        console.warn(`✗ Input element not found for ${metalConfig.name}`);
+        console.warn(`✗ Input element not found for ${metalName}`);
+      }
+      
+      // Add listeners for the main spot price action buttons (Add, Reset, Sync)
+      const addBtn = document.getElementById(`addBtn${metalName}`);
+      const mainResetBtn = document.getElementById(`resetBtn${metalName}`);
+      const syncBtn = document.getElementById(`syncBtn${metalName}`);
+      const cancelBtn = document.getElementById(`cancelSpotBtn${metalName}`);
+      
+      if (addBtn) {
+        addBtn.addEventListener('click', () => {
+          console.log(`Add button clicked for ${metalName}`);
+          showManualInput(metalName);
+        });
+        console.log(`✓ Add button listener added for ${metalName}`);
+      } else {
+        console.warn(`✗ Add button not found for ${metalName}`);
+      }
+      
+      if (mainResetBtn) {
+        mainResetBtn.addEventListener('click', () => {
+          console.log(`Reset button clicked for ${metalName}`);
+          resetSpotPrice(metalName);
+        });
+        console.log(`✓ Main reset button listener added for ${metalName}`);
+      } else {
+        console.warn(`✗ Main reset button not found for ${metalName}`);
+      }
+      
+      if (syncBtn) {
+        syncBtn.addEventListener('click', () => {
+          console.log(`Sync button clicked for ${metalName}`);
+          syncSpotPricesFromApi(true);
+        });
+        console.log(`✓ Sync button listener added for ${metalName}`);
+      } else {
+        console.warn(`✗ Sync button not found for ${metalName}`);
+      }
+      
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+          console.log(`Cancel button clicked for ${metalName}`);
+          hideManualInput(metalName);
+        });
+        console.log(`✓ Cancel button listener added for ${metalName}`);
+      } else {
+        console.warn(`✗ Cancel button not found for ${metalName}`);
       }
     });
 
@@ -700,42 +747,7 @@ const setupApiEvents = () => {
       });
     }
 
-    // Spot Price Action Button Events for each metal
-    Object.values(METALS).forEach(metalConfig => {
-      const metalName = metalConfig.name;
-      
-      // Sync button
-      const syncBtn = document.getElementById(`syncBtn${metalName}`);
-      if (syncBtn) {
-        syncBtn.addEventListener('click', () => {
-          syncSpotPricesFromApi(true);
-        });
-      }
-      
-      // Add button (manual input)
-      const addBtn = document.getElementById(`addBtn${metalName}`);
-      if (addBtn) {
-        addBtn.addEventListener('click', () => {
-          showManualInput(metalName);
-        });
-      }
-      
-      // Reset button
-      const resetBtn = document.getElementById(`resetBtn${metalName}`);
-      if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-          resetSpotPrice(metalName);
-        });
-      }
-      
-      // Cancel manual input button
-      const cancelBtn = document.getElementById(`cancelSpotBtn${metalName}`);
-      if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-          hideManualInput(metalName);
-        });
-      }
-    });
+    // Note: Spot price action button events are now handled in setupEventListeners()
 
     // ESC key to close modals
     document.addEventListener('keydown', (e) => {

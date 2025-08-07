@@ -24,11 +24,11 @@
         ├── utils.js             # Utility functions, validation, and helpers
     ├── structure.md
 ├── docs
-    ├── CHANGELOG.md
-    ├── LLM.md
-    ├── README.md
-    ├── VERSIONING.md
+    ├── CHANGELOG.md             # Detailed History of Application Changes
+    ├── LLM.md                   # LLM Friendly technical summary of the complete implementation
+    ├── VERSIONING.md            # Versioning notes
 ├── index.html
+├── README.md                    # Human Readable Application Summary
 ├── sample.csv
 ```
 
