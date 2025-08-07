@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precious Metals API Test</title>
+    <link rel="stylesheet" href="../wp-plugin/css/style.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            line-height: 1.5;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: #222;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .debug-info {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .loading {
+            display: inline-block;
+            margin-left: 10px;
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Precious Metals API Test</h1>
+    <p>This page demonstrates how to fetch and display live precious metal prices from the WordPress plugin API.</p>
+    
+    <div class="test-section">
+        <h2>Current Metal Prices</h2>
+        <div class="precious-metals-container" id="metalPrices">
+            <table class="precious-metals-table">
+                <thead>
+                    <tr>
+                        <th>Metal</th>
+                        <th>Symbol</th>
+                        <th>Price (USD)</th>
+                    </tr>
+                </thead>
+                <tbody id="pricesTable">
+                    <tr>
+                        <td colspan="3">Loading prices...</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="precious-metals-updated" id="lastUpdated">Last updated: --</p>
+        </div>
+        <button id="refreshButton">Refresh Prices</button>
+        <span id="loading" class="loading" style="display: none;">Fetching latest prices...</span>
+    </div>
+    
+    <div class="test-section">
+        <h2>Individual Metal Display</h2>
+        <div class="precious-metal-item">
+            <span class="precious-metal-silver-name precious-metal-name">Silver: </span>
+            <span class="precious-metal-silver-price precious-metal-price" id="silverPrice">--</span>
+        </div>
+        <div class="precious-metal-item">
+            <span class="precious-metal-gold-name precious-metal-name">Gold: </span>
+            <span class="precious-metal-gold-price precious-metal-price" id="goldPrice">--</span>
+        </div>
+        <div class="precious-metal-item">
+            <span class="precious-metal-platinum-name precious-metal-name">Platinum: </span>
+            <span class="precious-metal-platinum-price precious-metal-price" id="platinumPrice">--</span>
+        </div>
+        <div class="precious-metal-item">
+            <span class="precious-metal-palladium-name precious-metal-name">Palladium: </span>
+            <span class="precious-metal-palladium-price precious-metal-price" id="palladiumPrice">--</span>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>API Response</h2>
+        <div class="debug-info" id="debugInfo">No data fetched yet.</div>
+    </div>
+    
+    <script>
+        // API configuration
+        const config = {
+            // This should be updated to point to your WordPress REST API when deployed
+            apiUrl: 'https://example.com/wp-json/precious-metals/v1/prices',
+            
+            // For demo purposes, we'll use a mock API endpoint
+            useMockData: true,
+            
+            // Refresh interval in milliseconds (1 minute)
+            refreshInterval: 60000,
+            
+            // Metal symbols and their human-readable names
+            metals: {
+                'XAG': 'Silver',
+                'XAU': 'Gold',
+                'XPT': 'Platinum',
+                'XPD': 'Palladium'
+            }
+        };
+        
+        // References to DOM elements
+        const elements = {
+            pricesTable: document.getElementById('pricesTable'),
+            lastUpdated: document.getElementById('lastUpdated'),
+            refreshButton: document.getElementById('refreshButton'),
+            loading: document.getElementById('loading'),
+            debugInfo: document.getElementById('debugInfo'),
+            silverPrice: document.getElementById('silverPrice'),
+            goldPrice: document.getElementById('goldPrice'),
+            platinumPrice: document.getElementById('platinumPrice'),
+            palladiumPrice: document.getElementById('palladiumPrice')
+        };
+        
+        // Mock data for testing purposes
+        function getMockData() {
+            // Generate slightly random prices for testing
+            const randomFactor = Math.random() * 0.1 + 0.95; // 0.95 to 1.05
+            
+            return {
+                'XAG': {
+                    price: 22.75 * randomFactor,
+                    timestamp: Date.now() / 1000
+                },
+                'XAU': {
+                    price: 1925.50 * randomFactor,
+                    timestamp: Date.now() / 1000
+                },
+                'XPT': {
+                    price: 950.25 * randomFactor,
+                    timestamp: Date.now() / 1000
+                },
+                'XPD': {
+                    price: 1050.75 * randomFactor,
+                    timestamp: Date.now() / 1000
+                }
+            };
+        }
+        
+        // Fetch metal prices from API
+        async function fetchMetalPrices() {
+            try {
+                elements.loading.style.display = 'inline-block';
+                
+                if (config.useMockData) {
+                    // Use mock data for testing
+                    const data = getMockData();
+                    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
+                    updatePrices(data);
+                } else {
+                    // Fetch from actual API
+                    const response = await fetch(config.apiUrl);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    updatePrices(data);
+                }
+            } catch (error) {
+                console.error('Error fetching prices:', error);
+                elements.debugInfo.textContent = `Error: ${error.message}`;
+            } finally {
+                elements.loading.style.display = 'none';
+            }
+        }
+        
+        // Update the UI with new prices
+        function updatePrices(data) {
+            // Clear existing table rows
+            elements.pricesTable.innerHTML = '';
+            
+            // Update debug info
+            elements.debugInfo.textContent = JSON.stringify(data, null, 2);
+            
+            // Update each metal in the table
+            Object.entries(data).forEach(([symbol, info]) => {
+                const row = document.createElement('tr');
+                
+                const nameCell = document.createElement('td');
+                nameCell.className = `precious-metal-${config.metals[symbol].toLowerCase()}-name`;
+                nameCell.textContent = config.metals[symbol];
+                
+                const symbolCell = document.createElement('td');
+                symbolCell.textContent = symbol;
+                
+                const priceCell = document.createElement('td');
+                priceCell.className = `precious-metal-${config.metals[symbol].toLowerCase()}-price precious-metal-price`;
+                priceCell.textContent = `$${info.price.toFixed(2)}`;
+                
+                row.appendChild(nameCell);
+                row.appendChild(symbolCell);
+                row.appendChild(priceCell);
+                
+                elements.pricesTable.appendChild(row);
+                
+                // Update individual price displays
+                const elementId = `${config.metals[symbol].toLowerCase()}Price`;
+                if (elements[elementId]) {
+                    elements[elementId].textContent = `$${info.price.toFixed(2)}`;
+                }
+            });
+            
+            // Update last updated timestamp
+            const now = new Date();
+            elements.lastUpdated.textContent = `Last updated: ${now.toLocaleString()}`;
+        }
+        
+        // Set up refresh button
+        elements.refreshButton.addEventListener('click', fetchMetalPrices);
+        
+        // Set up auto-refresh timer
+        let refreshTimer = setInterval(fetchMetalPrices, config.refreshInterval);
+        
+        // Initial fetch
+        fetchMetalPrices();
+    </script>
+</body>
+</html>

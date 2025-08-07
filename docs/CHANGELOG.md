@@ -2,11 +2,24 @@
 
 ## 🚀 Roadmap (Future Versions)
 
-*All major planned features have been implemented! The tool now includes comprehensive inventory management with storage location tracking, multi-format import/export, advanced analytics, and a modern modular architecture.*
+* **Enhanced Price Charts**: Add interactive historical price charts
+* **Market News Integration**: Display relevant precious metals news
+* **Price Alerts**: Set price thresholds for notifications
+* **Multiple Currency Support**: Convert between different currencies
 
 ---
 
 ## 📋 Version History
+
+### Version 3.1.0 - Live Price API Integration (2025-08-06)
+- **New Feature**: Added live spot price integration with the metals.dev API
+- **WordPress Plugin**: Created WordPress plugin to proxy API requests and manage API key
+- **Auto-Refresh**: Added automatic and manual refresh options for spot prices
+- **API Management**: Implemented intelligent caching to stay within API request limits
+- **Refresh Button**: Added refresh button to spot price section for manual updates
+- **Integration Guide**: Created comprehensive documentation for API integration
+- **Test Environment**: Included test HTML file for development and testing
+- **Future-Proofing**: Built with extensibility for additional metals and currencies
 
 ### Version 3.0.5 – Notes Field Enhancement (2025-08-06)
 - **New feature**: Added optional notes field for inventory items

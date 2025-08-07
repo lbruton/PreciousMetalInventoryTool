@@ -291,6 +291,30 @@ input:focus, select:focus {
 /* =============================================================================
    SPOT PRICE CARDS
    ============================================================================= */
+.spot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing);
+}
+
+.spot-header h2 {
+  margin-bottom: 0;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+}
+
+.refresh-btn::before {
+  content: '↻';
+  font-size: 1.1rem;
+}
+
 .spot-input .grid.grid-2 {
   margin-top: var(--spacing-sm);
 }
