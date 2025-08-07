@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spot Price Integration Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        .pass { background: #f0fff0; border-color: #059669; }
+        .fail { background: #fff0f0; border-color: #dc2626; }
+        .info { background: #f0f8ff; border-color: #2563eb; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-success { background: #059669; color: white; }
+        .spot-display { font-size: 1.2em; font-weight: bold; padding: 10px; margin: 5px; border-radius: 4px; }
+        .price-manual { background: #fef3c7; color: #92400e; }
+        .price-api { background: #dcfce7; color: #166534; }
+        .price-none { background: #f3f4f6; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Spot Price Integration Test</h1>
+    <p id="environment-info">Detecting environment...</p>
+
+    <div id="spot-prices" class="test-section">
+        <h2>Current Spot Prices</h2>
+        <div class="spot-display price-none" id="spotPriceDisplaySilver">Silver: N/A</div>
+        <div class="spot-display price-none" id="spotPriceDisplayGold">Gold: N/A</div>
+        <div class="spot-display price-none" id="spotPriceDisplayPlatinum">Platinum: N/A</div>
+        <div class="spot-display price-none" id="spotPriceDisplayPalladium">Palladium: N/A</div>
+    </div>
+
+    <div id="controls" class="test-section">
+        <h2>Test Controls</h2>
+        <button class="btn-primary" onclick="testFetchSpotPrice()">🔄 Test Fetch Spot Prices</button>
+        <button class="btn-primary" onclick="testManualPrice()">✏️ Test Manual Price</button>
+        <button class="btn-success" onclick="testApiRefresh()">🌐 Test API Refresh</button>
+        <button onclick="showDiagnostics()">🔍 Show Diagnostics</button>
+    </div>
+
+    <div id="results" class="test-section">
+        <h2>Test Results</h2>
+        <div id="test-output">Click buttons above to test functionality...</div>
+    </div>
+
+    <div id="diagnostics" class="test-section info" style="display: none;">
+        <h2>System Diagnostics</h2>
+        <pre id="diagnostic-output"></pre>
+    </div>
+
+    <!-- Mock the inventory tool's global objects for testing -->
+    <script>
+        // Mock inventory tool globals
+        const METALS = {
+            SILVER: { name: 'Silver', key: 'silver', localStorageKey: 'spotSilver' },
+            GOLD: { name: 'Gold', key: 'gold', localStorageKey: 'spotGold' },
+            PLATINUM: { name: 'Platinum', key: 'platinum', localStorageKey: 'spotPlatinum' },
+            PALLADIUM: { name: 'Palladium', key: 'palladium', localStorageKey: 'spotPalladium' }
+        };
+
+        let spotPrices = { silver: 0, gold: 0, platinum: 0, palladium: 0 };
+        let spotHistory = [];
+
+        const elements = {
+            spotPriceDisplay: {
+                silver: document.getElementById('spotPriceDisplaySilver'),
+                gold: document.getElementById('spotPriceDisplayGold'),
+                platinum: document.getElementById('spotPriceDisplayPlatinum'),
+                palladium: document.getElementById('spotPriceDisplayPalladium')
+            }
+        };
+
+        const formatDollar = (n) => `$${parseFloat(n).toFixed(2)}`;
+        const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+        const loadData = (key, defaultValue = []) => {
+            try { return JSON.parse(localStorage.getItem(key)) || defaultValue; }
+            catch (e) { return defaultValue; }
+        };
+        const updateSummary = () => console.log('📊 Summary updated');
+
+        // Detect environment
+        function detectEnvironment() {
+            const isFile = window.location.protocol === 'file:';
+            const canFetch = typeof fetch !== 'undefined' && !isFile;
+            
+            document.getElementById('environment-info').innerHTML = `
+                <strong>Environment Detection:</strong><br>
+                📍 Protocol: ${window.location.protocol}<br>
+                📁 File mode: ${isFile ? 'Yes' : 'No'}<br>
+                🌐 API calls possible: ${canFetch ? 'Yes' : 'No'}<br>
+                📦 localStorage available: ${typeof localStorage !== 'undefined' ? 'Yes' : 'No'}
+            `;
+        }
+
+        // Test functions
+        function testFetchSpotPrice() {
+            addTestResult('🔄 Testing fetchSpotPrice()...');
+            
+            if (typeof fetchSpotPrice === 'function') {
+                fetchSpotPrice().then(() => {
+                    addTestResult('✅ fetchSpotPrice() completed successfully');
+                    updatePriceDisplay();
+                }).catch(error => {
+                    addTestResult(`❌ fetchSpotPrice() error: ${error.message}`);
+                });
+            } else {
+                addTestResult('❌ fetchSpotPrice() function not available');
+            }
+        }
+
+        function testManualPrice() {
+            // Simulate manual price entry
+            const testPrice = 35.50;
+            localStorage.setItem('spotSilver', testPrice.toString());
+            spotPrices.silver = testPrice;
+            
+            elements.spotPriceDisplay.silver.textContent = `Silver: ${formatDollar(testPrice)}`;
+            elements.spotPriceDisplay.silver.className = 'spot-display price-manual';
+            
+            addTestResult(`✅ Manual price set: Silver = ${formatDollar(testPrice)}`);
+        }
+
+        function testApiRefresh() {
+            addTestResult('🌐 Testing API refresh...');
+            
+            if (typeof refreshSpotPricesFromAPI === 'function') {
+                refreshSpotPricesFromAPI().then(() => {
+                    addTestResult('✅ API refresh completed');
+                    updatePriceDisplay();
+                }).catch(error => {
+                    addTestResult(`❌ API refresh error: ${error.message}`);
+                });
+            } else {
+                addTestResult('❌ refreshSpotPricesFromAPI() function not available');
+            }
+        }
+
+        function showDiagnostics() {
+            const diagnosticDiv = document.getElementById('diagnostics');
+            
+            if (typeof getSpotPriceDiagnostics === 'function') {
+                const diagnostics = getSpotPriceDiagnostics();
+                document.getElementById('diagnostic-output').textContent = JSON.stringify(diagnostics, null, 2);
+            } else {
+                document.getElementById('diagnostic-output').textContent = 'getSpotPriceDiagnostics() function not available';
+            }
+            
+            diagnosticDiv.style.display = diagnosticDiv.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addTestResult(message) {
+            const output = document.getElementById('test-output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function updatePriceDisplay() {
+            Object.entries(spotPrices).forEach(([metal, price]) => {
+                const display = elements.spotPriceDisplay[metal];
+                if (display && price > 0) {
+                    display.textContent = `${metal.charAt(0).toUpperCase() + metal.slice(1)}: ${formatDollar(price)}`;
+                    display.className = 'spot-display price-api';
+                }
+            });
+        }
+
+        // Initialize
+        detectEnvironment();
+        addTestResult('🧪 Integration test page loaded');
+        addTestResult('📋 Ready to test spot price integration functions');
+    </script>
+
+    <!-- Load the integration files (same as in your main app) -->
+    <script defer src="js/spot-api.js"></script>
+    <script defer src="js/spot-enhanced.js"></script>
+    
+    <script>
+        // Test integration after files load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                addTestResult('📦 Integration files loaded');
+                
+                // Check if functions are available
+                const functions = ['fetchSpotPrice', 'refreshSpotPricesFromAPI', 'getSpotPriceDiagnostics'];
+                functions.forEach(fn => {
+                    if (typeof window[fn] === 'function') {
+                        addTestResult(`✅ ${fn}() function available`);
+                    } else {
+                        addTestResult(`❌ ${fn}() function missing`);
+                    }
+                });
+                
+                // Auto-test basic functionality
+                addTestResult('🔄 Running automatic test...');
+                testFetchSpotPrice();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
