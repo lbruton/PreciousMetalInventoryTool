@@ -1,30 +1,3 @@
-# Integrating the WordPress Plugin with Precious Metal Inventory Tool
-
-This guide explains how to integrate the Precious Metals API WordPress plugin with the main Precious Metal Inventory Tool.
-
-## Overview
-
-The Precious Metal Inventory Tool currently uses manually entered spot prices. This integration will allow the tool to fetch live spot prices from your WordPress site, which gets its data from the metals.dev API.
-
-## 1. Installation Requirements
-
-- WordPress installed on your EasyWP Namecheap hosting
-- Precious Metals API plugin installed and activated on WordPress
-- Precious Metal Inventory Tool files
-
-## 2. WordPress Plugin Configuration
-
-1. Install and activate the Precious Metals API plugin on your WordPress site
-2. Navigate to **Settings > Precious Metals API**
-3. Configure your metals.dev API key
-4. Set an appropriate cache duration (recommended: 60 minutes)
-5. Note your WordPress site URL (e.g., `https://yourdomain.com`)
-
-## 3. Create Integration JavaScript
-
-Create a new file in the Precious Metal Inventory Tool's js directory:
-
-```javascript
 // spotAPI.js - Connects to WordPress plugin for live metal prices
 
 /**

@@ -1,0 +1,153 @@
+/**
+ * Precious Metals Multi-API Plugin Styles
+ */
+
+/* Main container */
+.precious-metals-display {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Configuration help */
+.precious-metals-config-help {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 15px 0;
+    border-left: 4px solid #f39c12;
+}
+
+.precious-metals-config-help h4 {
+    margin-top: 0;
+    color: #856404;
+}
+
+.config-instructions {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+.config-instructions ol {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.config-instructions code {
+    background: #e9ecef;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+}
+
+/* Table layout */
+.precious-metals-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.precious-metals-table th,
+.precious-metals-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.precious-metals-table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+    color: #333;
+}
+
+.precious-metals-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+/* Metal-specific styling */
+.metal-gold { color: #FFD700; font-weight: bold; }
+.metal-silver { color: #C0C0C0; font-weight: bold; }
+.metal-platinum { color: #E5E4E2; font-weight: bold; }
+.metal-palladium { color: #CED0DD; font-weight: bold; }
+
+.metal-price {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #2c5aa0;
+}
+
+/* Inline layout */
+.precious-metals-inline {
+    margin-bottom: 10px;
+}
+
+.metal-item {
+    display: inline-block;
+    margin: 5px 10px 5px 0;
+    padding: 5px 10px;
+    background: #fff;
+    border-radius: 3px;
+    border-left: 3px solid #2c5aa0;
+}
+
+/* Info section */
+.precious-metals-info {
+    font-size: 0.9em;
+    color: #666;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+/* Error display */
+.precious-metals-error {
+    background: #ffebee;
+    border: 1px solid #f44336;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .precious-metals-table {
+        font-size: 14px;
+    }
+    
+    .precious-metals-table th,
+    .precious-metals-table td {
+        padding: 6px;
+    }
+    
+    .metal-item {
+        display: block;
+        margin: 5px 0;
+    }
+}
+
+/* Admin page specific styles */
+.precious-metals-multi-api .form-table th {
+    width: 200px;
+}
+
+.api-status-good { 
+    color: #46b450; 
+    font-weight: bold;
+}
+
+.api-status-bad { 
+    color: #dc3232; 
+    font-weight: bold;
+}
+
+.api-status-unknown { 
+    color: #ffb900; 
+    font-weight: bold;
+}

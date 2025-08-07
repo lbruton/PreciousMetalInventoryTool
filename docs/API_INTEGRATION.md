@@ -12,7 +12,7 @@ The application now features live metal price updates through:
 
 ## API Key Management
 
-The metals.dev API key (`SD92QFY7UJFZYSPGWRSA540PGWRSA`) is stored securely in the WordPress plugin configuration, not in the client-side application. This prevents exposure of the API key in the browser.
+The metals.dev API key (`YOUR_API_KEY_HERE`) is stored securely in the WordPress plugin configuration, not in the client-side application. This prevents exposure of the API key in the browser.
 
 ## WordPress Plugin
 
