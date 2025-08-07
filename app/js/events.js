@@ -377,7 +377,7 @@ const setupEventListeners = () => {
       }
       
       if (resetBtn) {
-        resetBtn.addEventListener('click', () => resetSpot(metalKey));
+        resetBtn.addEventListener('click', () => resetSpotPrice(metalKey));
         console.log(`✓ Reset button listener added for ${metalName}`);
       } else {
         console.warn(`✗ Reset button not found for ${metalName}`);
