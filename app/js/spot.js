@@ -31,7 +31,7 @@ const recordSpot = (newSpot, source, metal) => {
 };
 
 /**
- * Fetches and displays current spot prices from localStorage
+ * Fetches and displays current spot prices from localStorage or defaults
  */
 const fetchSpotPrice = () => {
   // Load spot prices for all metals
@@ -40,9 +40,13 @@ const fetchSpotPrice = () => {
     if (storedSpot) {
       spotPrices[metalConfig.key] = parseFloat(storedSpot);
       elements.spotPriceDisplay[metalConfig.key].textContent = formatDollar(spotPrices[metalConfig.key]);
-      recordSpot(spotPrices[metalConfig.key], 'manual', metalConfig.name);
+      recordSpot(spotPrices[metalConfig.key], 'stored', metalConfig.name);
     } else {
-      elements.spotPriceDisplay[metalConfig.key].textContent = 'N/A';
+      // Use default price if no stored price
+      const defaultPrice = metalConfig.defaultPrice;
+      spotPrices[metalConfig.key] = defaultPrice;
+      elements.spotPriceDisplay[metalConfig.key].textContent = formatDollar(defaultPrice);
+      // Don't record default prices in history automatically
     }
   });
 
@@ -73,10 +77,17 @@ const updateManualSpot = (metalKey) => {
   recordSpot(num, 'manual', metalConfig.name);
 
   updateSummary();
+  
+  // Clear the input and hide the manual input section
+  input.value = '';
+  const manualInput = document.getElementById(`manualInput${metalConfig.name}`);
+  if (manualInput) {
+    manualInput.style.display = 'none';
+  }
 };
 
 /**
- * Resets spot price for specified metal to default (removes from localStorage)
+ * Resets spot price for specified metal to default or API cached value
  * 
  * @param {string} metalKey - Key of metal to reset ('silver', 'gold', 'platinum', 'palladium')
  */
@@ -84,8 +95,27 @@ const resetSpot = (metalKey) => {
   const metalConfig = Object.values(METALS).find(m => m.key === metalKey);
   if (!metalConfig) return;
 
-  localStorage.removeItem(metalConfig.spotKey);
-  fetchSpotPrice();
+  let resetPrice = metalConfig.defaultPrice;
+  let source = 'default';
+
+  // If we have cached API data, use that instead
+  if (apiCache && apiCache.data && apiCache.data[metalKey]) {
+    resetPrice = apiCache.data[metalKey];
+    source = 'api';
+  }
+
+  // Update price
+  localStorage.setItem(metalConfig.spotKey, resetPrice.toString());
+  spotPrices[metalKey] = resetPrice;
+  
+  // Update display
+  elements.spotPriceDisplay[metalKey].textContent = formatDollar(resetPrice);
+  
+  // Record in history
+  recordSpot(resetPrice, source, metalConfig.name);
+  
+  // Update summary
+  updateSummary();
 };
 
 // =============================================================================

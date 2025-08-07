@@ -350,11 +350,16 @@ const setupEventListeners = () => {
   elements.exportPdfBtn.addEventListener('click', exportPdf);
   elements.exportHtmlBtn.addEventListener('click', exportHtml);
 
+  // Backup All Button
+  elements.backupAllBtn.addEventListener('click', downloadCompleteBackup);
+
   // Boating Accident Button
   elements.boatingAccidentBtn.addEventListener('click', function() {
-    if (confirm("WARNING: This will erase ALL your data for this app (inventory, spot history, spot prices).\n\nAre you sure you want to proceed?\n\nThis action cannot be undone!")) {
+    if (confirm("WARNING: This will erase ALL your data for this app (inventory, spot history, spot prices, API configuration).\n\nAre you sure you want to proceed?\n\nThis action cannot be undone!")) {
       localStorage.removeItem(LS_KEY);
       localStorage.removeItem(SPOT_HISTORY_KEY);
+      localStorage.removeItem(API_KEY_STORAGE_KEY);
+      localStorage.removeItem(API_CACHE_KEY);
       Object.values(METALS).forEach(metalConfig => {
         localStorage.removeItem(metalConfig.spotKey);
       });
@@ -364,9 +369,18 @@ const setupEventListeners = () => {
       renderTable();
       loadSpotHistory();
       fetchSpotPrice();
+      
+      // Clear API state
+      apiConfig = null;
+      apiCache = null;
+      updateSyncButtonStates();
+      
       alert("All data has been erased.");
     }
   });
+  
+  // Setup API-specific event listeners
+  setupApiEvents();
 };
 
 /**
@@ -438,6 +452,108 @@ const setupThemeToggle = () => {
   elements.themeToggle.addEventListener('click', function() {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  });
+};
+
+/**
+ * Sets up API-related event listeners
+ */
+const setupApiEvents = () => {
+  // API Configuration Button
+  if (elements.apiBtn) {
+    elements.apiBtn.addEventListener('click', showApiModal);
+  }
+
+  // API Modal Events
+  const apiModal = document.getElementById('apiModal');
+  const apiCancelBtn = document.getElementById('apiCancelBtn');
+  const apiClearBtn = document.getElementById('apiClearBtn');
+  const apiConfigForm = document.getElementById('apiConfigForm');
+  const apiProviderSelect = document.getElementById('apiProvider');
+
+  // Modal background click to close
+  if (apiModal) {
+    apiModal.addEventListener('click', (e) => {
+      if (e.target === apiModal) {
+        hideApiModal();
+      }
+    });
+  }
+
+  // Cancel button
+  if (apiCancelBtn) {
+    apiCancelBtn.addEventListener('click', hideApiModal);
+  }
+
+  // Clear configuration button
+  if (apiClearBtn) {
+    apiClearBtn.addEventListener('click', () => {
+      if (confirm('This will remove your API configuration and cached data. Continue?')) {
+        clearApiConfig();
+        hideApiModal();
+        alert('API configuration cleared.');
+      }
+    });
+  }
+
+  // Form submission
+  if (apiConfigForm) {
+    apiConfigForm.addEventListener('submit', handleApiConfigSubmit);
+  }
+
+  // Provider selection change
+  if (apiProviderSelect) {
+    apiProviderSelect.addEventListener('change', (e) => {
+      updateProviderInfo(e.target.value);
+    });
+  }
+
+  // Spot Price Action Button Events for each metal
+  Object.values(METALS).forEach(metalConfig => {
+    const metalName = metalConfig.name;
+    const metalKey = metalConfig.key;
+    
+    // Sync button
+    const syncBtn = document.getElementById(`syncBtn${metalName}`);
+    if (syncBtn) {
+      syncBtn.addEventListener('click', () => {
+        syncSpotPricesFromApi(true);
+      });
+    }
+    
+    // Add button (manual input)
+    const addBtn = document.getElementById(`addBtn${metalName}`);
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        showManualInput(metalName);
+      });
+    }
+    
+    // Reset button
+    const resetBtn = document.getElementById(`resetBtn${metalName}`);
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        resetSpotPrice(metalName);
+      });
+    }
+    
+    // Cancel manual input button
+    const cancelBtn = document.getElementById(`cancelSpotBtn${metalName}`);
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => {
+        hideManualInput(metalName);
+      });
+    }
+  });
+
+  // ESC key to close modals
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const apiModal = document.getElementById('apiModal');
+      if (apiModal && apiModal.style.display === 'flex') {
+        hideApiModal();
+      }
+    }
   });
 };
 

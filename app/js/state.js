@@ -62,6 +62,7 @@ const elements = {
   exportExcelBtn: null,
   exportPdfBtn: null,
   exportHtmlBtn: null,
+  backupAllBtn: null,
 
   // Emergency reset button
   boatingAccidentBtn: null,
@@ -108,6 +109,21 @@ const elements = {
 
   // Theme toggle
   themeToggle: null,
+
+  // API elements
+  apiBtn: null,
+  apiModal: null,
+  apiModalContent: null,
+  apiProviderSelect: null,
+  apiKeyInput: null,
+  apiSaveBtn: null,
+  apiCancelBtn: null,
+  apiStatusDisplay: null,
+
+  // Spot price action buttons
+  spotSyncBtn: null,
+  spotAddBtn: null,
+  spotResetBtn: null,
 
   // Totals display elements (organized by metal type)
   totals: {
@@ -189,5 +205,11 @@ let spotPrices = {
 
 /** @type {Array} Historical spot price records */
 let spotHistory = [];
+
+/** @type {Object|null} Current API configuration */
+let apiConfig = null;
+
+/** @type {Object|null} Cached API data with timestamp */
+let apiCache = null;
 
 // =============================================================================

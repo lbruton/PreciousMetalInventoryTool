@@ -1,28 +1,56 @@
-# Precious Metals Inventory Tool v3.0.5
+## API Integration
 
-The Precious Metals Inventory Tool is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics and enhanced tracking capabilities.
+### Supported Providers
+- **Metals.dev**: Professional metals pricing API
+- **Metals-API.com**: Comprehensive precious metals data
+- **MetalPriceAPI.com**: Real-time metal price feeds
 
-## 🆕 What's New in v3.0.5
+### Setup Process
+1. Click the "API" button in the top-right corner
+2. Select your preferred API provider
+3. Enter your API key (get from provider's website)
+4. Test the connection and save configuration
+5. Use "Sync" buttons to update spot prices automatically
 
-- **Notes Field**: Added optional notes field for detailed item documentation
-- **Enhanced Search**: Search now includes notes content along with all other fields
-- **Complete Export Support**: Notes field included in all export formats (CSV, JSON, Excel, PDF, HTML)
-- **Improved Sample Data**: Updated sample.csv with realistic notes examples
-- **Backwards Compatibility**: Existing data automatically upgraded with empty notes field
+### Features
+- **24-Hour Caching**: Spot prices cached locally to reduce API calls
+- **Secure Storage**: API keys encrypted and stored locally only
+- **Fallback Support**: Manual price entry always available
+- **Default Prices**: Built-in fallback prices when no API is configured
+- **Connection Testing**: Verify API setup before saving
+
+### Data Management
+- **Reset Functionality**: Reset prices to API cache or defaults
+- **Manual Override**: Add custom prices even with API configured
+- **History Tracking**: All price changes recorded with source (API/manual/default)
+- **Complete Backup**: Export includes API configuration details (keys excluded for security)# Precious Metals Inventory Tool v3.1.0
+
+The Precious Metals Inventory Tool is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics, API integration for live spot prices, and enhanced tracking capabilities.
+
+## 🆕 What's New in v3.1.0
+
+- **API Integration**: Connect to live spot price providers (Metals.dev, Metals-API.com, MetalPriceAPI.com)
+- **Automated Price Sync**: 24-hour cached spot price updates with one-click sync
+- **Enhanced Spot Price Management**: Redesigned interface with Sync, Add, and Reset buttons
+- **Comprehensive Backup System**: Complete data backup including inventory, spot history, and API configuration
+- **Default Spot Prices**: Fallback prices when no API is configured (Silver: $25, Gold: $2500, Platinum/Palladium: $1000)
+- **Improved User Experience**: Streamlined workflow for price management and data synchronization
 
 ## Key Features
 
 - **Multi-Metal Support**: Track Silver, Gold, Platinum, and Palladium investments
+- **Live API Integration**: Connect to professional metals pricing APIs for real-time spot prices
 - **Comprehensive Tracking**: Metal type, quantity, weight, purchase/storage locations, and notes
 - **Financial Calculations**: Automatic calculation of premiums, profits/losses, and averages
 - **Collectable Item Support**: Special handling for collectible items with numismatic value
 - **Advanced Search**: Search and filter inventory by any field including notes
 - **Dark/Light Theme**: Toggle between dark and light themes for optimal viewing
 - **Import/Export**: Support for CSV, JSON, Excel, PDF, and HTML formats
+- **Complete Backup System**: ZIP export with inventory, spot history, and API configuration
 - **Data Visualization**: Interactive pie charts for inventory breakdown analysis
 - **Responsive Design**: Optimized for desktop and mobile devices
 - **Local Storage**: All data stored locally in browser - no server required
-- **Privacy**: No data transmission - everything stays on your device
+- **Privacy**: API keys encrypted locally, no data transmission except to chosen price providers
 
 ## Installation
 
@@ -32,13 +60,15 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 
 ## Quick Start
 
-1. **Set Spot Prices**: Enter current metal spot prices or use the defaults
-2. **Add Items**: Use the form to add items to your inventory
-3. **Track Storage**: Specify where each item is stored
-4. **Add Notes**: Include additional details about each item
-5. **Search & Filter**: Use the search bar to find specific items
-6. **Export Data**: Download your inventory in multiple formats
-7. **View Analytics**: Click "View Details" on summary cards for breakdowns
+1. **Configure API (Optional)**: Click the "API" button to set up live spot price sync
+2. **Set Spot Prices**: Use Sync button (if API configured) or Add button for manual entry
+3. **Add Items**: Use the form to add items to your inventory
+4. **Track Storage**: Specify where each item is stored
+5. **Add Notes**: Include additional details about each item
+6. **Search & Filter**: Use the search bar to find specific items
+7. **Export Data**: Download your inventory in multiple formats
+8. **View Analytics**: Click "View Details" on summary cards for breakdowns
+9. **Backup Everything**: Use "Backup All Data" for complete data export
 
 ## Version Management
 
@@ -119,6 +149,6 @@ This project is open source and available for personal use.
 
 ---
 
-**Current Version**: 3.0.5  
-**Last Updated**: August 6, 2025  
-**Status**: Feature Complete ✅
+**Current Version**: 3.1.0  
+**Last Updated**: August 7, 2025  
+**Status**: API Integration Complete ✅

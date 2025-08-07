@@ -8,6 +8,42 @@
 
 ## 📋 Version History
 
+### Version 3.1.0 – API Integration & Live Spot Prices (2025-08-07)
+- **Major feature**: Full API integration for live spot price feeds
+  - Support for three major providers: Metals.dev, Metals-API.com, MetalPriceAPI.com
+  - Secure local storage of API keys with base64 encryption
+  - 24-hour intelligent caching system to minimize API calls
+  - Connection testing and validation before saving configuration
+- **Redesigned spot price interface**: Complete UX overhaul
+  - New three-button system: Sync (API), Add (manual), Reset (default/cache)
+  - Collapsible manual input sections with smooth animations
+  - Real-time button state management based on API availability
+  - Enhanced visual feedback and loading states
+- **Default price system**: Intelligent fallback pricing
+  - Built-in defaults: Silver $25, Gold $2500, Platinum $1000, Palladium $1000
+  - Automatic price display when no user-set or API prices available
+  - Smart reset functionality using API cache when available, defaults otherwise
+- **Comprehensive backup system**: Complete data export solution
+  - New "Backup All Data" button for full data export
+  - Generates inventory CSV, spot price history CSV, and API configuration markdown
+  - Secure handling: API keys excluded from backups for security
+  - Timestamped filenames with detailed configuration summaries
+- **Enhanced data management**:
+  - Improved spot price history with source tracking (API/manual/default/stored)
+  - API cache management with expiration and validation
+  - Better integration between manual and API price sources
+  - Preserved all existing import/export functionality
+- **UI/UX improvements**:
+  - New API configuration modal with provider information and documentation links
+  - Improved boating accident functionality (now clears API data too)
+  - Better error handling and user feedback throughout API flows
+  - Enhanced accessibility with proper ARIA labels and keyboard navigation
+- **Developer improvements**:
+  - New modular api.js with comprehensive API management functions
+  - Updated state management for API-related data and DOM elements
+  - Enhanced initialization sequence to load API configuration and cache
+  - Better separation of concerns between spot price sources
+
 ### Version 3.0.5 – Notes Field Enhancement (2025-08-06)
 - **New feature**: Added optional notes field for inventory items
 - **Form enhancements**: Notes field positioned to the right of storage location in both add and edit forms

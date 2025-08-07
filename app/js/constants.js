@@ -1,8 +1,74 @@
 // CONFIGURATION & GLOBAL CONSTANTS
+/**
+ * API Provider configurations for metals pricing services
+ * 
+ * Each provider configuration contains:
+ * @property {string} name - Display name for the provider
+ * @property {string} baseUrl - Base API endpoint URL
+ * @property {Object} endpoints - API endpoints for different metals
+ * @property {function} parseResponse - Function to parse API response into standard format
+ * @property {string} documentation - URL to provider's API documentation
+ */
+const API_PROVIDERS = {
+  METALS_DEV: {
+    name: 'Metals.dev',
+    baseUrl: 'https://api.metals.dev/v1',
+    endpoints: {
+      silver: '/latest/XAG',
+      gold: '/latest/XAU',
+      platinum: '/latest/XPT',
+      palladium: '/latest/XPD'
+    },
+    parseResponse: (data, metal) => {
+      // Expected format: { "XAG": { "USD": 25.50 } }
+      const metalCode = metal === 'silver' ? 'XAG' : metal === 'gold' ? 'XAU' : 
+                       metal === 'platinum' ? 'XPT' : 'XPD';
+      return data[metalCode]?.USD || null;
+    },
+    documentation: 'https://metals.dev/docs'
+  },
+  METALS_API: {
+    name: 'Metals-API.com',
+    baseUrl: 'https://metals-api.com/api',
+    endpoints: {
+      silver: '/latest?access_key={API_KEY}&base=USD&symbols=XAG',
+      gold: '/latest?access_key={API_KEY}&base=USD&symbols=XAU',
+      platinum: '/latest?access_key={API_KEY}&base=USD&symbols=XPT',
+      palladium: '/latest?access_key={API_KEY}&base=USD&symbols=XPD'
+    },
+    parseResponse: (data, metal) => {
+      // Expected format: { "success": true, "rates": { "XAG": 0.04 } }
+      const metalCode = metal === 'silver' ? 'XAG' : metal === 'gold' ? 'XAU' : 
+                       metal === 'platinum' ? 'XPT' : 'XPD';
+      const rate = data.rates?.[metalCode];
+      return rate ? (1 / rate) : null; // Convert from metal per USD to USD per ounce
+    },
+    documentation: 'https://metals-api.com/documentation'
+  },
+  METAL_PRICE_API: {
+    name: 'MetalPriceAPI.com',
+    baseUrl: 'https://api.metalpriceapi.com/v1',
+    endpoints: {
+      silver: '/latest?api_key={API_KEY}&base=USD&currencies=XAG',
+      gold: '/latest?api_key={API_KEY}&base=USD&currencies=XAU',
+      platinum: '/latest?api_key={API_KEY}&base=USD&currencies=XPT',
+      palladium: '/latest?api_key={API_KEY}&base=USD&currencies=XPD'
+    },
+    parseResponse: (data, metal) => {
+      // Expected format: { "success": true, "rates": { "XAG": 0.04 } }
+      const metalCode = metal === 'silver' ? 'XAG' : metal === 'gold' ? 'XAU' : 
+                       metal === 'platinum' ? 'XPT' : 'XPD';
+      const rate = data.rates?.[metalCode];
+      return rate ? (1 / rate) : null; // Convert from metal per USD to USD per ounce
+    },
+    documentation: 'https://metalpriceapi.com/documentation'
+  }
+};
+
 // =============================================================================
 
 /** @constant {string} APP_VERSION - Application version */
-const APP_VERSION = '3.0.5';
+const APP_VERSION = '3.1.0';
 
 /** @constant {string} LS_KEY - LocalStorage key for inventory data */
 const LS_KEY = 'metalInventory';
@@ -12,6 +78,15 @@ const SPOT_HISTORY_KEY = 'metalSpotHistory';
 
 /** @constant {string} THEME_KEY - LocalStorage key for theme preference */
 const THEME_KEY = 'appTheme';
+
+/** @constant {string} API_KEY_STORAGE_KEY - LocalStorage key for API provider information */
+const API_KEY_STORAGE_KEY = 'metalApiConfig';
+
+/** @constant {string} API_CACHE_KEY - LocalStorage key for cached API data */
+const API_CACHE_KEY = 'metalApiCache';
+
+/** @constant {number} API_CACHE_DURATION - Cache duration in milliseconds (24 hours) */
+const API_CACHE_DURATION = 24 * 60 * 60 * 1000;
 
 /**
  * Metal configuration object - Central registry for all metal-related information
@@ -42,28 +117,32 @@ const METALS = {
     key: 'silver', 
     spotKey: 'userSpotPriceSilver',
     localStorageKey: 'spotSilver',
-    color: 'silver'
+    color: 'silver',
+    defaultPrice: 25.00
   },
   GOLD: { 
     name: 'Gold', 
     key: 'gold', 
     spotKey: 'userSpotPriceGold',
     localStorageKey: 'spotGold',
-    color: 'gold'
+    color: 'gold',
+    defaultPrice: 2500.00
   },
   PLATINUM: { 
     name: 'Platinum', 
     key: 'platinum', 
     spotKey: 'userSpotPricePlatinum',
     localStorageKey: 'spotPlatinum',
-    color: 'platinum'
+    color: 'platinum',
+    defaultPrice: 1000.00
   },
   PALLADIUM: { 
     name: 'Palladium', 
     key: 'palladium', 
     spotKey: 'userSpotPricePalladium',
     localStorageKey: 'spotPalladium',
-    color: 'palladium'
+    color: 'palladium',
+    defaultPrice: 1000.00
   }
 };
 

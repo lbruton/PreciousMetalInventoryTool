@@ -83,7 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.exportExcelBtn = document.getElementById('exportExcelBtn');
   elements.exportPdfBtn = document.getElementById('exportPdfBtn');
   elements.exportHtmlBtn = document.getElementById('exportHtmlBtn');
+  elements.backupAllBtn = document.getElementById('backupAllBtn');
   elements.boatingAccidentBtn = document.getElementById('boatingAccidentBtn');
+
+  // API elements
+  elements.apiBtn = document.getElementById('apiBtn');
+  elements.apiModal = document.getElementById('apiModal');
   elements.editModal = document.getElementById('editModal');
   elements.editForm = document.getElementById('editForm');
   elements.cancelEditBtn = document.getElementById('cancelEdit');
@@ -177,8 +182,16 @@ document.addEventListener('DOMContentLoaded', () => {
   elements.itemDate.value = todayStr();
   loadInventory();
   loadSpotHistory();
+  
+  // Initialize API system
+  apiConfig = loadApiConfig();
+  apiCache = loadApiCache();
+  
   renderTable();
   fetchSpotPrice();
+  
+  // Update sync button states based on API availability
+  updateSyncButtonStates();
 
   // Setup event listeners
   setupEventListeners();
@@ -186,6 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSearch();
   setupThemeToggle();
   setupColumnResizing();
+  
+  // Log initialization info
+  console.log('Application initialized successfully');
+  console.log('API configured:', !!apiConfig);
+  console.log('API cache available:', !!apiCache);
 });
 
 // Make functions available globally for inline event handlers
