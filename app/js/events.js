@@ -179,6 +179,7 @@ const setupEventListeners = () => {
     const price = parseFloat(elements.itemPrice.value);
     const purchaseLocation = elements.purchaseLocation.value.trim() || "Unknown";
     const storageLocation = elements.storageLocation.value.trim() || "Unknown";
+    const notes = elements.itemNotes.value.trim() || "";
     const date = elements.itemDate.value || todayStr();
 
     if (isNaN(qty) || qty < 1 || !Number.isInteger(qty) ||
@@ -214,6 +215,7 @@ const setupEventListeners = () => {
       date,
       purchaseLocation,
       storageLocation,
+      notes,
       spotPriceAtPurchase,
       premiumPerOz,
       totalPremium,
@@ -240,6 +242,7 @@ const setupEventListeners = () => {
     const price = parseFloat(elements.editPrice.value);
     const purchaseLocation = elements.editPurchaseLocation.value.trim() || "Unknown";
     const storageLocation = elements.editStorageLocation.value.trim() || "Unknown";
+    const notes = elements.editNotes.value.trim() || "";
     const date = elements.editDate.value;
 
     // Use the checkbox state the user just set
@@ -285,6 +288,7 @@ const setupEventListeners = () => {
       date,
       purchaseLocation,
       storageLocation,
+      notes,
       spotPriceAtPurchase: isCollectable ? 0 : spotPriceAtPurchase,
       premiumPerOz,
       totalPremium,

@@ -8,6 +8,18 @@
 
 ## 📋 Version History
 
+### Version 3.0.5 – Notes Field Enhancement (2025-08-06)
+- **New feature**: Added optional notes field for inventory items
+- **Form enhancements**: Notes field positioned to the right of storage location in both add and edit forms
+- **Improved organization**: Optional text field for additional comments, observations, or item-specific details
+- **Search integration**: Notes content now searchable along with all other inventory fields
+- **Complete import/export support**: Notes field included in all formats (CSV, JSON, Excel, PDF, HTML)
+- **Strategic table design**: Notes accessible through edit modal but excluded from main table display to maintain clean layout
+- **Backwards compatibility**: Existing inventory items automatically receive empty notes field
+- **Data preservation**: All import/export operations preserve notes data for full data portability
+- **User experience**: Enhanced search placeholder text to indicate notes as searchable content
+- **Database migration**: Seamless data structure upgrade with no user intervention required
+
 ### Version 3.0.4 – Security & Performance Enhancements (2025-08-06)
 - **Enhanced Security**: Added comprehensive input sanitization to prevent XSS attacks
   - Implemented `sanitizeHtml()` function for safe HTML content insertion

@@ -1,6 +1,6 @@
 # Precious Metals Inventory Tool - Project Structure
 
-## Current Structure (Version 3.0.4)
+## Current Structure (Version 3.0.5)
 
 ```text
 ├── STRUCTURE.md
@@ -27,7 +27,6 @@
     ├── CHANGELOG.md
     ├── LLM.md
     ├── README.md
-    ├── SOURCES.md
     ├── VERSIONING.md
 ├── index.html
 ├── sample.csv
@@ -47,7 +46,7 @@
 - More intuitive folder naming
 
 ### Version Management
-- Version constant added to `constants.js` as `APP_VERSION = '3.0.1'`
+- Version constant added to `constants.js` as `APP_VERSION = '3.0.5'`
 - Application title shows current version
 - Version tracking centralized in code rather than folder structure
 

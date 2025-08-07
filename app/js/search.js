@@ -17,6 +17,7 @@ const filterInventory = () => {
       item.type.toLowerCase().includes(query) ||
       item.purchaseLocation.toLowerCase().includes(query) ||
       (item.storageLocation && item.storageLocation.toLowerCase().includes(query)) ||
+      (item.notes && item.notes.toLowerCase().includes(query)) ||
       item.date.includes(query) ||
       item.qty.toString().includes(query) ||
       item.weight.toString().includes(query) ||
