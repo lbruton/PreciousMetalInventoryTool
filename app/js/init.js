@@ -179,11 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadSpotHistory();
   renderTable();
   fetchSpotPrice();
-  
-  // Initialize API integration if available
-  if (typeof initSpotApi === 'function') {
-    initSpotApi();
-  }
 
   // Setup event listeners
   setupEventListeners();
