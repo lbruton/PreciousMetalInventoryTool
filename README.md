@@ -1,8 +1,14 @@
-# Precious Metals Inventory Tool v3.1.2
+# Precious Metals Inventory Tool v3.1.6
 
 The Precious Metals Inventory Tool is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics and enhanced tracking capabilities.
 
-## 🆕 What's New in v3.1.2
+## 🆕 What's New in v3.1.6
+- **Fixed Theme Toggle**: Removed conflicting inline onclick handler, added system preference detection
+- **Enhanced Theme Management**: Auto-adapts to OS dark/light mode changes
+- **Improved Initialization**: Theme loads properly on startup with fallback handling
+- **Better UX**: Cleaner toggle logic without JavaScript conflicts
+
+## What's New in v3.1.2
 - **Improved Event Listener Setup**: Enhanced event listener attachment for robustness across browsers and protocols.
 - **Manual Input Workflow**:
   1. Click "Add" button to show manual price input form. *(Currently not functional; see Known Issues)*
@@ -159,9 +165,9 @@ This project is designed to be maintainable and extensible. When making changes:
 This project is open source and available for personal use.
 
 ---
-**Current Version**: 3.1.2  
+**Current Version**: 3.1.6  
 **Last Updated**: August 7, 2025  
-**Status**: Feature Complete, with spot price button issues pending fix
+**Status**: Feature Complete, theme toggle fixed, with spot price button issues pending fix
 
 
 

@@ -1,8 +1,8 @@
 # Project Status - Precious Metals Inventory Tool
 
-## 🎯 Current State: **FEATURE COMPLETE v3.1.5** ✅ TIMESTAMP DISPLAY ADDED
+## 🎯 Current State: **FEATURE COMPLETE v3.1.6** ✅ THEME TOGGLE FIXED
 
-**Precious Metals Inventory Tool v3.1.5** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management and API integration capabilities. 
+**Precious Metals Inventory Tool v3.1.6** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management and API integration capabilities. 
 
 ## 🏗️ Architecture Overview
 
@@ -18,15 +18,15 @@ The tool features a **modular JavaScript architecture** with separate files for 
 - `theme.js` - Dark/light theme management
 - `utils.js` - Helper functions and formatters
 
-## ✨ Latest Feature Addition (v3.1.5)
+## ✨ Latest Fix (v3.1.6)
 
-We added **timestamp display functionality** which:
-- ✅ Shows when each spot price was last updated
-- ✅ Displays relative time ("2 hrs ago") and data source (API/Manual/Cached)
-- ✅ Updates automatically when prices change
-- ✅ Provides clear visibility into data freshness
-- ✅ Uses existing spot history tracking system
-- ✅ Appears below spot price values in muted text
+We fixed **theme toggle functionality** which:
+- ✅ Removed conflicting inline onclick handler from HTML
+- ✅ Added system preference detection and auto-switching
+- ✅ Improved theme initialization on startup
+- ✅ System integration for OS dark/light mode changes
+- ✅ Cleaner theme toggle logic without JavaScript conflicts
+- ✅ Maintains backwards compatibility with saved preferences
 
 ## 🚀 Key Features
 
@@ -144,6 +144,6 @@ PreciousMetalInventoryTool/
 
 ---
 
-**Last Updated**: August 6, 2025  
+**Last Updated**: August 7, 2025  
 **Status**: ✅ COMPLETE - Ready for production use  
 **Documentation**: ✅ ALL FILES SYNCHRONIZED AND CURRENT

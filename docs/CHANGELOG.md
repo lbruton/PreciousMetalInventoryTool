@@ -50,6 +50,14 @@
 - **UI enhancement**: Timestamps appear below spot price values in muted text
 - **Smart formatting**: Displays relative time for recent updates, absolute dates for older ones
 
+### Version 3.1.6 – Theme Toggle Fix (2025-08-07)
+- **Fixed theme toggle**: Removed conflicting inline onclick handler from HTML button
+- **Enhanced theme management**: Added system preference detection and auto-switching
+- **Improved initialization**: Theme now loads properly on startup with fallback handling
+- **System integration**: Automatically adapts to OS dark/light mode changes
+- **Better UX**: Cleaner theme toggle logic without JavaScript conflicts
+- **Backwards compatibility**: Maintains existing theme preferences in localStorage
+
 ### Version 3.0.5 – Notes Field Enhancement (2025-08-06)
 - **New feature**: Added optional notes field for inventory items  
 - **Form enhancements**: Notes field positioned to the right of storage location in both add and edit forms  

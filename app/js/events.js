@@ -163,13 +163,17 @@ const setupEventListeners = () => {
         e.preventDefault();
         console.log('Theme toggle clicked');
         
-        const currentTheme = localStorage.getItem(THEME_KEY) || 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        if (typeof setTheme === 'function') {
+        if (typeof toggleTheme === 'function') {
+          toggleTheme();
+        } else if (typeof setTheme === 'function') {
+          // Fallback to manual toggle
+          const currentTheme = localStorage.getItem(THEME_KEY) || 'light';
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
           setTheme(newTheme);
         } else {
-          // Fallback theme switching
+          // Ultimate fallback
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
           if (newTheme === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             localStorage.setItem(THEME_KEY, 'dark');
@@ -653,19 +657,18 @@ const setupThemeToggle = () => {
   console.log('Setting up theme toggle...');
   
   try {
-    // Apply saved theme on startup
-    const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
-    
-    if (savedTheme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      if (elements.themeToggle) {
-        elements.themeToggle.textContent = 'Light Mode';
-      }
+    // Initialize theme with system preference detection
+    if (typeof initTheme === 'function') {
+      initTheme();
     } else {
-      document.documentElement.removeAttribute('data-theme');
-      if (elements.themeToggle) {
-        elements.themeToggle.textContent = 'Dark Mode';
-      }
+      // Fallback initialization
+      const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+      setTheme(savedTheme);
+    }
+    
+    // Set up system theme change listener
+    if (typeof setupSystemThemeListener === 'function') {
+      setupSystemThemeListener();
     }
     
     console.log('✓ Theme toggle setup complete');

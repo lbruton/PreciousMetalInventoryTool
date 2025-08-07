@@ -35,7 +35,7 @@
 <h1>Precious Metals Inventory Tool</h1>
 <div style="margin-left: auto; display: flex; gap: 0.5rem;">
 <button class="btn" id="apiBtn" title="API Configuration" onclick="if(typeof showApiModal==='function'){showApiModal()}else{alert('API configuration interface')}">API</button>
-<button class="btn" id="themeToggle" onclick="const theme=document.documentElement.getAttribute('data-theme');const newTheme=theme==='dark'?'light':'dark';if(newTheme==='dark'){document.documentElement.setAttribute('data-theme','dark');localStorage.setItem('appTheme','dark');this.textContent='Light Mode'}else{document.documentElement.removeAttribute('data-theme');localStorage.setItem('appTheme','light');this.textContent='Dark Mode'}">Dark Mode</button>
+<button class="btn" id="themeToggle">Dark Mode</button>
 </div>
 </div>
 <div class="container">
