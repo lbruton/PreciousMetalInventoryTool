@@ -8,18 +8,12 @@
   
   All data is stored locally using localStorage - no server required.
   Application version is managed dynamically via constants.js
-  
-  NOW ENHANCED WITH VERCEL API INTEGRATION:
-  - Automatically detects file:// vs web server environment
-  - Gets live price updates when served from web server  
-  - Falls back gracefully to manual prices when offline
-  - Zero breaking changes to existing functionality
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes" name="viewport"/>
-<meta content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://precious-metals-vercel-api.vercel.app; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; connect-src 'self' https://precious-metals-vercel-api.vercel.app;" http-equiv="Content-Security-Policy"/>
+<meta content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;" http-equiv="Content-Security-Policy"/>
 <!-- Title is dynamically updated by init.js using APP_VERSION constant -->
 <title>Precious Metals Inventory Tool</title>
 <!-- External libraries for data import/export functionality -->
@@ -51,8 +45,6 @@
          - Save and Reset buttons for price management
          
          Spot prices are used for premium calculations and profit/loss analysis
-         
-         NOW ENHANCED: Automatically loads prices from Vercel API when possible!
          ============================================================================= -->
 <section class="spot-prices">
 <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
@@ -117,16 +109,6 @@
 </div>
 </div>
 </div>
-
-<!-- NEW: API Integration Controls -->
-<div style="text-align: center; margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--border);">
-  <h3 style="margin: 0 0 1rem 0; color: var(--primary);">🌐 Live Price Updates</h3>
-  <p style="margin: 0 0 1rem 0; color: var(--text-secondary); font-size: 0.9rem;">Prices update automatically when served from web server. Manual entry always available.</p>
-  <button class="btn refresh-all-prices" onclick="refreshAllSpotPrices()" title="Refresh prices from Vercel API (web server mode only)">
-    🔄 Refresh All Prices from API
-  </button>
-</div>
-
 </section>
 <!-- =============================================================================
          TOTALS SECTION
@@ -729,17 +711,16 @@
 </div>
 </div>
 <!-- =============================================================================
-       JAVASCRIPT MODULE LOADING - ENHANCED WITH API INTEGRATION
+       JAVASCRIPT MODULE LOADING
        
        Modular architecture with proper dependency order:
        1. constants.js - Global configuration and version
        2. state.js - Application state and DOM element caching
        3. utils.js - Utility functions and formatters
        4. Feature modules - charts, theme, search, sorting, pagination, etc.
-       5. NEW: API integration modules BEFORE spot price management
-       6. Core modules - spot price management and inventory operations
-       7. events.js - Event listener setup (requires all other modules)
-       8. init.js - Application initialization and startup
+       5. Core modules - spot price management and inventory operations
+       6. events.js - Event listener setup (requires all other modules)
+       7. init.js - Application initialization and startup
        
        All scripts use 'defer' to ensure DOM is ready before execution
        External libraries (Chart.js, jsPDF, PapaParse, XLSX) loaded via CDN
@@ -754,9 +735,6 @@
 <script defer src="js/sorting.js"></script>
 <script defer src="js/pagination.js"></script>
 <script defer src="js/detailsModal.js"></script>
-<!-- NEW: API integration files loaded BEFORE spot.js -->
-<script defer src="js/spot-api.js"></script>
-<script defer src="js/spot-enhanced.js"></script>
 <script defer src="js/spot.js"></script>
 <script defer src="js/inventory.js"></script>
 <script defer src="js/events.js"></script>
