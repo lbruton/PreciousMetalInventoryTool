@@ -1,62 +1,131 @@
-# Changelog
+# Precious Metals Inventory Tool — Changelog
 
-## Version 3.1.2 - Button Functionality Fix
-**Date: August 7, 2025**
+## 🚀 Roadmap (Future Versions)
 
-### Fixed Issues
-- **Fixed Add and Reset Button Functionality**: The spot price "Add" and "Reset" buttons are now fully functional
-  - Add buttons now properly show manual input popup forms
-  - Reset buttons reset spot prices to default values or cached API values
-  - Save and Cancel buttons within manual input forms work correctly
-  - All button event listeners are properly attached during initialization
+*All major planned features have been implemented! The tool now includes comprehensive inventory management with storage location tracking, multi-format import/export, advanced analytics, and a modern modular architecture.*
 
-### Technical Changes
-- **Enhanced Event Listener Setup**: Improved the `setupEventListeners()` function in `events.js`
-  - Added comprehensive event handlers for all spot price action buttons
-  - Implemented proper button state management
-  - Added detailed logging for debugging button attachment
-  - Removed duplicate event listener setup code
+---
 
-- **Improved Spot Price Management**: Updated `spot.js` 
-  - Enhanced `updateManualSpot()` function to properly handle manual price input
-  - Added `resetSpotByName()` function for compatibility with API.js functions
-  - Fixed localStorage key usage to match HTML element IDs
-  - Improved integration with manual input show/hide functions
+## 📋 Version History
 
-- **Function Integration**: Connected all existing functions properly
-  - `showManualInput(metalName)` - Shows manual input popup for specified metal
-  - `hideManualInput(metalName)` - Hides manual input popup and clears values
-  - `resetSpotPrice(metalName)` - Resets spot price using API cache or defaults
-  - `updateManualSpot(metalKey)` - Updates spot price from user input
+### Version 3.1.2 – Spot-Price Button Manual Input Fix (2025-08-07)
+- **Button Functionality:** “Add” and “Reset” spot-price buttons are now fully functional
+  - “Add” spawns an inline popup form with working Save/Cancel buttons  
+  - “Reset” restores either the `APP_VERSION`-sourced default or the last-synced API price
+- **Coverage:** All four metals supported; falls back to last-synced API if no manual override exists  
+- **Persistence:** Manual overrides persist through reloads via the same listener flow in `events.js`
 
-### User Experience Improvements
-- **Manual Input Workflow**: 
-  1. Click "Add" button to show manual price input form
-  2. Enter desired spot price and click "Save" or press Enter
-  3. Click "Cancel" to abort and hide the form
-  4. Form automatically hides and clears after successful save
+### Version 3.0.5 – Notes Field Enhancement (2025-08-06)
+- **New feature**: Added optional notes field for inventory items  
+- **Form enhancements**: Notes field positioned to the right of storage location in both add and edit forms  
+- **Improved organization**: Optional text field for additional comments, observations, or item-specific details  
+- **Search integration**: Notes content now searchable along with all other inventory fields  
+- **Complete import/export support**: Notes field included in all formats (CSV, JSON, Excel, PDF, HTML)  
+- **Strategic table design**: Notes accessible through edit modal but excluded from main table display to maintain clean layout  
+- **Backwards compatibility**: Existing inventory items automatically receive empty notes field  
+- **Data preservation**: All import/export operations preserve notes data for full data portability  
+- **User experience**: Enhanced search placeholder text to indicate notes as searchable content  
+- **Database migration**: Seamless data structure upgrade with no user intervention required
 
-- **Reset Functionality**:
-  1. Click "Reset" button to restore default spot price
-  2. If API data is cached, uses cached price instead of default
-  3. Price history is automatically updated with source tracking
+### Version 3.0.4 – Security & Performance Enhancements (2025-08-06)
+- **Enhanced Security**: Comprehensive input sanitization to prevent XSS  
+  - Implemented `sanitizeHtml()` for safe HTML insertion  
+  - Applied sanitization to all user-generated content in table rendering  
+  - Enhanced form validation with `validateInventoryItem()`  
+- **Improved Date Parsing**: Rewritten logic for US (MM/DD/YYYY) vs. European (DD/MM/YYYY) formats  
+  - Intelligent disambiguation and logical fallbacks  
+  - Validation and error logging for unparseable dates  
+- **Performance Monitoring**: Added `monitorPerformance()` utility  
+  - Tracked bottlenecks in `renderTable()` with console warnings  
+- **Enhanced Error Handling**: Added `handleError()` and `getUserFriendlyMessage()`  
+  - Better error messages and detailed CSV import logging  
+- **Fixed Missing DOM Elements**: Corrected caching for `premium` and `lossProfit`  
+- **Code Quality Improvements**:  
+  - JSDoc for new functions  
+  - Modular architecture and separation of concerns  
+- **Documentation Updates**: Corrected version refs in LLM.md and STRUCTURE.md; removed stale links
 
-- **Sync Integration**: 
-  1. Sync buttons are enabled/disabled based on API configuration
-  2. All metal prices sync simultaneously from configured API provider
-  3. Button states show loading status during sync operations
+### Version 3.0.3 – Documentation Restructure (2025-08-06)
+- Moved docs to `/docs/`  
+- Updated `STRUCTURE.md` & `docs/README.md`  
+- Fixed broken internal links  
+- No functional changes
 
-### Development Notes
-- All temporary files are cleaned up during build process
-- Version number incremented to 3.1.2
-- Event listener setup includes comprehensive error handling and logging
-- Manual input forms use proper show/hide CSS display properties
+### Version 3.0.2 – Enhanced Table UX
+- **Clickable item names** open the edit modal (removed separate Edit column)  
+- **Simplified collectable toggle**: clean checkbox replaced toggle switch  
+- **Centered delete buttons** in their cells  
+- **Visual edit indicators**: hover/focus shows ✎ icon  
+- **Accessibility**: keyboard navigation (Enter/Space), ARIA labels  
+- **Streamlined table**: removed redundant column, compact layout
 
-### Validation
-- Tested all spot price button interactions
-- Verified event listener attachment for all four metals (Silver, Gold, Platinum, Palladium)
-- Confirmed proper integration between manual input and API functionality
-- Validated localStorage synchronization and history tracking
+### Version 3.0.1 – Storage Location Tracking
+- **New feature**: Added storage location field to track each item’s physical location  
+- **Enhanced forms**: storage location input with “Vault A, Safe B…” placeholder  
+- **Full table integration**: new column between “Purchase Location” and “Date”  
+- **Search & Sort**: includes storage location, fully sortable  
+- **Import/Export**: CSV, JSON, Excel, PDF, HTML include storage location  
+- **Backwards compatibility**: default “Unknown” for existing items  
+- **Dynamic version loading**: version auto-loads from `APP_VERSION` in `constants.js`  
+- **Utility functions**: `getVersionString()`, `getAppTitle()` in `utils.js`
 
-## Previous Versions
-[Previous changelog entries would be listed here]
+### Version 3.0 – UI Streamlining
+- Removed “Show Spot History” & “Clear Spot History” buttons  
+- Streamlined interface; spot history still collected in background  
+- Added `/docs/structure.md` and migration roadmap for git control
+
+### Version 2.8 – Modular Overhaul
+- **Refactor**: modular JS files  
+- **CSS modularization**: external `app/css/styles.css`  
+- **Dark mode**: via `theme.js` & CSS variables  
+- **Data visualization**: Chart.js pie charts  
+- **UI improvements**: pagination, search, sorting  
+- **Performance**: deferred script loading  
+
+### Version 2.7 – Details & Analytics
+- “View Details” on metal summary cards  
+- Breakdown reports by type & purchase location  
+- Improved navigation & layout  
+
+### Version 2.6 – Maintenance Update
+- Minor bug fixes & performance improvements  
+- Code cleanup  
+
+### Version 2.5 – Multi-Metal Support Completion
+- Full support for Platinum & Palladium  
+- UI & export refinements for all four metals  
+- Calculation consistency improvements  
+
+### Version 2.4 – Multi-Metal Support Introduction
+- **New metals**: Platinum & Palladium  
+- Expanded entry fields, summaries & calculations  
+- Export & UI enhancements  
+
+### Version 2.3 – Collectables Polish
+- Refined summary breakdowns by collectable status  
+- Improved edit interface & tooltips  
+
+### Version 2.2 – Collectables Enhancement
+- Enhanced collectable handling & price breakdowns  
+- Average price/oz for collectable vs non-collectable  
+
+### Version 2.1 – Collectables Introduction
+- **New feature**: mark items as “Collectable”  
+- Separate tracking & UI updates  
+
+### Version 2.0 – Major Update
+- **Expanded tracking** for Silver & Gold: type, quantity, weight, name  
+- **Comprehensive totals**: weight, price, value, avg/oz, premium, profit/loss  
+- **Editable table** with sorting  
+- **Import/Export**: CSV, JSON, Excel, PDF, HTML  
+- **Spot Price History** tracking  
+- **Dark Mode**  
+- “Boating Accident” reset feature  
+- **Pagination**  
+
+### Version 1.0 – Initial Release
+- Basic inventory tracking for Silver & Gold  
+- Core item fields (type, qty, weight, name, location, price, date)  
+- Totals & profit/loss calculations  
+- Edit/delete functionality  
+- Simple, clean interface with summary sections
