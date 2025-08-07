@@ -223,8 +223,32 @@ input:focus, select:focus {
 }
 
 /* =============================================================================
-   BUTTONS
+   BUTTONS - Enhanced for file:// protocol compatibility
    ============================================================================= */
+
+/* File protocol compatibility fixes */
+.btn {
+  /* Force clickability for file:// protocol */
+  pointer-events: auto !important;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Ensure header buttons are always clickable */
+.app-header .btn {
+  position: relative;
+  z-index: 100;
+  pointer-events: auto !important;
+}
+
+/* Force cursor pointer for all buttons */
+button, .btn, input[type="button"], input[type="submit"] {
+  cursor: pointer !important;
+}
+
+/* Main button styles */
 
 .btn {
   display: inline-flex;

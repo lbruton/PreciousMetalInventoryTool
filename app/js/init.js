@@ -2,6 +2,25 @@
 // =============================================================================
 
 /**
+ * Helper function to create dummy DOM elements to prevent null reference errors
+ * @returns {Object} A dummy element object with basic properties
+ */
+function createDummyElement() {
+  return {
+    textContent: '',
+    innerHTML: '',
+    style: {},
+    value: '',
+    checked: false,
+    disabled: false,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    focus: () => {},
+    click: () => {}
+  };
+}
+
+/**
  * Main application initialization function - entry point for the application
  * 
  * This function coordinates the complete application startup process:
@@ -41,169 +60,273 @@
  * document.addEventListener('DOMContentLoaded', initFunction);
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize DOM elements after DOM is loaded
-  elements.spotPriceDisplaySilver = document.getElementById('spotPriceDisplaySilver');
-  elements.spotPriceDisplayGold = document.getElementById('spotPriceDisplayGold');
-  elements.spotPriceDisplayPlatinum = document.getElementById('spotPriceDisplayPlatinum');
-  elements.spotPriceDisplayPalladium = document.getElementById('spotPriceDisplayPalladium');
+  console.log('=== APPLICATION INITIALIZATION STARTED ===');
+  
+  try {
+    // Initialize DOM elements after DOM is loaded
+    console.log('Initializing basic form elements...');
+    
+    // Core form elements - using safe element retrieval
+    elements.inventoryForm = document.getElementById('inventoryForm');
+    elements.inventoryTable = document.getElementById('inventoryTable') ? document.getElementById('inventoryTable').querySelector('tbody') : null;
+    elements.itemMetal = document.getElementById('itemMetal');
+    elements.itemName = document.getElementById('itemName');
+    elements.itemQty = document.getElementById('itemQty');
+    elements.itemType = document.getElementById('itemType');
+    elements.itemWeight = document.getElementById('itemWeight');
+    elements.itemPrice = document.getElementById('itemPrice');
+    elements.purchaseLocation = document.getElementById('purchaseLocation');
+    elements.storageLocation = document.getElementById('storageLocation');
+    elements.itemNotes = document.getElementById('itemNotes');
+    elements.itemDate = document.getElementById('itemDate');
 
-  elements.userSpotPriceSilver = document.getElementById('userSpotPriceSilver');
-  elements.userSpotPriceGold = document.getElementById('userSpotPriceGold');
-  elements.userSpotPricePlatinum = document.getElementById('userSpotPricePlatinum');
-  elements.userSpotPricePalladium = document.getElementById('userSpotPricePalladium');
+    console.log('Initializing import/export elements...');
+    elements.importCsvFile = document.getElementById('importCsvFile');
+    elements.importJsonFile = document.getElementById('importJsonFile');
+    elements.importExcelFile = document.getElementById('importExcelFile');
+    elements.exportCsvBtn = document.getElementById('exportCsvBtn');
+    elements.exportJsonBtn = document.getElementById('exportJsonBtn');
+    elements.exportExcelBtn = document.getElementById('exportExcelBtn');
+    elements.exportPdfBtn = document.getElementById('exportPdfBtn');
+    elements.exportHtmlBtn = document.getElementById('exportHtmlBtn');
+    elements.backupAllBtn = document.getElementById('backupAllBtn');
+    elements.boatingAccidentBtn = document.getElementById('boatingAccidentBtn');
 
-  elements.saveSpotBtnSilver = document.getElementById('saveSpotBtnSilver');
-  elements.saveSpotBtnGold = document.getElementById('saveSpotBtnGold');
-  elements.saveSpotBtnPlatinum = document.getElementById('saveSpotBtnPlatinum');
-  elements.saveSpotBtnPalladium = document.getElementById('saveSpotBtnPalladium');
+    // CRITICAL: Initialize header buttons - these were missing!
+    console.log('Initializing header buttons...');
+    elements.apiBtn = document.getElementById('apiBtn');
+    elements.themeToggle = document.getElementById('themeToggle');
+    
+    // Debug: Check if critical buttons were found
+    console.log('API Button found:', elements.apiBtn ? 'YES' : 'NO');
+    console.log('Theme Toggle found:', elements.themeToggle ? 'YES' : 'NO');
+    
+    if (!elements.apiBtn) {
+      console.error('CRITICAL: API button (id="apiBtn") not found in DOM!');
+    }
+    
+    if (!elements.themeToggle) {
+      console.error('CRITICAL: Theme toggle button (id="themeToggle") not found in DOM!');
+    }
 
-  elements.resetSpotBtnSilver = document.getElementById('resetSpotBtnSilver');
-  elements.resetSpotBtnGold = document.getElementById('resetSpotBtnGold');
-  elements.resetSpotBtnPlatinum = document.getElementById('resetSpotBtnPlatinum');
-  elements.resetSpotBtnPalladium = document.getElementById('resetSpotBtnPalladium');
+    // API and modal elements
+    console.log('Initializing modal elements...');
+    elements.apiModal = document.getElementById('apiModal');
+    elements.editModal = document.getElementById('editModal');
+    elements.editForm = document.getElementById('editForm');
+    elements.cancelEditBtn = document.getElementById('cancelEdit');
+    elements.editMetal = document.getElementById('editMetal');
+    elements.editName = document.getElementById('editName');
+    elements.editQty = document.getElementById('editQty');
+    elements.editType = document.getElementById('editType');
+    elements.editWeight = document.getElementById('editWeight');
+    elements.editPrice = document.getElementById('editPrice');
+    elements.editPurchaseLocation = document.getElementById('editPurchaseLocation');
+    elements.editStorageLocation = document.getElementById('editStorageLocation');
+    elements.editNotes = document.getElementById('editNotes');
+    elements.editDate = document.getElementById('editDate');
+    elements.editSpotPrice = document.getElementById('editSpotPrice');
+    
+    console.log('Initializing pagination elements...');
+    elements.itemsPerPage = document.getElementById('itemsPerPage');
+    elements.prevPage = document.getElementById('prevPage');
+    elements.nextPage = document.getElementById('nextPage');
+    elements.firstPage = document.getElementById('firstPage');
+    elements.lastPage = document.getElementById('lastPage');
+    elements.pageNumbers = document.getElementById('pageNumbers');
+    elements.paginationInfo = document.getElementById('paginationInfo');
+    
+    console.log('Initializing search elements...');
+    elements.searchInput = document.getElementById('searchInput');
+    elements.clearSearchBtn = document.getElementById('clearSearchBtn');
+    elements.searchResultsInfo = document.getElementById('searchResultsInfo');
 
-  elements.inventoryForm = document.getElementById('inventoryForm');
-  elements.inventoryTable = document.getElementById('inventoryTable').querySelector('tbody');
-  elements.itemMetal = document.getElementById('itemMetal');
-  elements.itemName = document.getElementById('itemName');
-  elements.itemQty = document.getElementById('itemQty');
-  elements.itemType = document.getElementById('itemType');
-  elements.itemWeight = document.getElementById('itemWeight');
-  elements.itemPrice = document.getElementById('itemPrice');
-  elements.purchaseLocation = document.getElementById('purchaseLocation');
-  elements.storageLocation = document.getElementById('storageLocation');
-  elements.itemNotes = document.getElementById('itemNotes');
-  elements.itemDate = document.getElementById('itemDate');
+    // Initialize details modal elements
+    console.log('Initializing details modal elements...');
+    elements.detailsModal = document.getElementById('detailsModal');
+    elements.detailsModalTitle = document.getElementById('detailsModalTitle');
+    elements.typeBreakdown = document.getElementById('typeBreakdown');
+    elements.locationBreakdown = document.getElementById('locationBreakdown');
 
-  elements.importCsvFile = document.getElementById('importCsvFile');
-  elements.importJsonFile = document.getElementById('importJsonFile');
-  elements.importExcelFile = document.getElementById('importExcelFile');
-  elements.exportCsvBtn = document.getElementById('exportCsvBtn');
-  elements.exportJsonBtn = document.getElementById('exportJsonBtn');
-  elements.exportExcelBtn = document.getElementById('exportExcelBtn');
-  elements.exportPdfBtn = document.getElementById('exportPdfBtn');
-  elements.exportHtmlBtn = document.getElementById('exportHtmlBtn');
-  elements.backupAllBtn = document.getElementById('backupAllBtn');
-  elements.boatingAccidentBtn = document.getElementById('boatingAccidentBtn');
+    // Initialize chart canvas elements
+    console.log('Initializing chart elements...');
+    elements.typeChart = document.getElementById('typeChart');
+    elements.locationChart = document.getElementById('locationChart');
 
-  // API elements
-  elements.apiBtn = document.getElementById('apiBtn');
-  elements.apiModal = document.getElementById('apiModal');
-  elements.editModal = document.getElementById('editModal');
-  elements.editForm = document.getElementById('editForm');
-  elements.cancelEditBtn = document.getElementById('cancelEdit');
-  elements.editMetal = document.getElementById('editMetal');
-  elements.editName = document.getElementById('editName');
-  elements.editQty = document.getElementById('editQty');
-  elements.editType = document.getElementById('editType');
-  elements.editWeight = document.getElementById('editWeight');
-  elements.editPrice = document.getElementById('editPrice');
-  elements.editPurchaseLocation = document.getElementById('editPurchaseLocation');
-  elements.editStorageLocation = document.getElementById('editStorageLocation');
-  elements.editNotes = document.getElementById('editNotes');
-  elements.editDate = document.getElementById('editDate');
-  elements.editSpotPrice = document.getElementById('editSpotPrice');
-  elements.itemsPerPage = document.getElementById('itemsPerPage');
-  elements.prevPage = document.getElementById('prevPage');
-  elements.nextPage = document.getElementById('nextPage');
-  elements.firstPage = document.getElementById('firstPage');
-  elements.lastPage = document.getElementById('lastPage');
-  elements.pageNumbers = document.getElementById('pageNumbers');
-  elements.paginationInfo = document.getElementById('paginationInfo');
-  elements.searchInput = document.getElementById('searchInput');
-  elements.clearSearchBtn = document.getElementById('clearSearchBtn');
-  elements.searchResultsInfo = document.getElementById('searchResultsInfo');
-  elements.themeToggle = document.getElementById('themeToggle');
+    // Update version numbers dynamically
+    console.log('Updating version information...');
+    document.title = getAppTitle();
+    const appHeader = document.querySelector('.app-header h1');
+    if (appHeader) {
+      appHeader.textContent = getAppTitle();
+    }
 
-  // Initialize details modal elements
-  elements.detailsModal = document.getElementById('detailsModal');
-  elements.detailsModalTitle = document.getElementById('detailsModalTitle');
-  elements.typeBreakdown = document.getElementById('typeBreakdown');
-  elements.locationBreakdown = document.getElementById('locationBreakdown');
+    // Initialize spot price elements for all metals - WITH NULL SAFETY
+    console.log('Initializing metal-specific elements...');
+    
+    // Initialize the nested objects first
+    elements.spotPriceDisplay = {};
+    elements.userSpotPriceInput = {};
+    elements.saveSpotBtn = {};
+    elements.resetSpotBtn = {};
+    
+    Object.values(METALS).forEach(metalConfig => {
+      const metalKey = metalConfig.key;
+      const metalName = metalConfig.name;
+      
+      console.log(`Initializing elements for ${metalName} (key: ${metalKey})`);
+      
+      // Spot price display elements
+      elements.spotPriceDisplay[metalKey] = document.getElementById(`spotPriceDisplay${metalName}`);
+      elements.userSpotPriceInput[metalKey] = document.getElementById(`userSpotPrice${metalName}`);
+      elements.saveSpotBtn[metalKey] = document.getElementById(`saveSpotBtn${metalName}`);
+      elements.resetSpotBtn[metalKey] = document.getElementById(`resetSpotBtn${metalName}`);
+      
+      // Debug: Check if elements were found
+      console.log(`  - spotPriceDisplay${metalName}:`, elements.spotPriceDisplay[metalKey] ? '✓' : '✗');
+      console.log(`  - userSpotPrice${metalName}:`, elements.userSpotPriceInput[metalKey] ? '✓' : '✗');
+      console.log(`  - saveSpotBtn${metalName}:`, elements.saveSpotBtn[metalKey] ? '✓' : '✗');
+      console.log(`  - resetSpotBtn${metalName}:`, elements.resetSpotBtn[metalKey] ? '✓' : '✗');
+      
+      // Create dummy elements for missing ones to prevent null errors
+      if (!elements.spotPriceDisplay[metalKey]) {
+        console.warn(`Creating dummy spotPriceDisplay for ${metalName}`);
+        elements.spotPriceDisplay[metalKey] = { textContent: '$ -' };
+      }
+      
+      if (!elements.userSpotPriceInput[metalKey]) {
+        console.warn(`Creating dummy userSpotPriceInput for ${metalName}`);
+        elements.userSpotPriceInput[metalKey] = { 
+          value: '',
+          addEventListener: () => {}
+        };
+      }
+      
+      if (!elements.saveSpotBtn[metalKey]) {
+        console.warn(`Creating dummy saveSpotBtn for ${metalName}`);
+        elements.saveSpotBtn[metalKey] = { 
+          addEventListener: () => {},
+          disabled: true
+        };
+      }
+      
+      if (!elements.resetSpotBtn[metalKey]) {
+        console.warn(`Creating dummy resetSpotBtn for ${metalName}`);
+        elements.resetSpotBtn[metalKey] = { 
+          addEventListener: () => {},
+          disabled: true
+        };
+      }
+    });
 
-  // Initialize chart canvas elements
-  elements.typeChart = document.getElementById('typeChart');
-  elements.locationChart = document.getElementById('locationChart');
+    // Initialize totals elements - WITH NULL SAFETY
+    console.log('Initializing totals elements...');
+    
+    // Initialize the nested totals object
+    if (!elements.totals) {
+      elements.totals = {};
+    }
+    
+    Object.values(METALS).forEach(metalConfig => {
+      const metalKey = metalConfig.key;
+      const metalName = metalConfig.name;
+      
+      elements.totals[metalKey] = {
+        items: document.getElementById(`totalItems${metalName}`) || createDummyElement(),
+        weight: document.getElementById(`totalWeight${metalName}`) || createDummyElement(),
+        value: document.getElementById(`currentValue${metalName}`) || createDummyElement(),
+        purchased: document.getElementById(`totalPurchased${metalName}`) || createDummyElement(),
+        premium: document.getElementById(`totalPremium${metalName}`) || createDummyElement(),
+        lossProfit: document.getElementById(`lossProfit${metalName}`) || createDummyElement(),
+        avgPrice: document.getElementById(`avgPrice${metalName}`) || createDummyElement(),
+        avgPremium: document.getElementById(`avgPremium${metalName}`) || createDummyElement(),
+        avgCollectablePrice: document.getElementById(`avgCollectablePrice${metalName}`) || createDummyElement(),
+        avgNonCollectablePrice: document.getElementById(`avgNonCollectablePrice${metalName}`) || createDummyElement()
+      };
+    });
 
-  // Update version numbers dynamically
-  document.title = getAppTitle();
-  const appHeader = document.querySelector('.app-header h1');
-  if (appHeader) {
-    appHeader.textContent = getAppTitle();
-  }
-
-  // Initialize spot price elements for all metals
-  Object.values(METALS).forEach(metalConfig => {
-    const metalKey = metalConfig.key;
-    elements.spotPriceDisplay[metalKey] = document.getElementById(`spotPriceDisplay${metalConfig.name}`);
-    elements.userSpotPriceInput[metalKey] = document.getElementById(`userSpotPrice${metalConfig.name}`);
-    elements.saveSpotBtn[metalKey] = document.getElementById(`saveSpotBtn${metalConfig.name}`);
-    elements.resetSpotBtn[metalKey] = document.getElementById(`resetSpotBtn${metalConfig.name}`);
-  });
-
-  // Initialize totals elements
-  Object.values(METALS).forEach(metalConfig => {
-    const metalKey = metalConfig.key;
-    elements.totals[metalKey] = {
-      items: document.getElementById(`totalItems${metalConfig.name}`),
-      weight: document.getElementById(`totalWeight${metalConfig.name}`),
-      value: document.getElementById(`currentValue${metalConfig.name}`),
-      purchased: document.getElementById(`totalPurchased${metalConfig.name}`),
-      premium: document.getElementById(`totalPremium${metalConfig.name}`),
-      lossProfit: document.getElementById(`lossProfit${metalConfig.name}`),
-      avgPrice: document.getElementById(`avgPrice${metalConfig.name}`),
-      avgPremium: document.getElementById(`avgPremium${metalConfig.name}`),
-      avgCollectablePrice: document.getElementById(`avgCollectablePrice${metalConfig.name}`),
-      avgNonCollectablePrice: document.getElementById(`avgNonCollectablePrice${metalConfig.name}`)
+    // Initialize "All" totals with null safety
+    elements.totals.all = {
+      items: document.getElementById('totalItemsAll') || createDummyElement(),
+      weight: document.getElementById('totalWeightAll') || createDummyElement(),
+      value: document.getElementById('currentValueAll') || createDummyElement(),
+      purchased: document.getElementById('totalPurchasedAll') || createDummyElement(),
+      premium: document.getElementById('totalPremiumAll') || createDummyElement(),
+      lossProfit: document.getElementById('lossProfitAll') || createDummyElement(),
+      avgPrice: document.getElementById('avgPriceAll') || createDummyElement(),
+      avgPremium: document.getElementById('avgPremiumAll') || createDummyElement(),
+      avgCollectablePrice: document.getElementById('avgCollectablePriceAll') || createDummyElement(),
+      avgNonCollectablePrice: document.getElementById('avgNonCollectablePriceAll') || createDummyElement()
     };
-  });
 
-  // Initialize "All" totals with null safety
-  const nullElement = {
-    textContent: '',
-    innerHTML: '',
-    style: {}
-  };
+    // Initialize app data
+    console.log('Loading application data...');
+    if (elements.itemDate) {
+      elements.itemDate.value = todayStr();
+    }
+    
+    loadInventory();
+    loadSpotHistory();
+    
+    // Initialize API system
+    console.log('Initializing API system...');
+    apiConfig = loadApiConfig();
+    apiCache = loadApiCache();
+    
+    // Render initial display
+    console.log('Rendering initial display...');
+    renderTable();
+    fetchSpotPrice();
+    
+    // Update sync button states based on API availability
+    updateSyncButtonStates();
 
-  elements.totals.all = {
-    items: document.getElementById('totalItemsAll') || nullElement,
-    weight: document.getElementById('totalWeightAll') || nullElement,
-    value: document.getElementById('currentValueAll') || nullElement,
-    purchased: document.getElementById('totalPurchasedAll') || nullElement,
-    premium: document.getElementById('totalPremiumAll') || nullElement,
-    lossProfit: document.getElementById('lossProfitAll') || nullElement,
-    avgPrice: document.getElementById('avgPriceAll') || nullElement,
-    avgPremium: document.getElementById('avgPremiumAll') || nullElement,
-    avgCollectablePrice: document.getElementById('avgCollectablePriceAll') || nullElement,
-    avgNonCollectablePrice: document.getElementById('avgNonCollectablePriceAll') || nullElement
-  };
+    // Setup event listeners - this is critical and needs to be delayed slightly for file:// protocol
+    console.log('Setting up event listeners...');
+    
+    // Small delay to ensure all DOM elements are fully loaded
+    setTimeout(() => {
+      try {
+        setupEventListeners();
+        setupPagination();
+        setupSearch();
+        setupThemeToggle();
+        setupColumnResizing();
+        
+        console.log('=== EVENT LISTENERS SETUP COMPLETE ===');
+      } catch (eventError) {
+        console.error('Error setting up event listeners:', eventError);
+        console.error('Event setup stack trace:', eventError.stack);
+      }
+    }, 100);
+    
+    // Log initialization completion
+    console.log('=== APPLICATION INITIALIZATION COMPLETE ===');
+    console.log('API configured:', !!apiConfig);
+    console.log('API cache available:', !!apiCache && !!apiCache.data);
+    console.log('Critical button check:');
+    console.log('- API button element:', !!elements.apiBtn);
+    console.log('- Theme toggle element:', !!elements.themeToggle);
+    console.log('- Inventory form element:', !!elements.inventoryForm);
+    console.log('- Inventory table element:', !!elements.inventoryTable);
+    
+  } catch (error) {
+    console.error('=== INITIALIZATION ERROR ===');
+    console.error('Error details:', error);
+    console.error('Stack trace:', error.stack);
+    
+    // Try to show user-friendly error
+    const errorMessage = `Application initialization failed: ${error.message}
+    
+Please check:
+1. All JavaScript files are properly loaded
+2. HTML elements have correct IDs
+3. Browser console for detailed error information
 
-  // Initialize app
-  elements.itemDate.value = todayStr();
-  loadInventory();
-  loadSpotHistory();
-  
-  // Initialize API system
-  apiConfig = loadApiConfig();
-  apiCache = loadApiCache();
-  
-  renderTable();
-  fetchSpotPrice();
-  
-  // Update sync button states based on API availability
-  updateSyncButtonStates();
-
-  // Setup event listeners
-  setupEventListeners();
-  setupPagination();
-  setupSearch();
-  setupThemeToggle();
-  setupColumnResizing();
-  
-  // Log initialization info
-  console.log('Application initialized successfully');
-  console.log('API configured:', !!apiConfig);
-  console.log('API cache available:', !!apiCache);
+Reload the page to try again.`;
+    
+    alert(errorMessage);
+  }
 });
 
 // Make functions available globally for inline event handlers
