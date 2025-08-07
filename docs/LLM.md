@@ -2,8 +2,15 @@
 
 ## 🎯 Project Context Prompt
 
-You are working on the **Precious Metals Inventory Tool v3.0.5**, a comprehensive client-side web application for tracking precious metal investments. This tool helps users manage their gold, silver, platinum, and palladium inventory with detailed analytics, import/export capabilities, storage location tracking, and notes functionality.
-
+You are working on the **Precious Metals Inventory Tool v3.0.5**, a comprehensive client-side web application for tracking precious metal investments. This tool helps users manage their gold, silver, platinum, and palladium inventory with detailed analytics, import/export capabilities, storage location tracking, and notes functionality. Please ensure that all related documentation remains fully up to date and consistent. Specifically, maintain the accuracy, coherence, and synchronization of the following key documentation files throughout your work:
+docs/README.md — Detailed project information covering user guidance, features, installation, and contribution.
+docs/LLM.md — This development guide for AI assistants.
+docs/CHANGELOG.md — Chronological version history with feature additions and fixes.
+docs/STATUS.md — Current project status, including completeness and feature coverage.
+docs/STRUCTURE.md — Project folder and file organization.
+docs/VERSIONING.md — Version management system and guidelines.
+ Preserving the integrity of these documents is essential to support developers, users, and automated systems interacting with or extending the codebase. Any modifications to source code, features, or user workflows should be reflected clearly in the appropriate documentation files to ensure project maintainability and clarity for all stakeholders.
+ 
 ## 📁 Project Structure
 
 ```
