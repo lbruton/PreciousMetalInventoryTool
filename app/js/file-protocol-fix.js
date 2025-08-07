@@ -222,13 +222,13 @@ const setupEventDelegation = () => {
       const buttonId = target.id;
       console.log(`Spot price button clicked: ${buttonId}`);
       
-      if (buttonId.startsWith('addBtn')) {
-        const metal = buttonId.replace('addBtn', '');
-        const manualInput = document.getElementById(`manualInput${metal}`);
-        if (manualInput) {
-          manualInput.style.display = manualInput.style.display === 'none' ? 'block' : 'none';
-        }
-      }
+     // if (buttonId.startsWith('addBtn')) {
+     //   const metal = buttonId.replace('addBtn', '');
+     //   const manualInput = document.getElementById(`manualInput${metal}`);
+     //   if (manualInput) {
+     //     manualInput.style.display = manualInput.style.display === 'none' ? 'block' : 'none';
+     //   }
+     // }
       
       if (buttonId.startsWith('resetBtn')) {
         const metal = buttonId.replace('resetBtn', '');
