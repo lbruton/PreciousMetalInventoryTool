@@ -13,7 +13,10 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes" name="viewport"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; connect-src 'self'; img-src 'self' data:;">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;
+  connect-src 'self' https://metals-api.com https://api.metals.dev https://api.metalpriceapi.com;">
 <!-- Title is dynamically updated by init.js using APP_VERSION constant -->
 <title>Precious Metals Inventory Tool</title>
 <!-- FILE PROTOCOL COMPATIBILITY - MUST LOAD FIRST -->
