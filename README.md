@@ -1,18 +1,22 @@
-# Precious Metals Inventory Tool v3.0.5
+# Precious Metals Inventory Tool v3.2.0
 
 The Precious Metals Inventory Tool is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics and enhanced tracking capabilities.
 
-## 🆕 What's New in v3.0.5
+## 🆕 What's New in v3.2.0
 
-- **Notes Field**: Added optional notes field for detailed item documentation
-- **Enhanced Search**: Search now includes notes content along with all other fields
-- **Complete Export Support**: Notes field included in all export formats (CSV, JSON, Excel, PDF, HTML)
-- **Improved Sample Data**: Updated sample.csv with realistic notes examples
-- **Backwards Compatibility**: Existing data automatically upgraded with empty notes field
+- **🛡️ File-Based Caching**: Bulletproof WordPress plugin caching that survives hosting provider purges
+- **⚡ Improved Reliability**: Works on ANY hosting provider, including shared hosting
+- **🔧 Enhanced WordPress Plugin**: Updated plugin with admin dashboard and cache monitoring
+- **📊 Cache Status Monitoring**: Real-time cache health indicators in admin interface
+- **🚀 Better Performance**: Faster loading with reliable file-based cache system
+- **🛠️ Hosting Independence**: No more cache issues with hosting provider limitations
 
 ## Key Features
 
 - **Multi-Metal Support**: Track Silver, Gold, Platinum, and Palladium investments
+- **Live Metal Prices**: Integration with metals.dev API for real-time spot prices
+- **Bulletproof Caching**: File-based caching system that works on all hosting providers
+- **WordPress Plugin**: Easy installation with reliable caching for hosting compatibility
 - **Comprehensive Tracking**: Metal type, quantity, weight, purchase/storage locations, and notes
 - **Financial Calculations**: Automatic calculation of premiums, profits/losses, and averages
 - **Collectable Item Support**: Special handling for collectible items with numismatic value
@@ -24,7 +28,67 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 - **Local Storage**: All data stored locally in browser - no server required
 - **Privacy**: No data transmission - everything stays on your device
 
-## Installation
+## WordPress Plugin Installation
+
+### Option 1: Simple Plugin (Recommended for hosting issues)
+
+1. **Download Plugin Files**:
+   - Copy `plugins/precious-metals-simple/` to your WordPress installation
+   - Upload to `/wp-content/plugins/precious-metals-simple/`
+
+2. **Activate Plugin**:
+   - Go to WordPress Admin > Plugins
+   - Find "Precious Metals Simple API"
+   - Click "Activate"
+
+3. **Configure (Optional)**:
+   - Go to Settings > Precious Metals
+   - Default API key is included (DPD98Z5TMCNMSYS0I2DA118S0I2DA)
+   - Plugin will automatically start fetching prices twice daily
+
+### Why File-Based Caching?
+
+**Traditional WordPress caching fails on shared hosting because:**
+- ❌ Hosting providers clear object cache
+- ❌ Memory limitations cause cache failures  
+- ❌ Database connection issues
+- ❌ Transient data gets purged unpredictably
+
+**Our file-based solution:**
+- ✅ **Stores cache in protected `/wp-content/uploads/precious-metals-cache/` directory**
+- ✅ **Survives hosting provider cache purges**
+- ✅ **Works with shared hosting limitations**
+- ✅ **Automatic fallback to stale cache during API outages**
+- ✅ **No database dependencies for cached data**
+
+### Plugin Features
+
+- **File-Based Caching**: Reliable caching that works everywhere
+- **Multiple API Support**: Automatic failover between 3 different APIs
+- **Admin Dashboard**: Real-time cache status and price monitoring
+- **REST API Endpoints**: Clean API for external consumption
+- **Twice Daily Updates**: Automatic price fetching every 12 hours
+- **Cache Health Monitoring**: Visual indicators for cache status
+
+### API Endpoints
+
+Once installed, your plugin provides these endpoints:
+
+```bash
+# Get current prices
+GET /wp-json/precious-metals/v1/prices
+
+# Force refresh prices
+GET /wp-json/precious-metals/v1/prices?force=true
+
+# Check cache status  
+GET /wp-json/precious-metals/v1/cache-status
+
+# Plugin status
+GET /wp-json/precious-metals/v1/status
+```
+
+## Installation (Standalone App)
 
 1. Clone or download this repository
 2. Open `index.html` in a web browser
@@ -62,10 +126,48 @@ PreciousMetalInventoryTool/
 │   ├── index.html         # Application interface
 │   ├── css/styles.css     # Complete styling
 │   └── js/               # Modular JavaScript
+├── plugins/              # WordPress plugins
+│   ├── precious-metals-simple/  # Recommended plugin
+│   │   ├── precious-metals-simple.php
+│   │   ├── class-api-handler.php
+│   │   ├── class-rest-endpoint.php
+│   │   ├── config.php
+│   │   └── README.md
+│   └── precious-metals-api.php  # Single-file plugin
 ├── docs/                 # Documentation
 ├── sample.csv           # Sample data with notes
 └── index.html          # Landing page
 ```
+
+## WordPress Plugin Troubleshooting
+
+### Common Issues & Solutions
+
+**"Unable to fetch metal prices"**
+- ✅ Plugin uses file-based caching - check Settings > Precious Metals for cache status
+- ✅ Even if API fails, cached data will still display
+- ✅ Default API key is included, no configuration required
+
+**"Cache directory not writable"**
+- Check file permissions: `chmod 755 wp-content/uploads/`
+- Contact hosting provider if issues persist
+- File caching works on all hosting providers with basic file permissions
+
+**Plugin not working on shared hosting**
+- ✅ File-based caching specifically designed for shared hosting
+- ✅ No special configuration required
+- ✅ Works with hosting provider limitations
+
+**Stale prices showing**
+- This is normal behavior during API outages
+- Plugin serves cached data as fallback
+- Fresh data returns when API is available
+
+### Cache Locations
+
+**Plugin Cache**: `/wp-content/uploads/precious-metals-cache/prices.json`
+**Protection**: Directory protected with `.htaccess` and `index.php`
+**Monitoring**: Admin dashboard shows real-time cache status
 
 ## Documentation
 
@@ -75,6 +177,7 @@ PreciousMetalInventoryTool/
 - **[docs/STATUS.md](docs/STATUS.md)** - Current project status
 - **[docs/STRUCTURE.md](docs/STRUCTURE.md)** - Project organization
 - **[docs/VERSIONING.md](docs/VERSIONING.md)** - Version management
+- **[plugins/precious-metals-simple/README.md](plugins/precious-metals-simple/README.md)** - WordPress plugin documentation
 
 ## Code Quality
 
@@ -86,14 +189,16 @@ This project maintains high code quality standards with:
 - Input sanitization and XSS protection
 - Performance monitoring for critical functions
 - Accessibility compliance with ARIA labels
+- Reliable file-based caching system
 
 ## Data Privacy & Security
 
 - **Local Storage Only**: All data stored in browser localStorage
-- **No Server Communication**: Zero external data transmission
+- **No Server Communication**: Zero external data transmission (except optional API calls)
 - **Input Sanitization**: XSS protection on all user inputs
 - **Privacy First**: Your data never leaves your device
 - **Export for Backup**: Multiple export formats for data portability
+- **Secure Cache**: WordPress plugin cache files are protected from direct access
 
 ## Browser Compatibility
 
@@ -112,6 +217,7 @@ This project is designed to be maintainable and extensible. When making changes:
 3. Update relevant documentation files
 4. Test backwards compatibility
 5. Ensure all exports include new fields
+6. Test WordPress plugin compatibility
 
 ## License
 
@@ -119,6 +225,7 @@ This project is open source and available for personal use.
 
 ---
 
-**Current Version**: 3.0.5  
-**Last Updated**: August 6, 2025  
-**Status**: Feature Complete ✅
+**Current Version**: 3.2.0  
+**Last Updated**: August 7, 2025  
+**Status**: Production Ready ✅  
+**WordPress Plugin**: File-Based Caching ✅

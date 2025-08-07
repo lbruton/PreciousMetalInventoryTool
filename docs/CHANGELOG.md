@@ -2,11 +2,58 @@
 
 ## 🚀 Roadmap (Future Versions)
 
-*All major planned features have been implemented! The tool now includes comprehensive inventory management with storage location tracking, multi-format import/export, advanced analytics, and a modern modular architecture.*
+* **Enhanced Price Charts**: Add interactive historical price charts
+* **Market News Integration**: Display relevant precious metals news
+* **Price Alerts**: Set price thresholds for notifications
+* **Multiple Currency Support**: Convert between different currencies
 
 ---
 
 ## 📋 Version History
+
+### Version 3.2.0 - File-Based Caching Implementation (2025-08-07)
+- **🛡️ Bulletproof Caching**: Implemented file-based caching system that survives hosting provider cache purges
+- **⚡ Hosting Independence**: Cache system now works on ALL hosting providers, including shared hosting
+- **🔧 Enhanced WordPress Plugin**: Major update to WordPress plugin with reliable file-based caching
+- **📊 Cache Monitoring**: Added real-time cache status monitoring in WordPress admin dashboard
+- **🚀 Improved Reliability**: Plugin now continues working even during API outages using cached data
+- **🛠️ Admin Interface**: Enhanced WordPress admin page with cache health indicators
+- **📱 REST API Extensions**: Added `/cache-status` endpoint for monitoring cache health
+- **🔒 Security Enhancements**: Protected cache directory with `.htaccess` and security files
+- **⚙️ Smart Fallbacks**: Automatic fallback to stale cache when fresh data unavailable
+- **📋 Status Indicators**: Visual cache freshness indicators throughout admin interface
+- **🔄 Multi-Layer Caching**: Database + file cache for maximum reliability
+- **📈 Performance**: Faster loading with reduced API dependency
+- **🛡️ Fault Tolerance**: Continues serving data even during hosting provider issues
+- **📖 Documentation**: Comprehensive documentation updates for file-based caching system
+- **🔧 Troubleshooting**: Added troubleshooting guide for common hosting issues
+
+**Technical Improvements:**
+- File cache stored in protected `/wp-content/uploads/precious-metals-cache/` directory
+- Automatic cache directory creation with security protection
+- Smart cache age detection and freshness indicators
+- Graceful degradation during API failures
+- Enhanced error logging and debugging capabilities
+- Cache size and modification time monitoring
+- Manual cache clearing functionality
+- REST API cache status reporting
+
+**Why File-Based Caching:**
+- ✅ Survives hosting provider cache purges
+- ✅ Works with shared hosting limitations  
+- ✅ No database dependencies for cached data
+- ✅ Automatic fallback to stale cache during outages
+- ✅ Compatible with ALL WordPress hosting providers
+
+### Version 3.1.0 - Live Price API Integration (2025-08-06)
+- **New Feature**: Added live spot price integration with the metals.dev API
+- **WordPress Plugin**: Created WordPress plugin to proxy API requests and manage API key
+- **Auto-Refresh**: Added automatic and manual refresh options for spot prices
+- **API Management**: Implemented intelligent caching to stay within API request limits
+- **Refresh Button**: Added refresh button to spot price section for manual updates
+- **Integration Guide**: Created comprehensive documentation for API integration
+- **Test Environment**: Included test HTML file for development and testing
+- **Future-Proofing**: Built with extensibility for additional metals and currencies
 
 ### Version 3.0.5 – Notes Field Enhancement (2025-08-06)
 - **New feature**: Added optional notes field for inventory items
