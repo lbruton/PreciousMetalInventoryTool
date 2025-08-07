@@ -54,6 +54,53 @@ const clearApiConfig = () => {
 };
 
 /**
+ * Clears only the API cache, keeping the configuration
+ */
+const clearApiCache = () => {
+  localStorage.removeItem(API_CACHE_KEY);
+  apiCache = null;
+  updateApiStatus();
+  alert('API cache cleared. Next sync will pull fresh data from the API.');
+};
+
+/**
+ * Refreshes display using cached data without making API calls
+ * @returns {boolean} Success status
+ */
+const refreshFromCache = () => {
+  const cache = loadApiCache();
+  if (!cache || !cache.data) {
+    return false;
+  }
+
+  let updatedCount = 0;
+  Object.entries(cache.data).forEach(([metal, price]) => {
+    const metalConfig = Object.values(METALS).find(m => m.key === metal);
+    if (metalConfig && price > 0) {
+      // Save to localStorage
+      localStorage.setItem(metalConfig.spotKey, price.toString());
+      spotPrices[metal] = price;
+      
+      // Update display
+      elements.spotPriceDisplay[metal].textContent = formatDollar(price);
+      
+      // Record in history as 'cached' to distinguish from fresh API calls
+      recordSpot(price, 'cached', metalConfig.name);
+      
+      updatedCount++;
+    }
+  });
+
+  if (updatedCount > 0) {
+    // Update summary calculations
+    updateSummary();
+    return true;
+  }
+  
+  return false;
+};
+
+/**
  * Loads cached API data from localStorage
  * @returns {Object|null} Cached data or null if expired/not found
  */
@@ -164,12 +211,36 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
 /**
  * Syncs spot prices from API and updates the application
  * @param {boolean} showProgress - Whether to show progress indicators
+ * @param {boolean} forceSync - Whether to force sync even if cache is valid
  * @returns {Promise<boolean>} Promise resolving to success status
  */
-const syncSpotPricesFromApi = async (showProgress = true) => {
+const syncSpotPricesFromApi = async (showProgress = true, forceSync = false) => {
   if (!apiConfig || !apiConfig.provider || !apiConfig.apiKey) {
     alert('No API configuration found. Please configure an API provider first.');
     return false;
+  }
+
+  // Check cache age if not forcing sync
+  if (!forceSync) {
+    const cache = loadApiCache();
+    if (cache && cache.data && cache.timestamp) {
+      const now = new Date().getTime();
+      const cacheAge = now - cache.timestamp;
+      
+      // If cache is less than 24 hours old, use cached data instead of API call
+      if (cacheAge < API_CACHE_DURATION) {
+        if (showProgress) {
+          const hoursAgo = Math.floor(cacheAge / (1000 * 60 * 60));
+          const minutesAgo = Math.floor(cacheAge / (1000 * 60));
+          const timeText = hoursAgo > 0 ? `${hoursAgo} hours ago` : `${minutesAgo} minutes ago`;
+          
+          alert(`Using cached prices from ${timeText}. To pull fresh data from the API, go to the API configuration and clear the cache first.`);
+        }
+        
+        // Use cached data to refresh display
+        return refreshFromCache();
+      }
+    }
   }
 
   if (showProgress) {

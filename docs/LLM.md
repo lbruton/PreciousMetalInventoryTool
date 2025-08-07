@@ -272,5 +272,5 @@ The `sample.csv` file includes realistic notes examples for testing import funct
 
 **Remember**: This is a client-side application with no backend dependencies. All data persistence uses localStorage, and all functionality should work offline. Focus on user experience, data integrity, and backwards compatibility.
 
-**Current Version**: 3.0.5 with notes field feature complete  
-**Last Updated**: August 6, 2025
+**Current Version**: 3.1.1 with enhanced API sync caching  
+**Last Updated**: August 7, 2025

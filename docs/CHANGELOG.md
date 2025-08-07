@@ -8,6 +8,22 @@
 
 ## 📋 Version History
 
+### Version 3.1.1 – Enhanced API Sync Caching (2025-08-07)
+- **Intelligent sync caching**: Modified sync behavior to respect 24-hour cache duration
+  - Regular sync buttons now check cache age and use stored values if API was synced within 24 hours
+  - Users are informed when cached prices are being used with cache age information
+  - Eliminates unnecessary API calls and preserves API rate limits
+- **New API modal functionality**: Added cache management tools in API configuration
+  - New "Sync Now" button to force fresh API calls from the modal
+  - New "Clear Cache" button to reset cache and force next sync to pull fresh data
+  - Enhanced user control over when fresh API data is retrieved
+- **Improved user experience**: Better messaging and guidance
+  - Clear instructions on how to get fresh API data (via API modal)
+  - Updated tooltips and button titles to reflect new caching behavior
+  - Preserved all existing manual price override functionality
+- **Enhanced price history tracking**: Added 'cached' source type to distinguish cache refreshes from fresh API calls
+- **Maintained backwards compatibility**: All existing functionality preserved, with enhanced caching as the only behavioral change
+
 ### Version 3.1.0 – API Integration & Live Spot Prices (2025-08-07)
 - **Major feature**: Full API integration for live spot price feeds
   - Support for three major providers: Metals.dev, Metals-API.com, MetalPriceAPI.com

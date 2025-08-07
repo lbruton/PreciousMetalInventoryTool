@@ -670,6 +670,23 @@ const setupApiEvents = () => {
         }
       });
     }
+    
+    // Sync now button (force fresh API call)
+    const apiSyncNowBtn = document.getElementById('apiSyncNowBtn');
+    if (apiSyncNowBtn) {
+      apiSyncNowBtn.addEventListener('click', async () => {
+        const success = await syncSpotPricesFromApi(true, true); // Force sync
+        if (success) {
+          updateApiStatus(); // Refresh status display
+        }
+      });
+    }
+    
+    // Clear cache button
+    const apiClearCacheBtn = document.getElementById('apiClearCacheBtn');
+    if (apiClearCacheBtn) {
+      apiClearCacheBtn.addEventListener('click', clearApiCache);
+    }
 
     // Form submission
     if (apiConfigForm) {
