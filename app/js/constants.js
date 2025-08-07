@@ -68,7 +68,7 @@ const API_PROVIDERS = {
 // =============================================================================
 
 /** @constant {string} APP_VERSION - Application version */
-const APP_VERSION = '3.1.2';
+const APP_VERSION = '3.1.5';
 
 /** @constant {string} LS_KEY - LocalStorage key for inventory data */
 const LS_KEY = 'metalInventory';
@@ -115,7 +115,7 @@ const METALS = {
   SILVER: { 
     name: 'Silver', 
     key: 'silver', 
-    spotKey: 'userSpotPriceSilver',
+    spotKey: 'spotSilver',
     localStorageKey: 'spotSilver',
     color: 'silver',
     defaultPrice: 25.00
@@ -123,7 +123,7 @@ const METALS = {
   GOLD: { 
     name: 'Gold', 
     key: 'gold', 
-    spotKey: 'userSpotPriceGold',
+    spotKey: 'spotGold',
     localStorageKey: 'spotGold',
     color: 'gold',
     defaultPrice: 2500.00
@@ -131,7 +131,7 @@ const METALS = {
   PLATINUM: { 
     name: 'Platinum', 
     key: 'platinum', 
-    spotKey: 'userSpotPricePlatinum',
+    spotKey: 'spotPlatinum',
     localStorageKey: 'spotPlatinum',
     color: 'platinum',
     defaultPrice: 1000.00
@@ -139,7 +139,7 @@ const METALS = {
   PALLADIUM: { 
     name: 'Palladium', 
     key: 'palladium', 
-    spotKey: 'userSpotPricePalladium',
+    spotKey: 'spotPalladium',
     localStorageKey: 'spotPalladium',
     color: 'palladium',
     defaultPrice: 1000.00

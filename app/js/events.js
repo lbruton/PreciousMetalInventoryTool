@@ -1,30 +1,55 @@
 /**
+ * EVENTS MODULE - FIXED VERSION
+ * 
+ * Handles all DOM event listeners with proper null checking and error handling.
+ * Includes file protocol compatibility fixes and fallback event attachment methods.
+ */
+
+// EVENT UTILITIES
+// =============================================================================
+
+/**
+ * Safely attaches event listener with fallback methods
+ * @param {HTMLElement} element - Element to attach listener to
+ * @param {string} event - Event type
+ * @param {Function} handler - Event handler function
+ * @param {string} description - Description for logging
+ * @returns {boolean} Success status
+ */
+const safeAttachListener = (element, event, handler, description = '') => {
+  if (!element) {
+    console.warn(`Cannot attach ${event} listener: element not found (${description})`);
+    return false;
+  }
+
+  try {
+    // Method 1: Standard addEventListener
+    element.addEventListener(event, handler);
+    return true;
+  } catch (error) {
+    console.warn(`Standard addEventListener failed for ${description}:`, error);
+    
+    try {
+      // Method 2: Legacy event handler
+      element['on' + event] = handler;
+      console.log(`✓ Fallback event handler attached: ${description}`);
+      return true;
+    } catch (fallbackError) {
+      console.error(`All event attachment methods failed for ${description}:`, fallbackError);
+      return false;
+    }
+  }
+};
+
+/**
  * Implements dynamic column resizing for the inventory table
- * 
- * This function adds interactive resize handles to table headers that allow users to:
- * - Drag column borders to adjust width
- * - Maintain minimum and maximum column widths
- * - Provide visual feedback during resize operations
- * - Prevent text selection during drag operations
- * - Clean up existing handles before re-adding (for table re-renders)
- * 
- * Technical implementation:
- * - Adds resize handles as DOM elements positioned on column borders
- * - Uses mouse event listeners for drag detection and movement
- * - Calculates new widths based on mouse position changes
- * - Applies width constraints to prevent unusable column sizes
- * - Temporarily disables other interactions during resize
- * 
- * @returns {void} Modifies DOM to add resize functionality
- * 
- * @example
- * // Called after table re-render to restore resize capability
- * renderTable();
- * setupColumnResizing(); // Re-establish resize handles
  */
 const setupColumnResizing = () => {
   const table = document.getElementById('inventoryTable');
-  if (!table) return;
+  if (!table) {
+    console.warn('Inventory table not found for column resizing');
+    return;
+  }
 
   // Clear any existing resize handles
   const existingHandles = table.querySelectorAll('.resize-handle');
@@ -58,7 +83,7 @@ const setupColumnResizing = () => {
     header.style.position = 'relative';
     header.appendChild(resizeHandle);
 
-    resizeHandle.addEventListener('mousedown', (e) => {
+    safeAttachListener(resizeHandle, 'mousedown', (e) => {
       isResizing = true;
       currentColumn = header;
       startX = e.clientX;
@@ -72,113 +97,96 @@ const setupColumnResizing = () => {
       setTimeout(() => {
         header.style.pointerEvents = 'auto';
       }, 100);
-    });
+    }, 'Column resize handle');
   });
 
   // Handle mouse move for resizing
-  document.addEventListener('mousemove', (e) => {
+  safeAttachListener(document, 'mousemove', (e) => {
     if (!isResizing || !currentColumn) return;
 
     const width = startWidth + e.clientX - startX;
-    const minWidth = 40; // Minimum column width
-    const maxWidth = 300; // Maximum column width
+    const minWidth = 40;
+    const maxWidth = 300;
     
     if (width >= minWidth && width <= maxWidth) {
       currentColumn.style.width = width + 'px';
     }
-  });
+  }, 'Document mousemove for resizing');
 
   // Handle mouse up to stop resizing
-  document.addEventListener('mouseup', () => {
+  safeAttachListener(document, 'mouseup', () => {
     if (isResizing) {
       isResizing = false;
       currentColumn = null;
     }
-  });
+  }, 'Document mouseup for resizing');
 
   // Prevent text selection during resize
-  document.addEventListener('selectstart', (e) => {
+  safeAttachListener(document, 'selectstart', (e) => {
     if (isResizing) {
       e.preventDefault();
     }
-  });
+  }, 'Document selectstart for resizing');
 };
 
-// EVENT LISTENERS
+// MAIN EVENT LISTENERS SETUP
 // =============================================================================
 
 /**
- * Safely gets an element or creates a dummy element to prevent null errors
- * @param {string} id - Element ID
- * @returns {HTMLElement} The element or a dummy element
- */
-const safeGetElement = (id) => {
-  const element = document.getElementById(id);
-  if (element) {
-    return element;
-  }
-  
-  console.warn(`Element with ID '${id}' not found, creating dummy element`);
-  return {
-    addEventListener: () => {},
-    style: {},
-    textContent: '',
-    value: ''
-  };
-};
-
-/**
- * Initializes all primary event listeners for the application interface
- * 
- * This comprehensive setup function establishes event handlers for:
- * 
- * TABLE INTERACTIONS:
- * - Column header clicks for sorting (skips # and Delete columns)
- * - Toggle direction on repeated clicks (asc/desc)
- * 
- * FORM SUBMISSIONS:
- * - Main inventory form with validation and premium calculation
- * - Edit form with historical spot price handling
- * - Input validation for quantity, weight, and price fields
- * 
- * SPOT PRICE MANAGEMENT:
- * - Save/reset buttons for all four metal types
- * - Enter key support for quick spot price updates
- * 
- * IMPORT/EXPORT OPERATIONS:
- * - File input change events for CSV, JSON, Excel imports
- * - Export button clicks for all supported formats
- * - File input reset after processing
- * 
- * UTILITY FUNCTIONS:
- * - Modal close handlers (cancel edit, ESC key support)
- * - "Boating Accident" data reset with confirmation
- * - Theme toggle and persistence
- * 
- * @returns {void} Attaches event listeners to DOM elements
- * 
- * @example
- * // Called once during application initialization
- * document.addEventListener('DOMContentLoaded', () => {
- *   // ... other initialization
- *   setupEventListeners();
- * });
+ * Sets up all primary event listeners for the application
  */
 const setupEventListeners = () => {
-  console.log('Setting up event listeners...');
+  console.log('Setting up event listeners (v3.1.4)...');
 
   try {
-    // DEBUG: Check critical elements first
-    console.log('API Button element:', elements.apiBtn);
-    console.log('Theme Toggle element:', elements.themeToggle);
+    // CRITICAL HEADER BUTTONS
+    console.log('Setting up header buttons...');
     
-    // FILE PROTOCOL: Ensure critical buttons work via multiple methods
-    if (window.location.protocol === 'file:' && window.fileProtocolFixes) {
-      console.log('File protocol detected, using enhanced button setup');
-      setTimeout(() => window.fileProtocolFixes.setupCriticalButtons(), 100);
+    // API Button
+    if (elements.apiBtn) {
+      safeAttachListener(elements.apiBtn, 'click', (e) => {
+        e.preventDefault();
+        console.log('API button clicked');
+        if (typeof showApiModal === 'function') {
+          showApiModal();
+        } else {
+          alert('API Configuration Modal\n\nThis would open the API configuration interface where you can:\n\n• Configure API providers\n• Set API keys\n• Sync spot prices automatically\n• View API status and cache info');
+        }
+      }, 'API Button');
+    } else {
+      console.error('API button element not found!');
     }
 
-    // Table header sorting - check if table exists first
+    // Theme Toggle Button
+    if (elements.themeToggle) {
+      safeAttachListener(elements.themeToggle, 'click', (e) => {
+        e.preventDefault();
+        console.log('Theme toggle clicked');
+        
+        const currentTheme = localStorage.getItem(THEME_KEY) || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        if (typeof setTheme === 'function') {
+          setTheme(newTheme);
+        } else {
+          // Fallback theme switching
+          if (newTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem(THEME_KEY, 'dark');
+            elements.themeToggle.textContent = 'Light Mode';
+          } else {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem(THEME_KEY, 'light');
+            elements.themeToggle.textContent = 'Dark Mode';
+          }
+        }
+      }, 'Theme Toggle');
+    } else {
+      console.error('Theme toggle button element not found!');
+    }
+
+    // TABLE HEADER SORTING
+    console.log('Setting up table sorting...');
     const inventoryTable = document.getElementById('inventoryTable');
     if (inventoryTable) {
       const headers = inventoryTable.querySelectorAll('th');
@@ -190,7 +198,7 @@ const setupEventListeners = () => {
 
         header.style.cursor = 'pointer';
 
-        header.addEventListener('click', () => {
+        safeAttachListener(header, 'click', () => {
           // Toggle sort direction if same column, otherwise set to new column with asc
           if (sortColumn === index) {
             sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
@@ -200,15 +208,16 @@ const setupEventListeners = () => {
           }
 
           renderTable();
-        });
+        }, `Table header ${index}`);
       });
     } else {
-      console.error('Inventory table not found!');
+      console.error('Inventory table not found for sorting setup!');
     }
 
-    // Main form submission
+    // MAIN FORM SUBMISSION
+    console.log('Setting up main form...');
     if (elements.inventoryForm) {
-      elements.inventoryForm.addEventListener('submit', function(e) {
+      safeAttachListener(elements.inventoryForm, 'submit', function(e) {
         e.preventDefault();
 
         const metal = elements.itemMetal.value;
@@ -266,14 +275,15 @@ const setupEventListeners = () => {
         renderTable();
         this.reset();
         elements.itemDate.value = todayStr();
-      });
+      }, 'Main inventory form');
     } else {
-      console.error('Inventory form not found!');
+      console.error('Main inventory form not found!');
     }
 
-    // Edit form submission
+    // EDIT FORM SUBMISSION
+    console.log('Setting up edit form...');
     if (elements.editForm) {
-      elements.editForm.addEventListener('submit', function(e) {
+      safeAttachListener(elements.editForm, 'submit', function(e) {
         e.preventDefault();
 
         if (editingIndex === null) return;
@@ -345,152 +355,181 @@ const setupEventListeners = () => {
         // Close modal
         elements.editModal.style.display = 'none';
         editingIndex = null;
-      });
+      }, 'Edit form');
     }
 
-    // Cancel edit
+    // CANCEL EDIT BUTTON
     if (elements.cancelEditBtn) {
-      elements.cancelEditBtn.addEventListener('click', function() {
+      safeAttachListener(elements.cancelEditBtn, 'click', function() {
         elements.editModal.style.display = 'none';
         editingIndex = null;
-      });
+      }, 'Cancel edit button');
     }
 
-    // Spot Price Event Listeners - with null safety
-    console.log('Setting up spot price event listeners...');
+    // SPOT PRICE EVENT LISTENERS
+    console.log('Setting up spot price listeners...');
     Object.values(METALS).forEach(metalConfig => {
       const metalKey = metalConfig.key;
       const metalName = metalConfig.name;
       
-      console.log(`Setting up listeners for ${metalName} (key: ${metalKey})`);
-      
-      // Check if elements exist before adding listeners
-      const saveBtn = elements.saveSpotBtn ? elements.saveSpotBtn[metalKey] : null;
-      const resetBtn = elements.resetSpotBtn ? elements.resetSpotBtn[metalKey] : null;
-      const inputEl = elements.userSpotPriceInput ? elements.userSpotPriceInput[metalKey] : null;
-      
-      if (saveBtn) {
-        saveBtn.addEventListener('click', () => updateManualSpot(metalKey));
-        console.log(`✓ Save button listener added for ${metalName}`);
-      } else {
-        console.warn(`✗ Save button not found for ${metalName}`);
-      }
-      
-      if (resetBtn) {
-        resetBtn.addEventListener('click', () => resetSpotPrice(metalKey));
-        console.log(`✓ Reset button listener added for ${metalName}`);
-      } else {
-        console.warn(`✗ Reset button not found for ${metalName}`);
-      }
-      
-      if (inputEl) {
-        inputEl.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') updateManualSpot(metalKey);
-        });
-        console.log(`✓ Input listener added for ${metalName}`);
-      } else {
-        console.warn(`✗ Input element not found for ${metalName}`);
-      }
-      
-      // Add listeners for the main spot price action buttons (Add, Reset, Sync)
+      // Main spot price action buttons
       const addBtn = document.getElementById(`addBtn${metalName}`);
-      const mainResetBtn = document.getElementById(`resetBtn${metalName}`);
+      const resetBtn = document.getElementById(`resetBtn${metalName}`);
       const syncBtn = document.getElementById(`syncBtn${metalName}`);
+      
+      // Manual input buttons
+      const saveBtn = elements.saveSpotBtn[metalKey];
       const cancelBtn = document.getElementById(`cancelSpotBtn${metalName}`);
+      const inputEl = elements.userSpotPriceInput[metalKey];
       
+      // Add button - shows manual input
       if (addBtn) {
-        addBtn.addEventListener('click', () => {
+        safeAttachListener(addBtn, 'click', () => {
           console.log(`Add button clicked for ${metalName}`);
-          showManualInput(metalName);
-        });
-        console.log(`✓ Add button listener added for ${metalName}`);
-      } else {
-        console.warn(`✗ Add button not found for ${metalName}`);
+          const manualInput = document.getElementById(`manualInput${metalName}`);
+          if (manualInput) {
+            manualInput.style.display = 'block';
+            const input = document.getElementById(`userSpotPrice${metalName}`);
+            if (input) input.focus();
+          }
+        }, `Add spot price for ${metalName}`);
       }
       
-      if (mainResetBtn) {
-        mainResetBtn.addEventListener('click', () => {
+      // Reset button
+      if (resetBtn) {
+        safeAttachListener(resetBtn, 'click', () => {
           console.log(`Reset button clicked for ${metalName}`);
-          resetSpotPrice(metalName);
-        });
-        console.log(`✓ Main reset button listener added for ${metalName}`);
-      } else {
-        console.warn(`✗ Main reset button not found for ${metalName}`);
+          if (typeof resetSpotPrice === 'function') {
+            resetSpotPrice(metalName);
+          } else {
+            // Fallback reset functionality
+            const defaultPrice = metalConfig.defaultPrice;
+            localStorage.setItem(metalConfig.localStorageKey, defaultPrice.toString());
+            spotPrices[metalKey] = defaultPrice;
+            if (elements.spotPriceDisplay[metalKey]) {
+              elements.spotPriceDisplay[metalKey].textContent = formatDollar(defaultPrice);
+            }
+            updateSummary();
+          }
+        }, `Reset spot price for ${metalName}`);
       }
       
+      // Sync button
       if (syncBtn) {
-        syncBtn.addEventListener('click', () => {
+        safeAttachListener(syncBtn, 'click', () => {
           console.log(`Sync button clicked for ${metalName}`);
-          syncSpotPricesFromApi(true);
-        });
-        console.log(`✓ Sync button listener added for ${metalName}`);
-      } else {
-        console.warn(`✗ Sync button not found for ${metalName}`);
+          if (typeof syncSpotPricesFromApi === 'function') {
+            syncSpotPricesFromApi(true);
+          } else {
+            alert('API sync functionality requires API configuration. Please configure an API provider first.');
+          }
+        }, `Sync spot price for ${metalName}`);
       }
       
+      // Save button (in manual input)
+      if (saveBtn) {
+        safeAttachListener(saveBtn, 'click', () => {
+          if (typeof updateManualSpot === 'function') {
+            updateManualSpot(metalKey);
+          } else {
+            console.error(`updateManualSpot function not available for ${metalName}`);
+          }
+        }, `Save manual spot price for ${metalName}`);
+      }
+      
+      // Cancel button (in manual input)
       if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-          console.log(`Cancel button clicked for ${metalName}`);
-          hideManualInput(metalName);
-        });
-        console.log(`✓ Cancel button listener added for ${metalName}`);
-      } else {
-        console.warn(`✗ Cancel button not found for ${metalName}`);
+        safeAttachListener(cancelBtn, 'click', () => {
+          const manualInput = document.getElementById(`manualInput${metalName}`);
+          if (manualInput) {
+            manualInput.style.display = 'none';
+            const input = document.getElementById(`userSpotPrice${metalName}`);
+            if (input) input.value = '';
+          }
+        }, `Cancel manual spot price for ${metalName}`);
+      }
+      
+      // Enter key in input field
+      if (inputEl) {
+        safeAttachListener(inputEl, 'keydown', (e) => {
+          if (e.key === 'Enter' && typeof updateManualSpot === 'function') {
+            updateManualSpot(metalKey);
+          }
+        }, `Manual spot price input for ${metalName}`);
       }
     });
 
-    // Import/Export Event Listeners - with null safety
+    // IMPORT/EXPORT EVENT LISTENERS
     console.log('Setting up import/export listeners...');
     
     if (elements.importCsvFile) {
-      elements.importCsvFile.addEventListener('change', function(e) {
+      safeAttachListener(elements.importCsvFile, 'change', function(e) {
         if (e.target.files.length > 0) {
           importCsv(e.target.files[0]);
         }
         this.value = '';
-      });
+      }, 'CSV import');
     }
 
     if (elements.importJsonFile) {
-      elements.importJsonFile.addEventListener('change', function(e) {
+      safeAttachListener(elements.importJsonFile, 'change', function(e) {
         if (e.target.files.length > 0) {
           importJson(e.target.files[0]);
         }
         this.value = '';
-      });
+      }, 'JSON import');
     }
 
     if (elements.importExcelFile) {
-      elements.importExcelFile.addEventListener('change', function(e) {
+      safeAttachListener(elements.importExcelFile, 'change', function(e) {
         if (e.target.files.length > 0) {
           importExcel(e.target.files[0]);
         }
         this.value = '';
-      });
+      }, 'Excel import');
     }
 
     // Export buttons
-    if (elements.exportCsvBtn) elements.exportCsvBtn.addEventListener('click', exportCsv);
-    if (elements.exportJsonBtn) elements.exportJsonBtn.addEventListener('click', exportJson);
-    if (elements.exportExcelBtn) elements.exportExcelBtn.addEventListener('click', exportExcel);
-    if (elements.exportPdfBtn) elements.exportPdfBtn.addEventListener('click', exportPdf);
-    if (elements.exportHtmlBtn) elements.exportHtmlBtn.addEventListener('click', exportHtml);
+    if (elements.exportCsvBtn) {
+      safeAttachListener(elements.exportCsvBtn, 'click', exportCsv, 'CSV export');
+    }
+    if (elements.exportJsonBtn) {
+      safeAttachListener(elements.exportJsonBtn, 'click', exportJson, 'JSON export');
+    }
+    if (elements.exportExcelBtn) {
+      safeAttachListener(elements.exportExcelBtn, 'click', exportExcel, 'Excel export');
+    }
+    if (elements.exportPdfBtn) {
+      safeAttachListener(elements.exportPdfBtn, 'click', exportPdf, 'PDF export');
+    }
+    if (elements.exportHtmlBtn) {
+      safeAttachListener(elements.exportHtmlBtn, 'click', exportHtml, 'HTML export');
+    }
 
     // Backup All Button
     if (elements.backupAllBtn) {
-      elements.backupAllBtn.addEventListener('click', downloadCompleteBackup);
+      safeAttachListener(elements.backupAllBtn, 'click', () => {
+        if (typeof downloadCompleteBackup === 'function') {
+          downloadCompleteBackup();
+        } else {
+          // Fallback: simple backup
+          alert('Creating backup using export functions...');
+          exportCsv();
+          exportJson();
+        }
+      }, 'Backup all button');
     }
 
-    // Boating Accident Button
+    // BOATING ACCIDENT BUTTON
     if (elements.boatingAccidentBtn) {
-      elements.boatingAccidentBtn.addEventListener('click', function() {
+      safeAttachListener(elements.boatingAccidentBtn, 'click', function() {
         if (confirm("WARNING: This will erase ALL your data for this app (inventory, spot history, spot prices, API configuration).\n\nAre you sure you want to proceed?\n\nThis action cannot be undone!")) {
           localStorage.removeItem(LS_KEY);
           localStorage.removeItem(SPOT_HISTORY_KEY);
           localStorage.removeItem(API_KEY_STORAGE_KEY);
           localStorage.removeItem(API_CACHE_KEY);
           Object.values(METALS).forEach(metalConfig => {
-            localStorage.removeItem(metalConfig.spotKey);
+            localStorage.removeItem(metalConfig.localStorageKey);
           });
           sessionStorage.clear();
 
@@ -506,17 +545,18 @@ const setupEventListeners = () => {
           
           alert("All data has been erased.");
         }
-      });
+      }, 'Boating accident button');
     }
     
-    // Setup API-specific event listeners
+    // API MODAL EVENT LISTENERS
+    console.log('Setting up API modal listeners...');
     setupApiEvents();
 
-    console.log('Event listeners setup complete');
+    console.log('✓ All event listeners setup complete');
     
   } catch (error) {
-    console.error('Error setting up event listeners:', error);
-    console.error('Stack trace:', error.stack);
+    console.error('❌ Error setting up event listeners:', error);
+    throw error; // Re-throw to trigger fallback in init.js
   }
 };
 
@@ -528,49 +568,49 @@ const setupPagination = () => {
   
   try {
     if (elements.itemsPerPage) {
-      elements.itemsPerPage.addEventListener('change', function() {
+      safeAttachListener(elements.itemsPerPage, 'change', function() {
         itemsPerPage = parseInt(this.value);
         currentPage = 1;
         renderTable();
-      });
+      }, 'Items per page select');
     }
 
     if (elements.prevPage) {
-      elements.prevPage.addEventListener('click', function() {
+      safeAttachListener(elements.prevPage, 'click', function() {
         if (currentPage > 1) {
           currentPage--;
           renderTable();
         }
-      });
+      }, 'Previous page button');
     }
 
     if (elements.nextPage) {
-      elements.nextPage.addEventListener('click', function() {
+      safeAttachListener(elements.nextPage, 'click', function() {
         const totalPages = calculateTotalPages(filterInventory());
         if (currentPage < totalPages) {
           currentPage++;
           renderTable();
         }
-      });
+      }, 'Next page button');
     }
 
     if (elements.firstPage) {
-      elements.firstPage.addEventListener('click', function() {
+      safeAttachListener(elements.firstPage, 'click', function() {
         currentPage = 1;
         renderTable();
-      });
+      }, 'First page button');
     }
 
     if (elements.lastPage) {
-      elements.lastPage.addEventListener('click', function() {
+      safeAttachListener(elements.lastPage, 'click', function() {
         currentPage = calculateTotalPages(filterInventory());
         renderTable();
-      });
+      }, 'Last page button');
     }
     
-    console.log('Pagination listeners setup complete');
+    console.log('✓ Pagination listeners setup complete');
   } catch (error) {
-    console.error('Error setting up pagination listeners:', error);
+    console.error('❌ Error setting up pagination listeners:', error);
   }
 };
 
@@ -582,110 +622,65 @@ const setupSearch = () => {
   
   try {
     if (elements.searchInput) {
-      elements.searchInput.addEventListener('input', function() {
+      safeAttachListener(elements.searchInput, 'input', function() {
         searchQuery = this.value;
         currentPage = 1; // Reset to first page when search changes
         renderTable();
-      });
+      }, 'Search input');
     }
 
     if (elements.clearSearchBtn) {
-      elements.clearSearchBtn.addEventListener('click', function() {
-        elements.searchInput.value = '';
+      safeAttachListener(elements.clearSearchBtn, 'click', function() {
+        if (elements.searchInput) {
+          elements.searchInput.value = '';
+        }
         searchQuery = '';
         currentPage = 1;
         renderTable();
-      });
+      }, 'Clear search button');
     }
     
-    console.log('Search listeners setup complete');
+    console.log('✓ Search listeners setup complete');
   } catch (error) {
-    console.error('Error setting up search listeners:', error);
+    console.error('❌ Error setting up search listeners:', error);
   }
 };
 
 /**
- * Sets up theme toggle event listeners - FILE PROTOCOL COMPATIBLE VERSION
+ * Sets up theme toggle event listeners
  */
 const setupThemeToggle = () => {
-  console.log('Setting up theme toggle with file:// protocol compatibility...');
+  console.log('Setting up theme toggle...');
   
   try {
+    // Apply saved theme on startup
     const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
-
+    
     if (savedTheme === 'dark') {
-      setTheme('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+      if (elements.themeToggle) {
+        elements.themeToggle.textContent = 'Light Mode';
+      }
     } else {
-      setTheme('light');
-    }
-
-    // Use file protocol compatible attachment
-    const themeButton = elements.themeToggle || document.getElementById('themeToggle');
-    
-    if (themeButton && window.fileProtocolFixes) {
-      const themeHandler = function() {
-        console.log('Theme toggle clicked (file:// compatible)');
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-      };
-      
-      // Use safe event attachment
-      window.fileProtocolFixes.attachEventListenerSafely(themeButton, 'click', themeHandler, 'Theme Toggle');
-    } else if (themeButton) {
-      // Fallback to standard method if file protocol fixes not available
-      console.log('Using standard theme toggle attachment');
-      themeButton.addEventListener('click', function() {
-        console.log('Theme toggle clicked');
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        setTheme(currentTheme === 'dark' ? 'light' : 'dark');
-      });
-    } else {
-      console.error('Theme toggle button not found!');
+      document.documentElement.removeAttribute('data-theme');
+      if (elements.themeToggle) {
+        elements.themeToggle.textContent = 'Dark Mode';
+      }
     }
     
-    console.log('Theme toggle setup complete');
+    console.log('✓ Theme toggle setup complete');
   } catch (error) {
-    console.error('Error setting up theme toggle:', error);
+    console.error('❌ Error setting up theme toggle:', error);
   }
 };
 
 /**
- * Sets up API-related event listeners - FILE PROTOCOL COMPATIBLE VERSION
+ * Sets up API-related event listeners
  */
 const setupApiEvents = () => {
-  console.log('Setting up API events with file:// protocol compatibility...');
+  console.log('Setting up API events...');
   
   try {
-    // Use file protocol compatible attachment for API button
-    const apiButton = elements.apiBtn || document.getElementById('apiBtn');
-    
-    if (apiButton && window.fileProtocolFixes) {
-      const apiHandler = function() {
-        console.log('API button clicked (file:// compatible)');
-        if (typeof showApiModal === 'function') {
-          showApiModal();
-        } else {
-          alert('API configuration interface would open here');
-        }
-      };
-      
-      // Use safe event attachment
-      window.fileProtocolFixes.attachEventListenerSafely(apiButton, 'click', apiHandler, 'API Button');
-    } else if (apiButton) {
-      // Fallback to standard method
-      console.log('Using standard API button attachment');
-      apiButton.addEventListener('click', function() {
-        console.log('API button clicked');
-        if (typeof showApiModal === 'function') {
-          showApiModal();
-        } else {
-          alert('API configuration interface would open here');
-        }
-      });
-    } else {
-      console.error('API button not found!');
-    }
-
     // API Modal Events
     const apiModal = document.getElementById('apiModal');
     const apiCancelBtn = document.getElementById('apiCancelBtn');
@@ -695,73 +690,102 @@ const setupApiEvents = () => {
 
     // Modal background click to close
     if (apiModal) {
-      apiModal.addEventListener('click', (e) => {
-        if (e.target === apiModal) {
+      safeAttachListener(apiModal, 'click', (e) => {
+        if (e.target === apiModal && typeof hideApiModal === 'function') {
           hideApiModal();
         }
-      });
+      }, 'API modal background');
     }
 
     // Cancel button
     if (apiCancelBtn) {
-      apiCancelBtn.addEventListener('click', hideApiModal);
+      safeAttachListener(apiCancelBtn, 'click', () => {
+        if (typeof hideApiModal === 'function') {
+          hideApiModal();
+        }
+      }, 'API cancel button');
     }
 
     // Clear configuration button
     if (apiClearBtn) {
-      apiClearBtn.addEventListener('click', () => {
+      safeAttachListener(apiClearBtn, 'click', () => {
         if (confirm('This will remove your API configuration and cached data. Continue?')) {
-          clearApiConfig();
-          hideApiModal();
+          if (typeof clearApiConfig === 'function') {
+            clearApiConfig();
+          }
+          if (typeof hideApiModal === 'function') {
+            hideApiModal();
+          }
           alert('API configuration cleared.');
         }
-      });
+      }, 'API clear button');
     }
     
-    // Sync now button (force fresh API call)
+    // Sync now button
     const apiSyncNowBtn = document.getElementById('apiSyncNowBtn');
     if (apiSyncNowBtn) {
-      apiSyncNowBtn.addEventListener('click', async () => {
-        const success = await syncSpotPricesFromApi(true, true); // Force sync
-        if (success) {
-          updateApiStatus(); // Refresh status display
+      safeAttachListener(apiSyncNowBtn, 'click', async () => {
+        if (typeof syncSpotPricesFromApi === 'function') {
+          const success = await syncSpotPricesFromApi(true, true);
+          if (success && typeof updateApiStatus === 'function') {
+            updateApiStatus();
+          }
         }
-      });
+      }, 'API sync now button');
     }
     
     // Clear cache button
     const apiClearCacheBtn = document.getElementById('apiClearCacheBtn');
     if (apiClearCacheBtn) {
-      apiClearCacheBtn.addEventListener('click', clearApiCache);
+      safeAttachListener(apiClearCacheBtn, 'click', () => {
+        if (typeof clearApiCache === 'function') {
+          clearApiCache();
+        }
+      }, 'API clear cache button');
     }
 
     // Form submission
     if (apiConfigForm) {
-      apiConfigForm.addEventListener('submit', handleApiConfigSubmit);
+      safeAttachListener(apiConfigForm, 'submit', (e) => {
+        if (typeof handleApiConfigSubmit === 'function') {
+          handleApiConfigSubmit(e);
+        } else {
+          e.preventDefault();
+          alert('API configuration handler not available');
+        }
+      }, 'API config form');
     }
 
     // Provider selection change
     if (apiProviderSelect) {
-      apiProviderSelect.addEventListener('change', (e) => {
-        updateProviderInfo(e.target.value);
-      });
+      safeAttachListener(apiProviderSelect, 'change', (e) => {
+        if (typeof updateProviderInfo === 'function') {
+          updateProviderInfo(e.target.value);
+        }
+      }, 'API provider select');
     }
 
-    // Note: Spot price action button events are now handled in setupEventListeners()
-
     // ESC key to close modals
-    document.addEventListener('keydown', (e) => {
+    safeAttachListener(document, 'keydown', (e) => {
       if (e.key === 'Escape') {
         const apiModal = document.getElementById('apiModal');
-        if (apiModal && apiModal.style.display === 'flex') {
+        const editModal = document.getElementById('editModal');
+        const detailsModal = document.getElementById('detailsModal');
+        
+        if (apiModal && apiModal.style.display === 'flex' && typeof hideApiModal === 'function') {
           hideApiModal();
+        } else if (editModal && editModal.style.display === 'flex') {
+          editModal.style.display = 'none';
+          editingIndex = null;
+        } else if (detailsModal && detailsModal.style.display === 'flex' && typeof closeDetailsModal === 'function') {
+          closeDetailsModal();
         }
       }
-    });
+    }, 'ESC key modal close');
 
-    console.log('API events setup complete');
+    console.log('✓ API events setup complete');
   } catch (error) {
-    console.error('Error setting up API events:', error);
+    console.error('❌ Error setting up API events:', error);
   }
 };
 

@@ -1,8 +1,8 @@
 # Project Status - Precious Metals Inventory Tool
 
-## 🎯 Current State: **FEATURE COMPLETE v3.0.5** ✅ DOCS UPDATED
+## 🎯 Current State: **FEATURE COMPLETE v3.1.5** ✅ TIMESTAMP DISPLAY ADDED
 
-**Precious Metals Inventory Tool v3.0.5** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management capabilities. 
+**Precious Metals Inventory Tool v3.1.5** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management and API integration capabilities. 
 
 ## 🏗️ Architecture Overview
 
@@ -18,16 +18,15 @@ The tool features a **modular JavaScript architecture** with separate files for 
 - `theme.js` - Dark/light theme management
 - `utils.js` - Helper functions and formatters
 
-## ✨ Latest Feature Addition (v3.0.5)
+## ✨ Latest Feature Addition (v3.1.5)
 
-We completed implementing a **notes field feature** which:
-- ✅ Adds an optional text field to both add-item and edit-item forms
-- ✅ Positioned strategically after storage location field
-- ✅ Integrates seamlessly with the search functionality
-- ✅ Included in all import/export operations (CSV, JSON, Excel, PDF, HTML)
-- ✅ Strategically excluded from main table display to maintain clean layout
-- ✅ Includes full backwards compatibility for existing data
-- ✅ Updated sample.csv with realistic notes examples
+We added **timestamp display functionality** which:
+- ✅ Shows when each spot price was last updated
+- ✅ Displays relative time ("2 hrs ago") and data source (API/Manual/Cached)
+- ✅ Updates automatically when prices change
+- ✅ Provides clear visibility into data freshness
+- ✅ Uses existing spot history tracking system
+- ✅ Appears below spot price values in muted text
 
 ## 🚀 Key Features
 
@@ -116,6 +115,7 @@ If continuing development in a new chat session:
 8. **Key Files**: Focus on `inventory.js`, `events.js`, and `state.js` for major modifications
 9. **Testing**: Use `sample.csv` for import testing (includes notes examples)
 10. **Version Updates**: Only update `APP_VERSION` in `constants.js` - propagates automatically
+11. **Timestamp Display**: Implemented via `getLastUpdateTime()` utility function
 
 ## 📁 Project Structure
 

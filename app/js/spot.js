@@ -39,14 +39,25 @@ const fetchSpotPrice = () => {
     const storedSpot = localStorage.getItem(metalConfig.localStorageKey);
     if (storedSpot) {
       spotPrices[metalConfig.key] = parseFloat(storedSpot);
-      elements.spotPriceDisplay[metalConfig.key].textContent = formatDollar(spotPrices[metalConfig.key]);
+      if (elements.spotPriceDisplay[metalConfig.key] && elements.spotPriceDisplay[metalConfig.key].textContent !== undefined) {
+        elements.spotPriceDisplay[metalConfig.key].textContent = formatDollar(spotPrices[metalConfig.key]);
+      }
       recordSpot(spotPrices[metalConfig.key], 'stored', metalConfig.name);
     } else {
       // Use default price if no stored price
       const defaultPrice = metalConfig.defaultPrice;
       spotPrices[metalConfig.key] = defaultPrice;
-      elements.spotPriceDisplay[metalConfig.key].textContent = formatDollar(defaultPrice);
+      if (elements.spotPriceDisplay[metalConfig.key] && elements.spotPriceDisplay[metalConfig.key].textContent !== undefined) {
+        elements.spotPriceDisplay[metalConfig.key].textContent = formatDollar(spotPrices[metalConfig.key]);
+      }
       // Don't record default prices in history automatically
+    }
+    
+    // Update timestamp display
+    const timestampElement = document.getElementById(`spotTimestamp${metalConfig.name}`);
+    if (timestampElement) {
+      const lastUpdate = getLastUpdateTime(metalConfig.name);
+      timestampElement.textContent = lastUpdate || 'No data';
     }
   });
 
@@ -73,14 +84,24 @@ const updateManualSpot = (metalKey) => {
   localStorage.setItem(metalConfig.localStorageKey, num);
   spotPrices[metalKey] = num;
 
-  elements.spotPriceDisplay[metalKey].textContent = formatDollar(num);
+  if (elements.spotPriceDisplay[metalKey] && elements.spotPriceDisplay[metalKey].textContent !== undefined) {
+    elements.spotPriceDisplay[metalKey].textContent = formatDollar(spotPrices[metalKey]);
+  }
   recordSpot(num, 'manual', metalConfig.name);
+  
+  // Update timestamp display
+  const timestampElement = document.getElementById(`spotTimestamp${metalConfig.name}`);
+  if (timestampElement) {
+    timestampElement.textContent = getLastUpdateTime(metalConfig.name) || 'No data';
+  }
 
   updateSummary();
   
-  // Clear the input and hide the manual input section
+  // Clear the input and hide the manual input section if available
   input.value = '';
-  hideManualInput(metalConfig.name);
+  if (typeof hideManualInput === 'function') {
+    hideManualInput(metalConfig.name);
+  }
 };
 
 /**
@@ -96,7 +117,7 @@ const resetSpot = (metalKey) => {
   let source = 'default';
 
   // If we have cached API data, use that instead
-  if (apiCache && apiCache.data && apiCache.data[metalKey]) {
+  if (typeof apiCache !== 'undefined' && apiCache && apiCache.data && apiCache.data[metalKey]) {
     resetPrice = apiCache.data[metalKey];
     source = 'api';
   }
@@ -106,16 +127,26 @@ const resetSpot = (metalKey) => {
   spotPrices[metalKey] = resetPrice;
   
   // Update display
-  elements.spotPriceDisplay[metalKey].textContent = formatDollar(resetPrice);
+  if (elements.spotPriceDisplay[metalKey] && elements.spotPriceDisplay[metalKey].textContent !== undefined) {
+    elements.spotPriceDisplay[metalKey].textContent = formatDollar(spotPrices[metalKey]);
+  }
   
   // Record in history
   recordSpot(resetPrice, source, metalConfig.name);
   
+  // Update timestamp display
+  const timestampElement = document.getElementById(`spotTimestamp${metalConfig.name}`);
+  if (timestampElement) {
+    timestampElement.textContent = getLastUpdateTime(metalConfig.name) || 'No data';
+  }
+  
   // Update summary
   updateSummary();
   
-  // Hide manual input if shown
-  hideManualInput(metalConfig.name);
+  // Hide manual input if shown and function is available
+  if (typeof hideManualInput === 'function') {
+    hideManualInput(metalConfig.name);
+  }
 };
 
 /**
@@ -132,3 +163,6 @@ const resetSpotByName = (metalName) => {
 };
 
 // =============================================================================
+
+// Ensure global availability
+window.fetchSpotPrice = fetchSpotPrice;

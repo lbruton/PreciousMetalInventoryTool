@@ -38,6 +38,48 @@ const monitorPerformance = (fn, name, ...args) => {
   return result;
 };
 
+/**
+ * Gets the most recent timestamp for a specific metal from spot history
+ * 
+ * @param {string} metalName - Metal name ('Silver', 'Gold', 'Platinum', 'Palladium')
+ * @returns {string|null} Formatted timestamp or null if no data
+ */
+const getLastUpdateTime = (metalName) => {
+  if (!spotHistory || spotHistory.length === 0) return null;
+  
+  // Find the most recent entry for this metal
+  const metalEntries = spotHistory.filter(entry => entry.metal === metalName);
+  if (metalEntries.length === 0) return null;
+  
+  const latestEntry = metalEntries[metalEntries.length - 1];
+  const timestamp = new Date(latestEntry.timestamp);
+  const now = new Date();
+  const diffMs = now - timestamp;
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  let timeText;
+  if (diffMins < 1) {
+    timeText = 'Just now';
+  } else if (diffMins < 60) {
+    timeText = `${diffMins} min${diffMins === 1 ? '' : 's'} ago`;
+  } else if (diffHours < 24) {
+    timeText = `${diffHours} hr${diffHours === 1 ? '' : 's'} ago`;
+  } else if (diffDays < 30) {
+    timeText = `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
+  } else {
+    timeText = timestamp.toLocaleDateString();
+  }
+  
+  const sourceText = latestEntry.source === 'api' ? 'API' : 
+                    latestEntry.source === 'manual' ? 'Manual' :
+                    latestEntry.source === 'cached' ? 'Cached' :
+                    latestEntry.source === 'default' ? 'Default' : 'Stored';
+  
+  return `${timeText} (${sourceText})`;
+};
+
 // =============================================================================
 
 /**

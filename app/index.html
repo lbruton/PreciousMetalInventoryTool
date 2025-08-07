@@ -13,7 +13,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes" name="viewport"/>
-<meta content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;" http-equiv="Content-Security-Policy"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; connect-src 'self'; img-src 'self' data:;">
 <!-- Title is dynamically updated by init.js using APP_VERSION constant -->
 <title>Precious Metals Inventory Tool</title>
 <!-- FILE PROTOCOL COMPATIBILITY - MUST LOAD FIRST -->
@@ -57,6 +57,7 @@
 <div class="spot-card">
 <div class="spot-card-label">Silver Spot Price</div>
 <div class="spot-card-value" id="spotPriceDisplaySilver">$ -</div>
+<div class="spot-card-timestamp" id="spotTimestampSilver">No data</div>
 </div>
 <div class="spot-actions">
 <button class="btn spot-action-btn" id="syncBtnSilver" title="Sync from API" disabled>Sync</button>
@@ -79,6 +80,7 @@
 <div class="spot-card">
 <div class="spot-card-label">Gold Spot Price</div>
 <div class="spot-card-value" id="spotPriceDisplayGold">$ -</div>
+<div class="spot-card-timestamp" id="spotTimestampGold">No data</div>
 </div>
 <div class="spot-actions">
 <button class="btn spot-action-btn" id="syncBtnGold" title="Sync from API" disabled>Sync</button>
@@ -101,6 +103,7 @@
 <div class="spot-card">
 <div class="spot-card-label">Platinum Spot Price</div>
 <div class="spot-card-value" id="spotPriceDisplayPlatinum">$ -</div>
+<div class="spot-card-timestamp" id="spotTimestampPlatinum">No data</div>
 </div>
 <div class="spot-actions">
 <button class="btn spot-action-btn" id="syncBtnPlatinum" title="Sync from API" disabled>Sync</button>
@@ -123,6 +126,7 @@
 <div class="spot-card">
 <div class="spot-card-label">Palladium Spot Price</div>
 <div class="spot-card-value" id="spotPriceDisplayPalladium">$ -</div>
+<div class="spot-card-timestamp" id="spotTimestampPalladium">No data</div>
 </div>
 <div class="spot-actions">
 <button class="btn spot-action-btn" id="syncBtnPalladium" title="Sync from API" disabled>Sync</button>

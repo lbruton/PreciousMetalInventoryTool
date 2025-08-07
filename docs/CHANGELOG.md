@@ -8,12 +8,47 @@
 
 ## 📋 Version History
 
+### Version 3.1.3 – Critical Bug Fixes and Stability Improvements (2025-08-07)
+- **Fixed Missing Function References**: Resolved JavaScript errors where functions were called but not defined
+  - Added fallback implementations for `resetSpotPrice()`, `showManualInput()`, `hideManualInput()`
+  - Enhanced `syncSpotPricesFromApi()` with existence checks and user-friendly error messages
+  - Improved `downloadCompleteBackup()` with fallback to basic export functions
+- **Theme Toggle Fixes**: Resolved file:// protocol compatibility issues
+  - Added fallback theme switching when `setTheme()` function unavailable
+  - Enhanced event attachment methods for improved reliability
+  - Added direct DOM manipulation for theme state persistence
+- **Improved Error Handling**: Comprehensive defensive programming
+  - Added function existence checks before all API-related calls
+  - Enhanced logging for debugging missing DOM elements
+  - Added graceful degradation when optional features unavailable
+- **Spot Price Reset Enhancements**: Multi-layer fallback system
+  - Primary: `resetSpotPrice()` from api.js
+  - Secondary: `resetSpot()` from spot.js
+  - Tertiary: Manual reset using default prices from constants
+- **File Protocol Compatibility**: Enhanced reliability when opening via file://
+  - Improved localStorage handling for edge cases
+  - Better fallback mechanisms for restricted environments
+  - Multiple event attachment methods for critical buttons
+- **User Experience**: Added informative error messages instead of silent failures
+  - Clear feedback for unavailable features
+  - Enhanced backup functionality with export fallbacks
+  - Improved API requirement notifications
+
 ### Version 3.1.2 – Spot-Price Button Manual Input Fix (2025-08-07)
 - **Button Functionality:** “Add” and “Reset” spot-price buttons are now fully functional
   - “Add” spawns an inline popup form with working Save/Cancel buttons  
   - “Reset” restores either the `APP_VERSION`-sourced default or the last-synced API price
 - **Coverage:** All four metals supported; falls back to last-synced API if no manual override exists  
 - **Persistence:** Manual overrides persist through reloads via the same listener flow in `events.js`
+
+### Version 3.1.5 – Timestamp Display Enhancement (2025-08-07)
+- **New feature**: Added timestamp display for all spot price updates
+- **Last update tracking**: Shows when each metal price was last updated with relative time (e.g., "2 hrs ago")
+- **Source indicators**: Displays data source (API, Manual, Cached, Default, Stored)
+- **Real-time updates**: Timestamps refresh when prices are updated via any method
+- **User experience**: Provides clear visibility into data freshness and origin
+- **UI enhancement**: Timestamps appear below spot price values in muted text
+- **Smart formatting**: Displays relative time for recent updates, absolute dates for older ones
 
 ### Version 3.0.5 – Notes Field Enhancement (2025-08-06)
 - **New feature**: Added optional notes field for inventory items  
