@@ -512,9 +512,9 @@ const setupEventListeners = () => {
 
     // Backup All Button
     if (elements.backupAllBtn) {
-      safeAttachListener(elements.backupAllBtn, 'click', () => {
-        if (typeof downloadCompleteBackup === 'function') {
-          downloadCompleteBackup();
+      safeAttachListener(elements.backupAllBtn, 'click', async () => {
+        if (typeof createBackupZip === 'function') {
+          await createBackupZip();
         } else {
           // Fallback: simple backup
           alert('Creating backup using export functions...');

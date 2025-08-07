@@ -457,9 +457,16 @@ const updateProviderInfo = (providerKey) => {
     providerDetails.innerHTML = `
       <strong>${provider.name}</strong><br>
       Base URL: ${provider.baseUrl}<br>
-      Metals: Silver, Gold, Platinum, Palladium
+      Metals: Silver, Gold, Platinum, Palladium<br>
+      <br>
+      <strong>📋 API Key Management:</strong><br>
+      • Visit the documentation link below to manage your API key<br>
+      • You can view usage, reset, or regenerate your key there<br>
+      • Keep your API key secure and never share it publicly
     `;
     providerDocs.href = provider.documentation;
+    providerDocs.innerHTML = `📄 ${provider.name} Documentation & Key Management`;
+    providerDocs.title = `Visit ${provider.name} to manage your API key, view usage, and access documentation`;
   } else {
     providerInfo.style.display = 'none';
   }
@@ -622,22 +629,41 @@ const createBackupData = () => {
 };
 
 /**
- * Downloads a complete backup as ZIP file
+ * Downloads complete backup files including inventory and API configuration
  */
 const downloadCompleteBackup = async () => {
   try {
-    // This would require a ZIP library like JSZip
-    // For now, we'll create individual files
-    
     const timestamp = new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-');
     
-    // Create inventory CSV
+    // 1. Create inventory CSV using existing export logic
     const inventory = loadData(LS_KEY, []);
     if (inventory.length > 0) {
-      exportCsv(); // Use existing CSV export
+      // Create CSV manually for backup instead of calling exportCsv() 
+      const headers = ["Metal","Name","Qty","Type","Weight(oz)","Purchase Price","Spot Price ($/oz)","Premium ($/oz)","Total Premium","Purchase Location","Storage Location","Notes","Date","Collectable"];
+      const sortedInventory = [...inventory].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      const rows = sortedInventory.map(item => [
+        item.metal || 'Silver',
+        item.name,
+        item.qty,
+        item.type,
+        parseFloat(item.weight).toFixed(4),
+        formatDollar(item.price),
+        item.isCollectable ? 'N/A' : formatDollar(item.spotPriceAtPurchase),
+        item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz),
+        item.isCollectable ? 'N/A' : formatDollar(item.totalPremium),
+        item.purchaseLocation,
+        item.storageLocation || 'Unknown',
+        item.notes || '',
+        item.date,
+        item.isCollectable ? 'Yes' : 'No'
+      ]);
+      
+      const inventoryCsv = Papa.unparse([headers, ...rows]);
+      downloadFile(`inventory-backup-${timestamp}.csv`, inventoryCsv, 'text/csv');
     }
     
-    // Create spot history CSV
+    // 2. Create spot history CSV
     const spotHistory = loadData(SPOT_HISTORY_KEY, []);
     if (spotHistory.length > 0) {
       const historyData = [
@@ -654,12 +680,40 @@ const downloadCompleteBackup = async () => {
       downloadFile(`spot-price-history-${timestamp}.csv`, historyCsv, 'text/csv');
     }
     
-    // Create API info markdown
-    const backupData = createBackupData();
-    const apiInfo = `# Precious Metals API Configuration Backup
+    // 3. Create complete JSON backup
+    const completeBackup = {
+      version: APP_VERSION,
+      timestamp: new Date().toISOString(),
+      data: {
+        inventory: inventory,
+        spotHistory: spotHistory,
+        spotPrices: { ...spotPrices },
+        apiConfig: apiConfig ? {
+          provider: apiConfig.provider,
+          providerName: API_PROVIDERS[apiConfig.provider]?.name || 'Unknown',
+          hasKey: !!apiConfig.apiKey,
+          keyLength: apiConfig.apiKey ? apiConfig.apiKey.length : 0,
+          timestamp: apiConfig.timestamp
+        } : null
+      }
+    };
     
+    const backupJson = JSON.stringify(completeBackup, null, 2);
+    downloadFile(`complete-backup-${timestamp}.json`, backupJson, 'application/json');
+    
+    // 4. Create API documentation and restoration guide
+    const backupData = createBackupData();
+    const apiInfo = `# Precious Metals Tool - Complete Backup
+
 Generated: ${new Date().toLocaleString()}
 Application Version: ${APP_VERSION}
+
+## Backup Contents
+
+1. **inventory-backup-${timestamp}.csv** - Complete inventory data
+2. **spot-price-history-${timestamp}.csv** - Historical spot price data
+3. **complete-backup-${timestamp}.json** - Full application backup
+4. **backup-info-${timestamp}.md** - This documentation file
 
 ## API Configuration
 ${backupData.apiConfig ? `
@@ -668,26 +722,37 @@ ${backupData.apiConfig ? `
 - Key Length: ${backupData.apiConfig.keyLength} characters
 - Configured: ${new Date(backupData.apiConfig.timestamp).toLocaleString()}
 
-**Note:** API keys are not included in backups for security reasons.
-You will need to reconfigure your API key after restoring from backup.
+**⚠️ Security Note:** API keys are not included in backups for security.
+After restoring, reconfigure your API key in the API settings.
+
+### API Key Management
+${API_PROVIDERS[apiConfig?.provider] ? `
+**${API_PROVIDERS[apiConfig.provider].name}**
+- Documentation: ${API_PROVIDERS[apiConfig.provider].documentation}
+- If you need to reset your API key, visit the documentation link above
+` : ''}
 ` : 'No API configuration found.'}
 
-## Current Spot Prices
-- Silver: $${spotPrices.silver || 'Not set'}
-- Gold: $${spotPrices.gold || 'Not set'}
-- Platinum: $${spotPrices.platinum || 'Not set'}
-- Palladium: $${spotPrices.palladium || 'Not set'}
-
-## Data Summary
+## Current Data Summary
 - Inventory Items: ${inventory.length}
 - Spot Price History: ${spotHistory.length} entries
+- Silver Price: ${spotPrices.silver || 'Not set'}
+- Gold Price: ${spotPrices.gold || 'Not set'}
+- Platinum Price: ${spotPrices.platinum || 'Not set'}
+- Palladium Price: ${spotPrices.palladium || 'Not set'}
 
-For complete data restoration, import the CSV files back into the application.
-    `;
+## Restoration Instructions
+
+1. Import **inventory-backup-${timestamp}.csv** using the CSV import feature
+2. Reconfigure API settings if needed (keys not backed up for security)
+3. Use **complete-backup-${timestamp}.json** for full data restoration if needed
+
+*This backup was created by Precious Metals Inventory Tool v${APP_VERSION}*
+`;
     
-    downloadFile(`api-config-${timestamp}.md`, apiInfo, 'text/markdown');
+    downloadFile(`backup-info-${timestamp}.md`, apiInfo, 'text/markdown');
     
-    alert('Backup files downloaded! Check your Downloads folder for:\n- Inventory CSV\n- Spot price history CSV\n- API configuration info (Markdown)');
+    alert(`Complete backup created! Downloaded files:\n\n✓ Inventory CSV (${inventory.length} items)\n✓ Spot price history (${spotHistory.length} entries)\n✓ Complete JSON backup\n✓ Documentation & restoration guide\n\nCheck your Downloads folder.`);
     
   } catch (error) {
     console.error('Backup error:', error);

@@ -1,4 +1,340 @@
 // INVENTORY FUNCTIONS
+/**
+ * Creates a comprehensive backup ZIP file containing all application data
+ * 
+ * This function generates a complete backup archive including:
+ * - Current inventory data in JSON format
+ * - All export formats (CSV, Excel, HTML)
+ * - Application settings and configuration
+ * - Spot price history
+ * - README file explaining backup contents
+ * 
+ * The backup is packaged as a ZIP file for easy storage and portability.
+ * All data is exported in multiple formats to ensure compatibility and
+ * provide redundancy for data recovery scenarios.
+ * 
+ * @returns {void} Downloads a ZIP file containing complete backup
+ * 
+ * @example
+ * // Called from backup button click
+ * document.getElementById('backupAllBtn').addEventListener('click', createBackupZip);
+ */
+const createBackupZip = async () => {
+  try {
+    // Show loading indicator
+    const backupBtn = document.getElementById('backupAllBtn');
+    const originalText = backupBtn.textContent;
+    backupBtn.textContent = 'Creating Backup...';
+    backupBtn.disabled = true;
+
+    // Create new JSZip instance
+    const zip = new JSZip();
+    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const timeFormatted = new Date().toLocaleString();
+
+    // 1. Add main inventory data (JSON)
+    const inventoryData = {
+      version: APP_VERSION,
+      exportDate: new Date().toISOString(),
+      inventory: inventory.map(item => ({
+        metal: item.metal,
+        name: item.name,
+        qty: item.qty,
+        type: item.type,
+        weight: item.weight,
+        price: item.price,
+        date: item.date,
+        purchaseLocation: item.purchaseLocation,
+        storageLocation: item.storageLocation,
+        notes: item.notes,
+        spotPriceAtPurchase: item.spotPriceAtPurchase,
+        isCollectable: item.isCollectable,
+        premiumPerOz: item.premiumPerOz,
+        totalPremium: item.totalPremium
+      }))
+    };
+    zip.file('inventory_data.json', JSON.stringify(inventoryData, null, 2));
+
+    // 2. Add current spot prices and settings
+    const settings = {
+      version: APP_VERSION,
+      exportDate: new Date().toISOString(),
+      spotPrices: spotPrices,
+      theme: localStorage.getItem(THEME_KEY) || 'light',
+      itemsPerPage: itemsPerPage,
+      currentPage: currentPage,
+      searchQuery: searchQuery,
+      sortColumn: sortColumn,
+      sortDirection: sortDirection
+    };
+    zip.file('settings.json', JSON.stringify(settings, null, 2));
+
+    // 3. Add spot price history
+    const spotHistoryData = {
+      version: APP_VERSION,
+      exportDate: new Date().toISOString(),
+      history: spotHistory
+    };
+    zip.file('spot_price_history.json', JSON.stringify(spotHistoryData, null, 2));
+
+    // 4. Generate and add CSV export
+    const csvHeaders = ["Metal", "Name", "Qty", "Type", "Weight(oz)", "Purchase Price", "Spot Price ($/oz)", "Premium ($/oz)", "Total Premium", "Purchase Location", "Storage Location", "Notes", "Date", "Collectable"];
+    const sortedInventory = sortInventoryByDateNewestFirst();
+    const csvRows = [];
+    for (const item of sortedInventory) {
+      const exportSpotPrice = item.isCollectable ? 
+        spotPrices[item.metal.toLowerCase()] : 
+        item.spotPriceAtPurchase;
+      csvRows.push([
+        item.metal || 'Silver',
+        item.name,
+        item.qty,
+        item.type,
+        parseFloat(item.weight).toFixed(4),
+        formatDollar(item.price),
+        exportSpotPrice > 0 ? formatDollar(exportSpotPrice) : 'N/A',
+        item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz),
+        item.isCollectable ? 'N/A' : formatDollar(item.totalPremium),
+        item.purchaseLocation,
+        item.storageLocation || 'Unknown',
+        item.notes || '',
+        item.date,
+        item.isCollectable ? 'Yes' : 'No'
+      ]);
+    }
+    const csvContent = Papa.unparse([csvHeaders, ...csvRows]);
+    zip.file('inventory_export.csv', csvContent);
+
+    // 5. Generate and add Excel export
+    const wsData = [csvHeaders];
+    for (const item of sortedInventory) {
+      const exportSpotPrice = item.isCollectable ? 
+        spotPrices[item.metal.toLowerCase()] : 
+        item.spotPriceAtPurchase;
+      wsData.push([
+        item.metal || 'Silver',
+        item.name,
+        item.qty,
+        item.type,
+        parseFloat(item.weight).toFixed(4),
+        item.price,
+        exportSpotPrice,
+        item.isCollectable ? null : item.premiumPerOz,
+        item.isCollectable ? null : item.totalPremium,
+        item.purchaseLocation,
+        item.storageLocation || 'Unknown',
+        item.notes || '',
+        item.date,
+        item.isCollectable ? 'Yes' : 'No'
+      ]);
+    }
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Inventory");
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    zip.file('inventory_export.xlsx', excelBuffer);
+
+    // 6. Generate and add HTML export (simplified version)
+    const htmlContent = generateBackupHtml(sortedInventory, timeFormatted);
+    zip.file('inventory_report.html', htmlContent);
+
+    // 7. Add README file
+    const readmeContent = generateReadmeContent(timeFormatted);
+    zip.file('README.txt', readmeContent);
+
+    // 8. Add sample data for reference
+    if (inventory.length > 0) {
+      const sampleData = inventory.slice(0, Math.min(5, inventory.length)).map(item => ({
+        metal: item.metal,
+        name: item.name,
+        qty: item.qty,
+        type: item.type,
+        weight: item.weight,
+        price: item.price,
+        date: item.date,
+        purchaseLocation: item.purchaseLocation,
+        storageLocation: item.storageLocation,
+        notes: item.notes,
+        isCollectable: item.isCollectable
+      }));
+      zip.file('sample_data.json', JSON.stringify(sampleData, null, 2));
+    }
+
+    // Generate and download the ZIP file
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(zipBlob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `precious_metals_backup_${timestamp}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    // Restore button state
+    backupBtn.textContent = originalText;
+    backupBtn.disabled = false;
+    
+    alert('Backup created successfully!');
+  } catch (error) {
+    console.error('Backup creation failed:', error);
+    alert('Backup creation failed: ' + error.message);
+    
+    // Restore button state on error
+    const backupBtn = document.getElementById('backupAllBtn');
+    backupBtn.textContent = 'Backup All Data';
+    backupBtn.disabled = false;
+  }
+};
+
+/**
+ * Generates HTML content for backup export
+ * 
+ * @param {Array} sortedInventory - Sorted inventory data
+ * @param {string} timeFormatted - Formatted timestamp
+ * @returns {string} HTML content
+ */
+const generateBackupHtml = (sortedInventory, timeFormatted) => {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precious Metals Inventory Backup</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #2563eb; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .backup-info { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Precious Metals Inventory Backup</h1>
+  <div class="backup-info">
+    <strong>Backup Created:</strong> ${timeFormatted}<br>
+    <strong>Application Version:</strong> ${APP_VERSION}<br>
+    <strong>Total Items:</strong> ${sortedInventory.length}<br>
+    <strong>Archive Contents:</strong> Complete inventory data, settings, and spot price history
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Metal</th><th>Name</th><th>Qty</th><th>Type</th><th>Weight(oz)</th>
+        <th>Purchase Price</th><th>Purchase Location</th><th>Storage Location</th>
+        <th>Notes</th><th>Date</th><th>Collectable</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${sortedInventory.map(item => `
+        <tr>
+          <td>${item.metal}</td>
+          <td>${item.name}</td>
+          <td>${item.qty}</td>
+          <td>${item.type}</td>
+          <td>${parseFloat(item.weight).toFixed(2)}</td>
+          <td>${formatDollar(item.price)}</td>
+          <td>${item.purchaseLocation}</td>
+          <td>${item.storageLocation || 'Unknown'}</td>
+          <td>${item.notes || ''}</td>
+          <td>${item.date}</td>
+          <td>${item.isCollectable ? 'Yes' : 'No'}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+</body>
+</html>`;
+};
+
+/**
+ * Generates README content for backup archive
+ * 
+ * @param {string} timeFormatted - Formatted timestamp
+ * @returns {string} README content
+ */
+const generateReadmeContent = (timeFormatted) => {
+  return `PRECIOUS METALS INVENTORY TOOL - BACKUP ARCHIVE
+===============================================
+
+Backup Created: ${timeFormatted}
+Application Version: ${APP_VERSION}
+Total Items: ${inventory.length}
+
+FILE CONTENTS:
+--------------
+
+1. inventory_data.json
+   - Complete inventory data in JSON format
+   - Includes all item details, notes, and metadata
+   - Primary data file for restoration
+
+2. settings.json
+   - Application configuration and preferences
+   - Current spot prices and user settings
+   - UI state (pagination, search, sorting)
+
+3. spot_price_history.json
+   - Historical spot price data and tracking
+   - API sync records and manual overrides
+   - Price trend information
+
+4. inventory_export.csv
+   - Spreadsheet-compatible export
+   - Human-readable format for external use
+   - Compatible with Excel, Google Sheets
+
+5. inventory_export.xlsx
+   - Excel format export with proper formatting
+   - Preserves data types and calculations
+   - Professional presentation ready
+
+6. inventory_report.html
+   - Self-contained web page report
+   - No external dependencies required
+   - Print-friendly format
+
+7. sample_data.json (if applicable)
+   - Sample of inventory items for reference
+   - Useful for testing import functionality
+   - Demonstrates data structure
+
+8. README.txt (this file)
+   - Backup contents explanation
+   - Restoration instructions
+
+RESTORATION INSTRUCTIONS:
+------------------------
+
+1. For complete restoration:
+   - Import inventory_data.json using the application's JSON import feature
+   - Manually configure spot prices from settings.json if needed
+
+2. For partial restoration:
+   - Use inventory_export.csv for spreadsheet applications
+   - Use inventory_export.xlsx for Excel compatibility
+   - View inventory_report.html in any web browser
+
+3. For data analysis:
+   - All files contain the same core data in different formats
+   - Choose the format best suited for your analysis tools
+
+SUPPORT:
+--------
+
+For questions about this backup or the Precious Metals Inventory Tool:
+- Check the application documentation
+- Verify file integrity before restoration
+- Test imports with sample data first
+
+This backup contains your complete precious metals inventory as of ${timeFormatted}.
+Store this archive in a secure location for data protection.
+
+--- End of README ---`;
+};
+
 // =============================================================================
 
 /**

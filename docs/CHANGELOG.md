@@ -8,6 +8,32 @@
 
 ## 📋 Version History
 
+### Version 3.1.8 – Comprehensive Backup ZIP Functionality (2025-08-07)
+- **New feature**: Implemented complete backup system with ZIP file download
+- **Comprehensive backup**: Creates ZIP archive containing all application data
+  - Complete inventory data in JSON format with version metadata
+  - All export formats included: CSV, Excel, HTML with proper formatting
+  - Application settings and configuration backup
+  - Spot price history preservation
+  - Detailed README file with restoration instructions
+- **User experience**: "Backup All Data" button now fully functional
+  - Loading indicator during backup creation
+  - Success confirmation after completion
+  - Error handling with user-friendly messages
+- **Archive contents**: 
+  - `inventory_data.json` - Primary data file for restoration
+  - `settings.json` - Application preferences and current spot prices
+  - `spot_price_history.json` - Historical price tracking data
+  - `inventory_export.csv` - Spreadsheet-compatible export
+  - `inventory_export.xlsx` - Excel format with proper formatting
+  - `inventory_report.html` - Self-contained web page report
+  - `README.txt` - Comprehensive restoration instructions
+  - `sample_data.json` - Sample items for testing (if inventory exists)
+- **Dependencies**: Added JSZip library for reliable ZIP file creation
+- **File naming**: Timestamped files for easy organization (e.g., `precious_metals_backup_20250807.zip`)
+- **Data integrity**: Multiple format redundancy ensures data recovery options
+- **Privacy**: All processing done client-side, no data transmission
+
 ### Version 3.1.3 – Critical Bug Fixes and Stability Improvements (2025-08-07)
 - **Fixed Missing Function References**: Resolved JavaScript errors where functions were called but not defined
   - Added fallback implementations for `resetSpotPrice()`, `showManualInput()`, `hideManualInput()`

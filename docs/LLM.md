@@ -16,7 +16,7 @@
 
 ## 1. Purpose
 
-Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Metals Inventory Tool v3.1.6** to guide development, documentation, and QA tasks.
+Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Metals Inventory Tool v3.1.8** to guide development, documentation, and QA tasks.
 
 ## 2. Project Snapshot
 
@@ -26,9 +26,10 @@ Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Me
   - Manual spot-price overrides (Add/Reset with Save/Cancel popups)  
   - Inventory management (storage locations, optional notes, collectable flag)  
   - Multi-format import/export (CSV, JSON, Excel, PDF, HTML)  
+  - **Comprehensive backup ZIP system** with all data formats and restoration guides
   - Responsive & accessible UI (mobile-first, ARIA, keyboard support)  
-  - Modular JS architecture (constants, state, events, utils, importExport)  
-- **Version**: 3.1.6 (theme toggle fix)  
+  - Modular JS architecture (constants, state, events, utils, inventory)  
+- **Version**: 3.1.8 (backup ZIP functionality)  
 - **Last Updated**: August 7, 2025  
 
 ## 3. Project Structure
@@ -42,7 +43,15 @@ PreciousMetalInventoryTool/
 │       ├── state.js          # Global state & DOM caching
 │       ├── events.js         # UI event listeners
 │       ├── utils.js          # Helper functions
-│       └── importExport.js   # Import/export logic
+│       ├── inventory.js      # CRUD operations, import/export, backup ZIP
+│       ├── search.js         # Search and filtering
+│       ├── sorting.js        # Table sorting
+│       ├── pagination.js     # Pagination controls
+│       ├── charts.js         # Chart.js integration
+│       ├── theme.js          # Dark/light theme
+│       ├── spot.js           # Spot price management
+│       ├── detailsModal.js   # Analytics modal
+│       └── init.js           # Application initialization
 ├── docs/
 │   ├── CHANGELOG.md
 │   ├── STRUCTURE.md
@@ -78,13 +87,16 @@ PreciousMetalInventoryTool/
 5. **Import/Export Schema**  
    - Ensure all fields (notes, storage, overrides) are serialized/deserialized  
 
-## 6. v3.1.2 Spotlight
+## 6. v3.1.8 Spotlight
 
-- **Manual Spot-Price Buttons**:  
-  - **Add**: Opens inline form; Save/Cancel; listener keys `spotPriceAdd`, `spotPriceCancel`  
-  - **Reset**: Restores default/API price; listener key `spotPriceReset`  
-  - Applies to all metals; fallback to API if no override  
-- **API Cache Sync**: Improved caching in `importExport.js` to maintain overrides across sessions  
+- **Comprehensive Backup ZIP System**:  
+  - **createBackupZip()**: Generates complete archive with all data formats  
+  - **Archive Contents**: JSON data, CSV/Excel exports, HTML reports, settings, spot history  
+  - **Restoration Guide**: Detailed README.txt with recovery instructions  
+  - **Dependencies**: Added JSZip library for reliable ZIP file creation  
+  - **User Experience**: Loading indicator, success confirmation, error handling  
+- **Data Integrity**: Multiple format redundancy ensures recovery options  
+- **Privacy**: All processing client-side, no data transmission  
 
 ---
 
