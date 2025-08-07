@@ -5,6 +5,94 @@ if (!defined('ABSPATH')) {
 
 class PMS_API_Handler {
 
+    private $cache_file_path;
+
+    public function __construct() {
+        $this->init_cache_directory();
+    }
+
+    /**
+     * Initialize cache directory and set cache file path
+     */
+    public function init_cache_directory() {
+        $upload_dir = wp_upload_dir();
+        $cache_dir = $upload_dir['basedir'] . '/precious-metals-cache/';
+        
+        if (!file_exists($cache_dir)) {
+            wp_mkdir_p($cache_dir);
+            // Create .htaccess to protect cache files
+            file_put_contents($cache_dir . '.htaccess', "Deny from all\n");
+            // Create index.php for additional protection
+            file_put_contents($cache_dir . 'index.php', "<?php\n// Silence is golden\n");
+        }
+        
+        $this->cache_file_path = $cache_dir . 'prices.json';
+    }
+
+    /**
+     * Get cache status for admin display
+     * 
+     * @return array Cache status information
+     */
+    public function get_cache_status() {
+        $status = array(
+            'file_exists' => file_exists($this->cache_file_path),
+            'writable' => is_writable(dirname($this->cache_file_path)),
+            'last_modified' => file_exists($this->cache_file_path) ? filemtime($this->cache_file_path) : 0,
+            'size' => file_exists($this->cache_file_path) ? filesize($this->cache_file_path) : 0
+        );
+        
+        return $status;
+    }
+
+    /**
+     * Get cached prices from file
+     * 
+     * @param bool $force_fresh Only return fresh cache data
+     * @return array|false Cached price data or false if not available/fresh
+     */
+    private function get_cached_prices($force_fresh = true) {
+        if (!file_exists($this->cache_file_path)) {
+            return false;
+        }
+
+        $cached_data = json_decode(file_get_contents($this->cache_file_path), true);
+        
+        if (!$cached_data || !isset($cached_data['timestamp'])) {
+            return false;
+        }
+
+        if ($force_fresh) {
+            $cache_age = time() - $cached_data['timestamp'];
+            if ($cache_age > PMS_CACHE_DURATION) {
+                return false; // Cache is stale
+            }
+        }
+
+        return $cached_data['prices'];
+    }
+
+    /**
+     * Save prices to cache file
+     * 
+     * @param array $prices Price data to cache
+     * @return bool Success status
+     */
+    private function save_to_cache($prices) {
+        $cache_data = array(
+            'timestamp' => time(),
+            'prices' => $prices
+        );
+
+        try {
+            $result = file_put_contents($this->cache_file_path, json_encode($cache_data));
+            return $result !== false;
+        } catch (Exception $e) {
+            error_log('PMS: Failed to write cache file: ' . $e->getMessage());
+            return false;
+        }
+    }
+
     public function fetch_from_specific_api($api_number) {
         $apis = PMS_APIS;
 
@@ -34,13 +122,42 @@ class PMS_API_Handler {
 
         if ($result['success']) {
             error_log("PMS: API request successful, storing prices");
+            
+            // Store in database
             $stored = $this->store_prices($result['data'], $api['name']);
-            error_log("PMS: Prices stored: " . ($stored ? 'SUCCESS' : 'FAILED'));
+            
+            // Store in file cache
+            $cache_saved = $this->save_to_cache($this->format_prices_for_cache($result['data'], $api['name']));
+            
+            error_log("PMS: Database stored: " . ($stored ? 'SUCCESS' : 'FAILED'));
+            error_log("PMS: Cache saved: " . ($cache_saved ? 'SUCCESS' : 'FAILED'));
+            
             return $stored;
         } else {
             error_log("PMS: API request failed: " . $result['message']);
             return false;
         }
+    }
+
+    /**
+     * Format prices for cache storage
+     * 
+     * @param array $rates Raw API rates data
+     * @param string $source API source name
+     * @return array Formatted price data
+     */
+    private function format_prices_for_cache($rates, $source) {
+        $prices = array();
+        foreach ($rates as $symbol => $price) {
+            if (in_array($symbol, PMS_METALS)) {
+                $prices[$symbol] = array(
+                    'price' => floatval($price),
+                    'source' => $source,
+                    'timestamp' => time()
+                );
+            }
+        }
+        return $prices;
     }
 
     private function make_api_request($api) {
@@ -53,7 +170,7 @@ class PMS_API_Handler {
         $response = wp_remote_get($url, array(
             'timeout' => 30,
             'headers' => array(
-                'User-Agent' => 'WordPress-PreciousMetals/1.0'
+                'User-Agent' => 'WordPress-PreciousMetals/1.1'
             )
         ));
 
@@ -135,7 +252,17 @@ class PMS_API_Handler {
         return $stored_count > 0;
     }
 
-    public function get_latest_prices() {
+    public function get_latest_prices($force_refresh = false) {
+        // Try cache first unless force refresh is requested
+        if (!$force_refresh) {
+            $cached_prices = $this->get_cached_prices(true);
+            if ($cached_prices !== false) {
+                error_log("PMS: Returning cached prices");
+                return $cached_prices;
+            }
+        }
+
+        // Fall back to database
         global $wpdb;
         $table_name = pms_get_table_name();
 
@@ -160,6 +287,18 @@ class PMS_API_Handler {
                 'source' => $row['source'],
                 'timestamp' => strtotime($row['fetched_at'])
             );
+        }
+
+        // If we have database data but no cache, save to cache
+        if (!empty($latest_prices)) {
+            $this->save_to_cache($latest_prices);
+        } else {
+            // No database data, try stale cache as last resort
+            $stale_cache = $this->get_cached_prices(false);
+            if ($stale_cache !== false) {
+                error_log("PMS: Returning stale cached prices as fallback");
+                return $stale_cache;
+            }
         }
 
         return $latest_prices;
