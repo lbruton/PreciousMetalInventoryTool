@@ -15,6 +15,9 @@ let itemsPerPage = 25;        // Number of items to display per page
 /** @type {string} Current search query */
 let searchQuery = '';
 
+/** @type {{field: string|null, value: string|null}} Active column filter */
+let columnFilter = { field: null, value: null };
+
 /** @type {Object} Chart instances for proper cleanup */
 let chartInstances = {
   typeChart: null,

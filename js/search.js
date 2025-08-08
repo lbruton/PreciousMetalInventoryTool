@@ -7,10 +7,20 @@
  * @returns {Array} Filtered inventory items matching the search query
  */
 const filterInventory = () => {
-  if (!searchQuery.trim()) return inventory;
+  let result = inventory;
+
+  if (columnFilter.field) {
+    const value = columnFilter.value.toLowerCase();
+    result = result.filter(item => {
+      const fieldVal = (item[columnFilter.field] || '').toString().toLowerCase();
+      return fieldVal === value;
+    });
+  }
+
+  if (!searchQuery.trim()) return result;
 
   const query = searchQuery.toLowerCase();
-  return inventory.filter(item => {
+  return result.filter(item => {
     return (
       item.metal.toLowerCase().includes(query) ||
       item.name.toLowerCase().includes(query) ||
@@ -25,6 +35,23 @@ const filterInventory = () => {
       (item.isCollectable ? 'yes' : 'no').includes(query)
     );
   });
+};
+
+/**
+ * Applies a column-specific filter and re-renders the table
+ * @param {string} field - Item property to filter by
+ * @param {string} value - Value to match exactly
+ */
+const applyColumnFilter = (field, value) => {
+  if (columnFilter.field === field && columnFilter.value === value) {
+    columnFilter = { field: null, value: null };
+  } else {
+    columnFilter = { field, value };
+  }
+  searchQuery = '';
+  if (elements.searchInput) elements.searchInput.value = '';
+  currentPage = 1;
+  renderTable();
 };
 
 // =============================================================================

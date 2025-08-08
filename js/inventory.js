@@ -419,6 +419,29 @@ const loadInventory = () => {
  * searchQuery = 'silver';
  * renderTable();
  */
+const METAL_COLORS = {
+  Silver: 'var(--silver)',
+  Gold: 'var(--gold)',
+  Platinum: 'var(--platinum)',
+  Palladium: 'var(--palladium)'
+};
+
+const typeColors = {};
+const purchaseLocationColors = {};
+const storageLocationColors = {};
+
+const getColor = (map, key) => {
+  if (!map[key]) {
+    const hue = (Object.keys(map).length * 137) % 360;
+    map[key] = `hsl(${hue}, 60%, 80%)`;
+  }
+  return map[key];
+};
+
+const getTypeColor = type => getColor(typeColors, type);
+const getPurchaseLocationColor = loc => getColor(purchaseLocationColors, loc);
+const getStorageLocationColor = loc => getColor(storageLocationColors, loc);
+
 const renderTable = () => {
   return monitorPerformance(() => {
     const filteredInventory = filterInventory();
@@ -435,23 +458,22 @@ const renderTable = () => {
 
       rows.push(`
       <tr>
-      <td>${i + 1}</td>
-      <td>${item.metal || 'Silver'}</td>
-      <td>${item.qty}</td>
-      <td>${item.type}</td>
-      <td class="clickable-name" onclick="editItem(${originalIdx})" title="Click to edit" tabindex="0" role="button" aria-label="Edit ${sanitizeHtml(item.name)}" onkeydown="if(event.key==='Enter'||event.key===' ')editItem(${originalIdx})">${sanitizeHtml(item.name)}</td>
-      <td>${parseFloat(item.weight).toFixed(2)}</td>
-      <td>${formatDollar(item.price)}</td>
-      <td>${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
-      <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.premiumPerOz > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
-      <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
-      <td>${sanitizeHtml(item.purchaseLocation)}</td>
-      <td>${sanitizeHtml(item.storageLocation || 'Unknown')}</td>
-      <td>${item.date}</td>
-      <td class="checkbox-cell">
+      <td class="shrink"><button class="btn filter-btn" style="background: ${getTypeColor(item.type)}; color: #000;" onclick="applyColumnFilter('type', ${JSON.stringify(item.type)})">${sanitizeHtml(item.type)}</button></td>
+      <td class="shrink"><button class="btn filter-btn" style="background: ${METAL_COLORS[item.metal] || 'var(--primary)'}; color: #000;" onclick="applyColumnFilter('metal', ${JSON.stringify(item.metal)})">${sanitizeHtml(item.metal || 'Silver')}</button></td>
+      <td class="shrink">${item.qty}</td>
+      <td class="clickable-name expand" onclick="editItem(${originalIdx})" title="Click to edit" tabindex="0" role="button" aria-label="Edit ${sanitizeHtml(item.name)}" onkeydown="if(event.key==='Enter'||event.key===' ')editItem(${originalIdx})">${sanitizeHtml(item.name)}</td>
+      <td class="shrink">${parseFloat(item.weight).toFixed(2)}</td>
+      <td class="shrink">${formatDollar(item.price)}</td>
+      <td class="shrink">${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
+      <td class="shrink" style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
+      <td class="shrink"><button class="btn filter-btn" style="background: ${getPurchaseLocationColor(item.purchaseLocation)}; color: #000;" onclick="applyColumnFilter('purchaseLocation', ${JSON.stringify(item.purchaseLocation)})">${sanitizeHtml(item.purchaseLocation)}</button></td>
+      <td class="shrink"><button class="btn filter-btn" style="background: ${getStorageLocationColor(item.storageLocation || 'Unknown')}; color: #000;" onclick="applyColumnFilter('storageLocation', ${JSON.stringify(item.storageLocation || 'Unknown')})">${sanitizeHtml(item.storageLocation || 'Unknown')}</button></td>
+      <td class="shrink">${item.date}</td>
+      <td class="checkbox-cell shrink">
       <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${sanitizeHtml(item.name)} as collectable" title="Mark as collectable">
       </td>
-      <td class="delete-cell"><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
+      <td class="shrink"><button class="btn" onclick="showNotes(${originalIdx})" aria-label="View notes" title="View notes">Notes</button></td>
+      <td class="shrink"><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item" title="Delete item">Delete</button></td>
       </tr>
       `);
     }
@@ -690,8 +712,18 @@ const deleteItem = (idx) => {
 };
 
 /**
+ * Displays the notes for an inventory item in a popup prompt
+ *
+ * @param {number} idx - Index of item whose notes to show
+ */
+const showNotes = (idx) => {
+  const item = inventory[idx];
+  window.prompt('Item Notes', item.notes || '');
+};
+
+/**
  * Prepares and displays edit modal for specified inventory item
- * 
+ *
  * @param {number} idx - Index of item to edit
  */
 const editItem = (idx) => {

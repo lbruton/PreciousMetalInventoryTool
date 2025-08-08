@@ -15,19 +15,18 @@ const sortInventory = (data = inventory) => {
 
     // Map column index to data property
     switch(sortColumn) {
+      case 0: valA = a.type; valB = b.type; break; // Type
       case 1: valA = a.metal; valB = b.metal; break; // Metal
       case 2: valA = a.qty; valB = b.qty; break; // Qty
-      case 3: valA = a.type; valB = b.type; break; // Type
-      case 4: valA = a.name; valB = b.name; break; // Name
-      case 5: valA = a.weight; valB = b.weight; break; // Weight
-      case 6: valA = a.price; valB = b.price; break; // Purchase Price
-      case 7: valA = a.spotPriceAtPurchase; valB = b.spotPriceAtPurchase; break; // Spot Price
-      case 8: valA = a.premiumPerOz; valB = b.premiumPerOz; break; // Premium per oz
-      case 9: valA = a.totalPremium; valB = b.totalPremium; break; // Total Premium
-      case 10: valA = a.purchaseLocation; valB = b.purchaseLocation; break; // Purchase Location
-      case 11: valA = a.storageLocation || 'Unknown'; valB = b.storageLocation || 'Unknown'; break; // Storage Location
-      case 12: valA = a.date; valB = b.date; break; // Date
-      case 13: valA = a.isCollectable; valB = b.isCollectable; break; // Collectable
+      case 3: valA = a.name; valB = b.name; break; // Name
+      case 4: valA = a.weight; valB = b.weight; break; // Weight
+      case 5: valA = a.price; valB = b.price; break; // Purchase Price
+      case 6: valA = a.spotPriceAtPurchase; valB = b.spotPriceAtPurchase; break; // Spot at Purchase
+      case 7: valA = a.totalPremium; valB = b.totalPremium; break; // Premium
+      case 8: valA = a.purchaseLocation; valB = b.purchaseLocation; break; // Purchase Location
+      case 9: valA = a.storageLocation || 'Unknown'; valB = b.storageLocation || 'Unknown'; break; // Storage Location
+      case 10: valA = a.date; valB = b.date; break; // Date
+      case 11: valA = a.isCollectable; valB = b.isCollectable; break; // Collectable
       default: return 0;
     }
 
