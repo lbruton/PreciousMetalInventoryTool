@@ -46,7 +46,8 @@
 <h1>Precious Metals Inventory Tool</h1>
 <div style="margin-left: auto; display: flex; gap: 0.5rem;">
 <button class="btn" id="apiBtn" title="API Configuration">API</button>
-<button class="btn" id="themeToggle">Dark Mode</button>
+  <button class="btn" id="aboutBtn" title="About">About</button>
+  <button class="btn" id="themeToggle">Dark Mode</button>
 </div>
 </div>
 <div class="container">
@@ -779,6 +780,31 @@
 </div>
 </div>
 <!-- =============================================================================
+       ABOUT & DISCLAIMER MODAL
+       Provides application information and requires user acceptance.
+       ============================================================================= -->
+<div class="modal" id="aboutModal" style="display: none;">
+  <div class="modal-content">
+    <h2 style="margin-bottom: 1rem; color: var(--primary);">About <span id="aboutVersion"></span></h2>
+    <p style="margin-bottom: 1rem;">All data is stored locally in your browser. Back up often and use at your own risk.</p>
+    <p style="margin-bottom: 1rem;"><a href="https://github.com/jlarmstrongiv/Precious-Metals-Inventory" target="_blank" style="color: var(--primary);">View on GitHub</a></p>
+    <div style="margin-bottom: 1rem;">
+      <div style="font-weight: 600; margin-bottom: 0.5rem;">What's New</div>
+      <ul style="margin-left: 1.25rem; list-style: disc;">
+        <li>Added disclaimer splash requiring acceptance</li>
+        <li>About button for quick access to app details</li>
+      </ul>
+    </div>
+    <div style="margin-bottom: 1rem;">
+      <div style="font-weight: 600; margin-bottom: 0.5rem;">Changes from v3.1.11</div>
+      <ul style="margin-left: 1.25rem; list-style: disc;">
+        <li>UI enhancements and documentation improvements</li>
+      </ul>
+    </div>
+    <div style="text-align: right;"><button class="btn" id="aboutAcceptBtn" style="background: var(--success);">Accept & Continue</button></div>
+  </div>
+</div>
+<!-- =============================================================================
        API CONFIGURATION MODAL
        
        Modal for configuring API providers and keys for live spot price data.
@@ -872,6 +898,7 @@ Your API key is stored locally and encrypted
 <script defer src="./js/spot.js"></script>
 <script defer src="./js/api.js"></script>
 <script defer src="./js/inventory.js"></script>
+<script defer src="./js/about.js"></script>
 <script defer src="./js/events.js"></script>
 <script defer src="./js/init.js"></script>
 </body>
