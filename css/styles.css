@@ -1156,7 +1156,7 @@ td input:checked + .slider:before {
 .acceptance-text {
   font-size: 0.875rem;
   color: var(--text-muted);
-  margin-bottom: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
   line-height: 1.5;
   max-width: 600px;
   margin-left: auto;
