@@ -812,6 +812,35 @@ Choose your preferred metals pricing API provider
 </div>
 </div>
 
+<!-- =============================================================================
+       ABOUT/DISCLAIMER MODAL
+
+       Displays project information, version details and last changes.
+       Shown automatically until user accepts the disclaimer.
+       ============================================================================= -->
+<div class="modal" id="aboutModal" style="display: none;">
+  <div class="modal-content">
+    <h2 style="margin-bottom: 1rem; color: var(--primary);">About This App</h2>
+    <p class="about-disclaimer">All data is stored locally in your browser. Back up often and use at your own risk.</p>
+    <p class="about-links">
+      <a href="https://github.com/Precious-Metals-Inventory" target="_blank">GitHub Repository</a>
+      &middot;
+      <a href="README.md" target="_blank">Project README</a>
+    </p>
+    <div class="version-section">
+      <div>Current version: <span id="aboutVersion"></span></div>
+      <div class="changelog">
+        <div>Last version changes:</div>
+        <pre id="aboutChangelog"></pre>
+      </div>
+    </div>
+    <div class="about-buttons" style="margin-top: 1rem; text-align: right;">
+      <button class="btn" id="aboutClose" type="button">Close</button>
+      <button class="btn premium" id="aboutAccept" type="button">Accept</button>
+    </div>
+  </div>
+</div>
+
 <div style="margin-bottom: 1rem;">
 <label for="apiKey">API Key</label>
 <input type="password" id="apiKey" placeholder="Enter your API key" />
@@ -872,6 +901,7 @@ Your API key is stored locally and encrypted
 <script defer src="./js/spot.js"></script>
 <script defer src="./js/api.js"></script>
 <script defer src="./js/inventory.js"></script>
+<script defer src="./js/about.js"></script>
 <script defer src="./js/events.js"></script>
 <script defer src="./js/init.js"></script>
 </body>

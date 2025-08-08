@@ -179,6 +179,25 @@ const setupEventListeners = () => {
       console.error('Theme toggle button element not found!');
     }
 
+    // About modal buttons
+    const aboutAccept = document.getElementById('aboutAccept');
+    if (aboutAccept) {
+      safeAttachListener(aboutAccept, 'click', () => {
+        if (typeof acceptAboutModal === 'function') {
+          acceptAboutModal();
+        }
+      }, 'About accept button');
+    }
+
+    const aboutClose = document.getElementById('aboutClose');
+    if (aboutClose) {
+      safeAttachListener(aboutClose, 'click', () => {
+        if (typeof hideAboutModal === 'function') {
+          hideAboutModal();
+        }
+      }, 'About close button');
+    }
+
     // Details modal buttons
     if (elements.detailsButtons && elements.detailsButtons.length) {
       elements.detailsButtons.forEach(btn => {

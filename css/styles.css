@@ -881,6 +881,38 @@ td input:checked + .slider:before {
   padding-bottom: var(--spacing-sm);
 }
 
+/* ABOUT MODAL STYLES */
+#aboutModal .about-links {
+  margin: var(--spacing-lg) 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+#aboutModal .about-links a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+#aboutModal .about-links a:hover {
+  text-decoration: underline;
+}
+
+#aboutModal .version-section {
+  margin-top: var(--spacing-lg);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+#aboutChangelog {
+  margin-top: var(--spacing-sm);
+  background: var(--bg-secondary);
+  padding: var(--spacing);
+  border-radius: var(--radius);
+  max-height: 150px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
 .details-content {
   display: grid;
   grid-template-columns: 1fr 1fr;

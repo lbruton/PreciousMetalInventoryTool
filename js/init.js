@@ -46,6 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log(`=== APPLICATION INITIALIZATION STARTED (v${APP_VERSION}) ===`);
 
+  if (!localStorage.getItem('aboutAccepted') && typeof showAboutModal === 'function') {
+    showAboutModal();
+  }
+
   try {
     // Phase 1: Initialize Core DOM Elements
     debugLog('Phase 1: Initializing core DOM elements...');
