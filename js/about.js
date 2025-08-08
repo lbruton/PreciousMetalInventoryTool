@@ -180,17 +180,6 @@ const extractChangelogItems = (content) => {
 };
 
 /**
- * Handles backup button click from about modal
- */
-const handleAboutBackup = () => {
-  if (typeof window.backupAllData === 'function') {
-    window.backupAllData();
-  } else {
-    console.warn('Backup function not available');
-  }
-};
-
-/**
  * Shows full changelog in a new window or navigates to documentation
  */
 const showFullChangelog = () => {
@@ -211,7 +200,6 @@ const showFullChangelog = () => {
 const setupAboutModalEvents = () => {
   const aboutCloseBtn = document.getElementById('aboutCloseBtn');
   const aboutAcceptBtn = document.getElementById('aboutAcceptBtn');
-  const aboutBackupBtn = document.getElementById('aboutBackupBtn');
   const aboutShowChangelogBtn = document.getElementById('aboutShowChangelogBtn');
   const aboutModal = document.getElementById('aboutModal');
   
@@ -223,11 +211,6 @@ const setupAboutModalEvents = () => {
   // Accept button
   if (aboutAcceptBtn) {
     aboutAcceptBtn.addEventListener('click', acceptAbout);
-  }
-  
-  // Backup button
-  if (aboutBackupBtn) {
-    aboutBackupBtn.addEventListener('click', handleAboutBackup);
   }
   
   // Show changelog button
