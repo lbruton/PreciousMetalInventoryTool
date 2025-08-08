@@ -384,18 +384,27 @@ const setupEventListeners = () => {
     if (elements.saveNotesBtn) {
       safeAttachListener(elements.saveNotesBtn, 'click', () => {
         if (notesIndex === null) return;
-        const text = elements.notesTextarea.value.trim();
+        const textareaElement = elements.notesTextarea || document.getElementById('notesTextarea');
+        const text = textareaElement ? textareaElement.value.trim() : "";
+        
         inventory[notesIndex].notes = text;
         saveInventory();
         renderTable();
-        elements.notesModal.style.display = 'none';
+        
+        const modalElement = elements.notesModal || document.getElementById('notesModal');
+        if (modalElement) {
+          modalElement.style.display = 'none';
+        }
         notesIndex = null;
       }, 'Save notes button');
     }
 
     if (elements.cancelNotesBtn) {
       safeAttachListener(elements.cancelNotesBtn, 'click', () => {
-        elements.notesModal.style.display = 'none';
+        const modalElement = elements.notesModal || document.getElementById('notesModal');
+        if (modalElement) {
+          modalElement.style.display = 'none';
+        }
         notesIndex = null;
       }, 'Cancel notes button');
     }
@@ -706,6 +715,30 @@ const setupThemeToggle = () => {
   } catch (error) {
     console.error('❌ Error setting up theme toggle:', error);
   }
+};
+
+/**
+ * Sets up event listeners for details buttons (called after totals are rendered)
+ */
+const setupDetailsButtons = () => {
+  debugLog('Setting up details buttons...');
+  
+  // Re-query details buttons since they're created dynamically
+  const detailsButtons = document.querySelectorAll('.details-btn');
+  
+  detailsButtons.forEach(btn => {
+    safeAttachListener(btn, 'click', () => {
+      const metal = btn.dataset.metal;
+      debugLog(`Details button clicked for ${metal}`);
+      if (typeof showDetailsModal === 'function') {
+        showDetailsModal(metal);
+      } else {
+        alert(`Details modal for ${metal} would show analytics charts and breakdowns`);
+      }
+    }, `Details button (${btn.dataset.metal})`);
+  });
+  
+  debugLog(`✓ Setup ${detailsButtons.length} details button listeners`);
 };
 
 /**

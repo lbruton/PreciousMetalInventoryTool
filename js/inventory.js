@@ -728,14 +728,25 @@ const deleteItem = (idx) => {
 const showNotes = (idx) => {
   notesIndex = idx;
   const item = inventory[idx];
-  if (elements.notesTextarea) {
-    elements.notesTextarea.value = item.notes || '';
+  
+  // Add fallbacks and better error handling
+  const textareaElement = elements.notesTextarea || document.getElementById('notesTextarea');
+  const modalElement = elements.notesModal || document.getElementById('notesModal');
+  
+  if (textareaElement) {
+    textareaElement.value = item.notes || '';
+  } else {
+    console.error('Notes textarea element not found');
   }
-  if (elements.notesModal) {
-    elements.notesModal.style.display = 'flex';
+  
+  if (modalElement) {
+    modalElement.style.display = 'flex';
+  } else {
+    console.error('Notes modal element not found');
   }
-  if (elements.notesTextarea && elements.notesTextarea.focus) {
-    elements.notesTextarea.focus();
+  
+  if (textareaElement && textareaElement.focus) {
+    textareaElement.focus();
   }
 };
 
@@ -758,7 +769,13 @@ const editItem = (idx) => {
   elements.editPrice.value = item.price;
   elements.editPurchaseLocation.value = item.purchaseLocation;
   elements.editStorageLocation.value = item.storageLocation || '';
-  elements.editNotes.value = item.notes || '';
+  
+  // Add fallback for notes field
+  const notesField = elements.editNotes || document.getElementById('editNotes');
+  if (notesField) {
+    notesField.value = item.notes || '';
+  }
+  
   elements.editDate.value = item.date;
   elements.editSpotPrice.value = item.spotPriceAtPurchase;
   document.getElementById("editCollectable").checked = item.isCollectable;
