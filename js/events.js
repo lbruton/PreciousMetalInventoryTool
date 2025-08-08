@@ -147,6 +147,16 @@ const setupEventListeners = () => {
       console.error('API button element not found!');
     }
 
+    // About Button
+    if (elements.aboutBtn) {
+      safeAttachListener(elements.aboutBtn, 'click', (e) => {
+        e.preventDefault();
+        if (typeof showAboutModal === 'function') {
+          showAboutModal();
+        }
+      }, 'About Button');
+    }
+
     // Theme Toggle Button
     if (elements.themeToggle) {
       safeAttachListener(elements.themeToggle, 'click', (e) => {
@@ -594,6 +604,12 @@ const setupEventListeners = () => {
     // API MODAL EVENT LISTENERS
     debugLog('Setting up API modal listeners...');
     setupApiEvents();
+    
+    // ABOUT MODAL EVENT LISTENERS
+    debugLog('Setting up about modal listeners...');
+    if (typeof setupAboutModalEvents === 'function') {
+      setupAboutModalEvents();
+    }
 
     debugLog('✓ All event listeners setup complete');
     

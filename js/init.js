@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Header buttons - CRITICAL
     debugLog('Phase 2: Initializing header buttons...');
     elements.apiBtn = safeGetElement('apiBtn', true);
+    elements.aboutBtn = safeGetElement('aboutBtn');
     elements.themeToggle = safeGetElement('themeToggle', true);
     
     // Check if critical buttons exist
@@ -92,6 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal elements
     debugLog('Phase 4: Initializing modal elements...');
     elements.apiModal = safeGetElement('apiModal');
+    elements.aboutModal = safeGetElement('aboutModal');
+    elements.ackModal = safeGetElement('ackModal');
+    elements.ackAcceptBtn = safeGetElement('ackAcceptBtn');
     elements.editModal = safeGetElement('editModal');
     elements.editForm = safeGetElement('editForm');
     elements.cancelEditBtn = safeGetElement('cancelEdit');
@@ -106,6 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.editNotes = safeGetElement('editNotes');
     elements.editDate = safeGetElement('editDate');
     elements.editSpotPrice = safeGetElement('editSpotPrice');
+
+    // Show acknowledgment modal immediately and set up modal events
+    if (typeof setupAckModalEvents === 'function') {
+      setupAckModalEvents();
+    }
+    if (typeof showAckModal === 'function') {
+      showAckModal();
+    }
+    if (typeof setupAboutModalEvents === 'function') {
+      setupAboutModalEvents();
+    }
 
     // Notes modal elements
     elements.notesModal = safeGetElement('notesModal');
@@ -217,6 +232,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (appHeader) {
       appHeader.textContent = getAppTitle();
     }
+    const aboutVersion = document.getElementById('aboutVersion');
+    if (aboutVersion) {
+      aboutVersion.textContent = `v${APP_VERSION}`;
+    }
+    if (typeof loadChangelog === 'function') {
+      loadChangelog();
+    }
 
     // Phase 12: Data Initialization
     debugLog('Phase 12: Loading application data...');
@@ -251,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setupSearch();
         setupThemeToggle();
         setupColumnResizing();
-        
         debugLog('✓ All event listeners setup complete');
       } catch (eventError) {
         console.error('❌ Error setting up event listeners:', eventError);

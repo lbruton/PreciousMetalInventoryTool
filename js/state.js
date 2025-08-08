@@ -123,6 +123,12 @@ const elements = {
   // Theme toggle
   themeToggle: null,
 
+  // About & acknowledgment modal elements
+  aboutBtn: null,
+  aboutModal: null,
+  ackModal: null,
+  ackAcceptBtn: null,
+
   // API elements
   apiBtn: null,
   apiModal: null,
