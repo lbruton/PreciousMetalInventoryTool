@@ -614,6 +614,12 @@ const setupEventListeners = () => {
     // API MODAL EVENT LISTENERS
     debugLog('Setting up API modal listeners...');
     setupApiEvents();
+    
+    // ABOUT MODAL EVENT LISTENERS
+    debugLog('Setting up about modal listeners...');
+    if (typeof setupAboutModalEvents === 'function') {
+      setupAboutModalEvents();
+    }
 
     debugLog('✓ All event listeners setup complete');
     

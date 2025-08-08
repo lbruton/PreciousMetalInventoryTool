@@ -781,26 +781,111 @@
 </div>
 <!-- =============================================================================
        ABOUT & DISCLAIMER MODAL
-       Provides application information and requires user acceptance.
+       Comprehensive application information and disclaimer modal similar to the
+       original splash page design with enhanced features and detailed information.
        ============================================================================= -->
 <div class="modal" id="aboutModal" style="display: none;">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Precious Metals Inventory Tool <span id="aboutVersion"></span></h2>
+  <div class="modal-content about-modal-content">
+    <div class="modal-header about-modal-header">
+      <h1 class="about-title" id="aboutTitle">Precious Metals Inventory Tool <span id="aboutVersion"></span></h1>
+      <button aria-label="Close modal" class="modal-close" id="aboutCloseBtn">×</button>
     </div>
-    <div class="modal-body">
-      <p>All data is stored locally in your browser. Back up often and use at your own risk.</p>
-      <div class="section">
-        <div class="section-title">What's New</div>
-        <ul id="aboutChangelogLatest"></ul>
+    <div class="modal-body about-modal-body">
+      <!-- Application Description -->
+      <div class="about-description">
+        Track your precious metal investments with comprehensive spot price tracking, premium calculations, 
+        and detailed reporting. Add items to your inventory, monitor current values across Silver, Gold, 
+        Platinum, and Palladium, and export your data in multiple formats including CSV, JSON, Excel, 
+        PDF, and HTML.
       </div>
-      <div class="section" id="aboutChangelogPreviousSection">
-        <div class="section-title" id="aboutChangelogPreviousTitle"></div>
-        <ul id="aboutChangelogPrevious"></ul>
+      
+      <!-- Key Features -->
+      <div class="about-features">
+        <div class="features-title">✨ Key Features</div>
+        <div class="features-grid">
+          <div class="feature-item">📊 Live Spot Price Tracking</div>
+          <div class="feature-item">💰 Premium & Profit Calculations</div>
+          <div class="feature-item">📈 Advanced Analytics & Charts</div>
+          <div class="feature-item">📁 Multi-Format Import/Export</div>
+          <div class="feature-item">🔍 Real-time Search & Filtering</div>
+          <div class="feature-item">🏦 Storage Location Tracking</div>
+          <div class="feature-item">🎨 Dark/Light Theme Support</div>
+          <div class="feature-item">🔒 100% Local Storage</div>
+        </div>
       </div>
-      <div class="modal-actions">
-        <a class="btn" href="https://github.com/lbruton/Precious-Metals-Inventory" target="_blank" rel="noopener">Sources</a>
-        <button class="btn" id="aboutAcceptBtn" style="background: var(--success);">Accept & Continue</button>
+      
+      <!-- Important Notice -->
+      <div class="about-alert">
+        <div class="alert-header">
+          <span class="alert-icon">⚠️</span>
+          <strong>Important Privacy & Data Notice</strong>
+        </div>
+        <div class="alert-content">
+          <p><strong>Your Privacy is Protected:</strong> All data is stored locally in your browser using localStorage and <em>never transmitted to any server</em>. Your precious metals inventory information remains completely private and under your control.</p>
+          
+          <p><strong>Data Backup Responsibility:</strong> Since data is stored locally, it will be lost if you clear browser history, reset browser data, or use private browsing mode. Use the "Backup All Data" feature regularly to save your information.</p>
+          
+          <p><strong>Use at Your Own Risk:</strong> This tool is provided for informational and organizational purposes only. The developer assumes no responsibility for any financial decisions, investment choices, or data loss. Always verify spot prices and calculations independently.</p>
+          
+          <p><strong>Spot Price Accuracy:</strong> Prices displayed are for reference only and may not reflect real-time market conditions. Always confirm current pricing with your dealer or official market sources before making transactions.</p>
+        </div>
+      </div>
+      
+      <!-- What's New Section -->
+      <div class="about-section">
+        <div class="section-title">🚀 What's New in <span id="aboutCurrentVersion"></span></div>
+        <ul id="aboutChangelogLatest" class="changelog-list"></ul>
+      </div>
+      
+      <!-- Previous Version Changes -->
+      <div class="about-section" id="aboutChangelogPreviousSection">
+        <div class="section-title" id="aboutChangelogPreviousTitle">📋 Previous Changes</div>
+        <ul id="aboutChangelogPrevious" class="changelog-list"></ul>
+      </div>
+      
+      <!-- Roadmap Section -->
+      <div class="about-section" id="aboutRoadmapSection">
+        <div class="section-title">🗺️ Development Roadmap</div>
+        <div class="roadmap-content">
+          <p>This project is actively maintained with regular updates and improvements. Future enhancements may include:</p>
+          <ul class="roadmap-list">
+            <li>Multi-currency support for international users</li>
+            <li>Enhanced backup encryption for sensitive data</li>
+            <li>Additional API provider integrations</li>
+            <li>Advanced reporting and analytics features</li>
+            <li>Mobile application companion</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Resources Section -->
+      <div class="about-section">
+        <div class="section-title">📄 Resources & Links</div>
+        <div class="resources-grid">
+          <a class="resource-btn" href="sample.csv" download="sample.csv">
+            📄 Download Sample Data
+          </a>
+          <a class="resource-btn" href="https://github.com/lbruton/Precious-Metals-Inventory" target="_blank" rel="noopener">
+            📁 View Source Code
+          </a>
+          <button class="resource-btn" id="aboutShowChangelogBtn">
+            📜 View Full Changelog
+          </button>
+          <button class="resource-btn" id="aboutBackupBtn">
+            💾 Backup Data Now
+          </button>
+        </div>
+      </div>
+      
+      <!-- Modal Actions -->
+      <div class="about-modal-actions">
+        <div class="acceptance-text">
+          By continuing, you acknowledge that you understand this tool stores data locally, 
+          you are responsible for backing up your data, and you use this application at your own risk.
+        </div>
+        <button class="btn btn-primary about-accept-btn" id="aboutAcceptBtn">
+          ✅ I Understand - Continue to Application
+        </button>
       </div>
     </div>
   </div>
