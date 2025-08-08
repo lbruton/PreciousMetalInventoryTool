@@ -443,7 +443,6 @@ const renderTable = () => {
       <td>${parseFloat(item.weight).toFixed(2)}</td>
       <td>${formatDollar(item.price)}</td>
       <td>${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
-      <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.premiumPerOz > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
       <td style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
       <td>${sanitizeHtml(item.purchaseLocation)}</td>
       <td>${sanitizeHtml(item.storageLocation || 'Unknown')}</td>
@@ -451,6 +450,7 @@ const renderTable = () => {
       <td class="checkbox-cell">
       <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${sanitizeHtml(item.name)} as collectable" title="Mark as collectable">
       </td>
+      <td><button class="btn" onclick="showNotes(${originalIdx})" aria-label="View notes">📝</button></td>
       <td class="delete-cell"><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
       </tr>
       `);
@@ -677,8 +677,19 @@ const updateSummary = () => {
 };
 
 /**
+ * Displays notes for a specific inventory item in a popup text box
+ *
+ * @param {number} idx - Index of the item to display notes for
+ */
+const showNotes = (idx) => {
+  const item = inventory[idx];
+  const notes = item.notes || 'No notes available';
+  window.prompt('Item Notes', notes);
+};
+
+/**
  * Deletes inventory item at specified index after confirmation
- * 
+ *
  * @param {number} idx - Index of item to delete
  */
 const deleteItem = (idx) => {

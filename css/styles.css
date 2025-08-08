@@ -663,14 +663,14 @@ th:nth-child(3) { width: 45px; }   /* Qty */
 th:nth-child(4) { width: 60px; }   /* Type */
 th:nth-child(5) { width: 120px; }  /* Name - clickable */
 th:nth-child(6) { width: 80px; }   /* Weight */
-th:nth-child(7) { width: 90px; }   /* Purchase Price */
-th:nth-child(8) { width: 85px; }   /* Spot Price */
-th:nth-child(9) { width: 85px; }   /* Premium */
-th:nth-child(10) { width: 100px; } /* Total Premium */
-th:nth-child(11) { width: 110px; } /* Purchase Location */
-th:nth-child(12) { width: 110px; } /* Storage Location */
-th:nth-child(13) { width: 80px; }  /* Date */
-th:nth-child(14) { width: 70px; }  /* Collectable - checkbox */
+th:nth-child(7) { width: 90px; }   /* Purchase Price Paid */
+th:nth-child(8) { width: 85px; }   /* Spot Price at Purchase */
+th:nth-child(9) { width: 100px; } /* Total Premium */
+th:nth-child(10) { width: 110px; } /* Purchase Location */
+th:nth-child(11) { width: 110px; } /* Storage Location */
+th:nth-child(12) { width: 80px; }  /* Date */
+th:nth-child(13) { width: 70px; }  /* Collectable - checkbox */
+th:nth-child(14) { width: 70px; }  /* Notes */
 th:nth-child(15) { width: 50px; }  /* Delete */
 
 /* Clickable name cell styling */
@@ -1471,14 +1471,14 @@ input:disabled + .slider {
   th:nth-child(4) { width: 50px; }   /* Type */
   th:nth-child(5) { width: 100px; }  /* Name */
   th:nth-child(6) { width: 70px; }   /* Weight */
-  th:nth-child(7) { width: 80px; }   /* Purchase Price */
-  th:nth-child(8) { width: 75px; }   /* Spot Price */
-  th:nth-child(9) { width: 75px; }   /* Premium */
-  th:nth-child(10) { width: 85px; }  /* Total Premium */
-  th:nth-child(11) { width: 90px; }  /* Purchase Location */
-  th:nth-child(12) { width: 90px; }  /* Storage Location */
-  th:nth-child(13) { width: 70px; }  /* Date */
-  th:nth-child(14) { width: 60px; }  /* Collectable */
+  th:nth-child(7) { width: 80px; }   /* Purchase Price Paid */
+  th:nth-child(8) { width: 75px; }   /* Spot Price at Purchase */
+  th:nth-child(9) { width: 85px; }  /* Total Premium */
+  th:nth-child(10) { width: 90px; }  /* Purchase Location */
+  th:nth-child(11) { width: 90px; }  /* Storage Location */
+  th:nth-child(12) { width: 70px; }  /* Date */
+  th:nth-child(13) { width: 60px; }  /* Collectable */
+  th:nth-child(14) { width: 60px; }  /* Notes */
   th:nth-child(15) { width: 40px; }  /* Delete */
 }
 
