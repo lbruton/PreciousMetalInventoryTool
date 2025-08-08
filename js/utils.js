@@ -1,4 +1,15 @@
 // UTILITY FUNCTIONS
+
+/**
+ * Logs messages to console when DEBUG flag is enabled
+ *
+ * @param {...any} args - Values to log when debugging
+ */
+const debugLog = (...args) => {
+  if (DEBUG) {
+    console.log(...args);
+  }
+};
 /**
  * Returns formatted version string
  * 
@@ -32,7 +43,7 @@ const monitorPerformance = (fn, name, ...args) => {
   if (duration > 100) {
     console.warn(`Performance warning: ${name} took ${duration.toFixed(2)}ms`);
   } else {
-    console.debug(`Performance: ${name} took ${duration.toFixed(2)}ms`);
+    debugLog(`Performance: ${name} took ${duration.toFixed(2)}ms`);
   }
   
   return result;

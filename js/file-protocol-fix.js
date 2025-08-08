@@ -2,11 +2,11 @@
 // =============================================================================
 // Minimal file:// protocol fixes without conflicts
 
-console.log('Loading simplified file:// protocol compatibility...');
+debugLog('Loading simplified file:// protocol compatibility...');
 
 // Only provide essential localStorage fallback for file:// protocol
 if (window.location.protocol === 'file:') {
-  console.log('File protocol detected - enabling localStorage fallback');
+  debugLog('File protocol detected - enabling localStorage fallback');
   
   // Create memory storage fallback if localStorage fails
   window.tempStorage = window.tempStorage || {};
@@ -42,6 +42,6 @@ if (window.location.protocol === 'file:') {
   };
 }
 
-console.log('File protocol compatibility loaded');
+debugLog('File protocol compatibility loaded');
 
 // =============================================================================

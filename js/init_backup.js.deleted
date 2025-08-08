@@ -201,9 +201,9 @@ document.addEventListener('DOMContentLoaded', () => {
   setupColumnResizing();
   
   // Log initialization info
-  console.log('Application initialized successfully');
-  console.log('API configured:', !!apiConfig);
-  console.log('API cache available:', !!apiCache);
+  debugLog('Application initialized successfully');
+  debugLog('API configured:', !!apiConfig);
+  debugLog('API cache available:', !!apiCache);
 });
 
 // Make functions available globally for inline event handlers

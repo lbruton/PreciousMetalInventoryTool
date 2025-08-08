@@ -83,6 +83,23 @@ const API_CACHE_KEY = 'metalApiCache';
 /** @constant {number} API_CACHE_DURATION - Cache duration in milliseconds (24 hours) */
 const API_CACHE_DURATION = 24 * 60 * 60 * 1000;
 
+/** @constant {boolean} DEV_MODE - Enables verbose debug logging when true */
+const DEV_MODE = false;
+
+/**
+ * Global debug flag, can be toggled via DEV_MODE or `?debug` query parameter
+ * @constant {boolean}
+ */
+let DEBUG = DEV_MODE;
+
+if (typeof window !== 'undefined') {
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('debug')) {
+    const value = params.get('debug');
+    DEBUG = value === null || value === '' || value === '1' || value === 'true';
+  }
+}
+
 /**
  * Metal configuration object - Central registry for all metal-related information
  * 
@@ -144,4 +161,8 @@ const METALS = {
 // =============================================================================
 
 // Expose globals
-if(typeof window!=='undefined'){window.API_PROVIDERS=API_PROVIDERS; window.METALS=METALS;}
+if (typeof window !== 'undefined') {
+  window.API_PROVIDERS = API_PROVIDERS;
+  window.METALS = METALS;
+  window.DEBUG = DEBUG;
+}
