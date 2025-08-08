@@ -1,6 +1,6 @@
 # Precious Metals Inventory Tool - Project Structure
 
-## Current Structure (Version 3.1.8)
+## Current Structure (Version 3.1.9)
 
 ```text
 ├── STRUCTURE.md

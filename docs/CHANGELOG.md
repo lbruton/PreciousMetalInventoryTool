@@ -8,6 +8,9 @@
 
 ## 📋 Version History
 
+### Version 3.1.9 – API Modal Button Styling Fix (2025-08-07)
+- **UI Consistency**: Added `--info` CSS variable and updated Clear Cache button to ensure visible, uniform styling across themes.
+
 ### Version 3.1.8 – Comprehensive Backup ZIP Functionality (2025-08-07)
 - **New feature**: Implemented complete backup system with ZIP file download
 - **Comprehensive backup**: Creates ZIP archive containing all application data
