@@ -19,8 +19,22 @@ const filterInventory = () => {
 
   if (!searchQuery.trim()) return result;
 
-  const query = searchQuery.toLowerCase();
+  let query = searchQuery.toLowerCase();
+  let filterCollectable = false;
+
+  if (query.includes('collectable')) {
+    filterCollectable = true;
+    query = query.replace(/collectable/g, '').trim();
+  }
+  if (query.includes('collectible')) {
+    filterCollectable = true;
+    query = query.replace(/collectible/g, '').trim();
+  }
+
   return result.filter(item => {
+    if (filterCollectable && !item.isCollectable) return false;
+    if (!query) return true;
+
     const formattedDate = formatDisplayDate(item.date).toLowerCase();
     return (
       item.metal.toLowerCase().includes(query) ||

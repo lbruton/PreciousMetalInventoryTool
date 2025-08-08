@@ -360,6 +360,26 @@ const setupEventListeners = () => {
       }, 'Cancel edit button');
     }
 
+    // NOTES MODAL BUTTONS
+    if (elements.saveNotesBtn) {
+      safeAttachListener(elements.saveNotesBtn, 'click', () => {
+        if (notesIndex === null) return;
+        const text = elements.notesTextarea.value.trim();
+        inventory[notesIndex].notes = text;
+        saveInventory();
+        renderTable();
+        elements.notesModal.style.display = 'none';
+        notesIndex = null;
+      }, 'Save notes button');
+    }
+
+    if (elements.cancelNotesBtn) {
+      safeAttachListener(elements.cancelNotesBtn, 'click', () => {
+        elements.notesModal.style.display = 'none';
+        notesIndex = null;
+      }, 'Cancel notes button');
+    }
+
     // SPOT PRICE EVENT LISTENERS
     debugLog('Setting up spot price listeners...');
     Object.values(METALS).forEach(metalConfig => {

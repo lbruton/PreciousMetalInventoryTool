@@ -106,6 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.editNotes = safeGetElement('editNotes');
     elements.editDate = safeGetElement('editDate');
     elements.editSpotPrice = safeGetElement('editSpotPrice');
+
+    // Notes modal elements
+    elements.notesModal = safeGetElement('notesModal');
+    elements.notesTextarea = safeGetElement('notesTextarea');
+    elements.saveNotesBtn = safeGetElement('saveNotes');
+    elements.cancelNotesBtn = safeGetElement('cancelNotes');
     
     // Pagination elements
     debugLog('Phase 5: Initializing pagination elements...');

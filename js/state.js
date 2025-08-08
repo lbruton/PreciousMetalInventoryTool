@@ -7,6 +7,8 @@ let sortDirection = 'asc';    // 'asc' or 'desc' - current sort direction
 
 /** @type {number|null} Index of item being edited (null = no edit in progress) */
 let editingIndex = null;
+/** @type {number|null} Index of item whose notes are being edited */
+let notesIndex = null;
 
 /** @type {Object} Pagination state */
 let currentPage = 1;          // Current page number (1-based)
@@ -85,6 +87,12 @@ const elements = {
   editNotes: null,
   editDate: null,
   editSpotPrice: null,
+
+  // Notes modal elements
+  notesModal: null,
+  notesTextarea: null,
+  saveNotesBtn: null,
+  cancelNotesBtn: null,
 
   // Details modal elements
   detailsModal: null,

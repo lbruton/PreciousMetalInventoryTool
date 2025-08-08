@@ -721,13 +721,22 @@ const deleteItem = (idx) => {
 };
 
 /**
- * Displays the notes for an inventory item in a popup prompt
+ * Opens modal to view and edit an item's notes
  *
- * @param {number} idx - Index of item whose notes to show
+ * @param {number} idx - Index of item whose notes to view/edit
  */
 const showNotes = (idx) => {
+  notesIndex = idx;
   const item = inventory[idx];
-  window.prompt('Item Notes', item.notes || '');
+  if (elements.notesTextarea) {
+    elements.notesTextarea.value = item.notes || '';
+  }
+  if (elements.notesModal) {
+    elements.notesModal.style.display = 'flex';
+  }
+  if (elements.notesTextarea && elements.notesTextarea.focus) {
+    elements.notesTextarea.focus();
+  }
 };
 
 /**

@@ -699,8 +699,24 @@
 <button class="btn premium" type="submit">Save Changes</button>
 </div>
 </form>
+<!-- =============================================================================
+       NOTES MODAL
+
+       Simple modal for viewing and editing item notes. Opens when the Notes
+       button is clicked in the inventory table. Allows users to update the
+       notes field without opening the full edit form.
+       ============================================================================= -->
+<div class="modal" id="notesModal" style="display: none;">
+  <div class="modal-content">
+    <h2 style="margin-bottom: 1rem; color: var(--primary);">Item Notes</h2>
+    <textarea id="notesTextarea" rows="6" style="width: 100%;"></textarea>
+    <div style="margin-top: 1rem; text-align: right;">
+      <button class="btn" id="cancelNotes" type="button">Cancel</button>
+      <button class="btn premium" id="saveNotes" type="button">Save</button>
+    </div>
+  </div>
 </div>
-</div>
+
 <!-- =============================================================================
        DETAILS MODAL WITH PIE CHARTS
        
