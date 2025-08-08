@@ -20,6 +20,9 @@ const setTheme = (theme) => {
       elements.themeToggle.textContent = 'Dark Mode';
     }
   }
+  if (typeof renderTable === 'function') {
+    renderTable();
+  }
 };
 
 /**

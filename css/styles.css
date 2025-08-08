@@ -33,11 +33,11 @@
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
-  /* Metal-specific Colors */
-  --silver: #a8a8a8;
-  --gold: #ffd700;
-  --platinum: #e5e4e2;
-  --palladium: #c0c0ee;
+  /* Metal-specific Colors - tuned for light mode */
+  --silver: #6b7280;
+  --gold: #b45309;
+  --platinum: #4b5563;
+  --palladium: #7c3aed;
 
   /* Component Spacing */
   --radius: 8px;
@@ -58,6 +58,12 @@
   --secondary: #6b7280;
   --secondary-hover: #9ca3af;
   --info: #38bdf8;
+
+  /* Metal-specific Colors - dark mode */
+  --silver: #d1d5db;
+  --gold: #fbbf24;
+  --platinum: #f3f4f6;
+  --palladium: #d8b4fe;
 
   /* Background Colors - Dark Mode */
   --bg-primary: #0f172a;
@@ -746,8 +752,14 @@ td .btn {
   line-height: 1;
 }
 
-td .filter-btn {
-  color: #000;
+td .filter-text {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+td .filter-text:hover,
+td .filter-text:focus {
+  text-decoration: underline;
 }
 
 /* Make toggle switches smaller */

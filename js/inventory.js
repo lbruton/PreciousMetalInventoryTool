@@ -432,10 +432,17 @@ const storageLocationColors = {};
 
 const getColor = (map, key) => {
   if (!map[key]) {
-    const hue = (Object.keys(map).length * 137) % 360;
-    map[key] = `hsl(${hue}, 60%, 80%)`;
+    map[key] = (Object.keys(map).length * 137) % 360; // store hue for consistency
   }
-  return map[key];
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const lightness = isDark ? 70 : 40;
+  return `hsl(${map[key]}, 60%, ${lightness}%)`;
+};
+
+const filterLink = (field, value, color) => {
+  const handler = `applyColumnFilter('${field}', ${JSON.stringify(value)})`;
+  const safe = sanitizeHtml(value);
+  return `<span class="filter-text" style="color: ${color};" onclick="${handler}" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' ')${handler}" title="Filter by ${safe}">${safe}</span>`;
 };
 
 const getTypeColor = type => getColor(typeColors, type);
@@ -458,16 +465,16 @@ const renderTable = () => {
 
       rows.push(`
       <tr>
-      <td class="shrink"><button class="btn filter-btn" style="background: ${getTypeColor(item.type)}; color: #000;" onclick="applyColumnFilter('type', ${JSON.stringify(item.type)})">${sanitizeHtml(item.type)}</button></td>
-      <td class="shrink"><button class="btn filter-btn" style="background: ${METAL_COLORS[item.metal] || 'var(--primary)'}; color: #000;" onclick="applyColumnFilter('metal', ${JSON.stringify(item.metal)})">${sanitizeHtml(item.metal || 'Silver')}</button></td>
+      <td class="shrink">${filterLink('type', item.type, getTypeColor(item.type))}</td>
+      <td class="shrink">${filterLink('metal', item.metal || 'Silver', METAL_COLORS[item.metal] || 'var(--primary)')}</td>
       <td class="shrink">${item.qty}</td>
       <td class="clickable-name expand" onclick="editItem(${originalIdx})" title="Click to edit" tabindex="0" role="button" aria-label="Edit ${sanitizeHtml(item.name)}" onkeydown="if(event.key==='Enter'||event.key===' ')editItem(${originalIdx})">${sanitizeHtml(item.name)}</td>
       <td class="shrink">${parseFloat(item.weight).toFixed(2)}</td>
       <td class="shrink">${formatDollar(item.price)}</td>
       <td class="shrink">${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
       <td class="shrink" style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
-      <td class="shrink"><button class="btn filter-btn" style="background: ${getPurchaseLocationColor(item.purchaseLocation)}; color: #000;" onclick="applyColumnFilter('purchaseLocation', ${JSON.stringify(item.purchaseLocation)})">${sanitizeHtml(item.purchaseLocation)}</button></td>
-      <td class="shrink"><button class="btn filter-btn" style="background: ${getStorageLocationColor(item.storageLocation || 'Unknown')}; color: #000;" onclick="applyColumnFilter('storageLocation', ${JSON.stringify(item.storageLocation || 'Unknown')})">${sanitizeHtml(item.storageLocation || 'Unknown')}</button></td>
+      <td class="shrink">${filterLink('purchaseLocation', item.purchaseLocation, getPurchaseLocationColor(item.purchaseLocation))}</td>
+      <td class="shrink">${filterLink('storageLocation', item.storageLocation || 'Unknown', getStorageLocationColor(item.storageLocation || 'Unknown'))}</td>
       <td class="shrink">${item.date}</td>
       <td class="checkbox-cell shrink">
       <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${sanitizeHtml(item.name)} as collectable" title="Mark as collectable">
