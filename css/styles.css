@@ -1030,6 +1030,11 @@ td input:checked + .slider:before {
   break-inside: avoid;
 }
 
+.about-alert .alert-actions {
+  margin-top: var(--spacing-lg);
+  text-align: center;
+}
+
 .about-info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1151,15 +1156,6 @@ td input:checked + .slider:before {
   color: var(--primary);
   transform: translateY(-2px);
   box-shadow: var(--shadow);
-}
-
-.about-modal-actions {
-  background: var(--bg-tertiary);
-  padding: var(--spacing-lg);
-  margin: var(--spacing-xl) calc(-1 * var(--spacing-xl)) calc(-1 * var(--spacing-xl));
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  text-align: center;
-  border-top: 1px solid var(--border);
 }
 
 .acceptance-text {
