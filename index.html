@@ -46,10 +46,11 @@
 <h1>Precious Metals Inventory Tool</h1>
 <div style="margin-left: auto; display: flex; gap: 0.5rem;">
 <button class="btn" id="apiBtn" title="API Configuration">API</button>
-<button class="btn" id="themeToggle">Dark Mode</button>
-</div>
-</div>
-<div class="container">
+  <button class="btn" id="aboutBtn" title="About">About</button>
+  <button class="btn" id="themeToggle">Dark Mode</button>
+  </div>
+  </div>
+  <div class="container">
 <!-- =============================================================================
          SPOT PRICES SECTION
          
@@ -779,6 +780,37 @@
 </div>
 </div>
 <!-- =============================================================================
+       ABOUT & DISCLAIMER MODAL
+       Provides application information and requires user acceptance.
+       ============================================================================= -->
+<div class="modal" id="aboutModal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Precious Metals Inventory Tool <span id="aboutVersion"></span></h2>
+    </div>
+    <div class="modal-body">
+      <p>All data is stored locally in your browser. Back up often and use at your own risk.</p>
+      <div class="section">
+        <div class="section-title">What's New</div>
+        <ul>
+          <li>Added disclaimer splash requiring acceptance</li>
+          <li>About button for quick access to app details</li>
+        </ul>
+      </div>
+      <div class="section">
+        <div class="section-title">Changes from v3.1.11</div>
+        <ul>
+          <li>UI enhancements and documentation improvements</li>
+        </ul>
+      </div>
+      <div class="modal-actions">
+        <a class="btn" href="https://github.com/lbruton/Precious-Metals-Inventory" target="_blank" rel="noopener">Sources</a>
+        <button class="btn" id="aboutAcceptBtn" style="background: var(--success);">Accept & Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- =============================================================================
        API CONFIGURATION MODAL
        
        Modal for configuring API providers and keys for live spot price data.
@@ -872,6 +904,7 @@ Your API key is stored locally and encrypted
 <script defer src="./js/spot.js"></script>
 <script defer src="./js/api.js"></script>
 <script defer src="./js/inventory.js"></script>
+<script defer src="./js/about.js"></script>
 <script defer src="./js/events.js"></script>
 <script defer src="./js/init.js"></script>
 </body>
