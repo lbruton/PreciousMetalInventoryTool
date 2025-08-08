@@ -185,8 +185,8 @@ const setupEventListeners = () => {
     if (inventoryTable) {
       const headers = inventoryTable.querySelectorAll('th');
       headers.forEach((header, index) => {
-        // Skip # column (0) and Delete column (last column)
-        if (index === 0 || index >= headers.length - 1) {
+        // Skip # column (0) and Notes/Delete columns (last two)
+        if (index === 0 || index >= headers.length - 2) {
           return;
         }
 
