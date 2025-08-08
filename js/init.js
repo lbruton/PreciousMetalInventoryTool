@@ -94,7 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
     debugLog('Phase 4: Initializing modal elements...');
     elements.apiModal = safeGetElement('apiModal');
     elements.aboutModal = safeGetElement('aboutModal');
-    elements.aboutAcceptBtn = safeGetElement('aboutAcceptBtn');
+    elements.ackModal = safeGetElement('ackModal');
+    elements.ackAcceptBtn = safeGetElement('ackAcceptBtn');
     elements.editModal = safeGetElement('editModal');
     elements.editForm = safeGetElement('editForm');
     elements.cancelEditBtn = safeGetElement('cancelEdit');
@@ -110,12 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.editDate = safeGetElement('editDate');
     elements.editSpotPrice = safeGetElement('editSpotPrice');
 
-    // Show About modal immediately and set up its events
+    // Show acknowledgment modal immediately and set up modal events
+    if (typeof setupAckModalEvents === 'function') {
+      setupAckModalEvents();
+    }
+    if (typeof showAckModal === 'function') {
+      showAckModal();
+    }
     if (typeof setupAboutModalEvents === 'function') {
       setupAboutModalEvents();
-    }
-    if (typeof showAboutModal === 'function') {
-      showAboutModal();
     }
 
     // Notes modal elements
