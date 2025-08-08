@@ -7,8 +7,8 @@
 const showAboutModal = () => {
   if (elements.aboutModal) {
     populateAboutModal();
-    elements.aboutModal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    elements.aboutModal.style.display = "flex";
+    document.body.style.overflow = "hidden";
   }
 };
 
@@ -17,8 +17,8 @@ const showAboutModal = () => {
  */
 const hideAboutModal = () => {
   if (elements.aboutModal) {
-    elements.aboutModal.style.display = 'none';
-    document.body.style.overflow = '';
+    elements.aboutModal.style.display = "none";
+    document.body.style.overflow = "";
   }
 };
 
@@ -26,11 +26,11 @@ const hideAboutModal = () => {
  * Shows the acknowledgment modal on load
  */
 const showAckModal = () => {
-  const ackModal = document.getElementById('ackModal');
+  const ackModal = document.getElementById("ackModal");
   if (ackModal) {
     populateAckModal();
-    ackModal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    ackModal.style.display = "flex";
+    document.body.style.overflow = "hidden";
   }
 };
 
@@ -38,10 +38,10 @@ const showAckModal = () => {
  * Hides the acknowledgment modal
  */
 const hideAckModal = () => {
-  const ackModal = document.getElementById('ackModal');
+  const ackModal = document.getElementById("ackModal");
   if (ackModal) {
-    ackModal.style.display = 'none';
-    document.body.style.overflow = '';
+    ackModal.style.display = "none";
+    document.body.style.overflow = "";
   }
 };
 
@@ -57,14 +57,14 @@ const acceptAck = () => {
  */
 const populateAboutModal = () => {
   // Update version displays
-  const aboutVersion = document.getElementById('aboutVersion');
-  const aboutCurrentVersion = document.getElementById('aboutCurrentVersion');
+  const aboutVersion = document.getElementById("aboutVersion");
+  const aboutCurrentVersion = document.getElementById("aboutCurrentVersion");
 
-  if (aboutVersion && typeof APP_VERSION !== 'undefined') {
+  if (aboutVersion && typeof APP_VERSION !== "undefined") {
     aboutVersion.textContent = `v${APP_VERSION}`;
   }
 
-  if (aboutCurrentVersion && typeof APP_VERSION !== 'undefined') {
+  if (aboutCurrentVersion && typeof APP_VERSION !== "undefined") {
     aboutCurrentVersion.textContent = `v${APP_VERSION}`;
   }
 
@@ -76,8 +76,8 @@ const populateAboutModal = () => {
  * Populates the acknowledgment modal with version information
  */
 const populateAckModal = () => {
-  const ackVersion = document.getElementById('ackVersion');
-  if (ackVersion && typeof APP_VERSION !== 'undefined') {
+  const ackVersion = document.getElementById("ackVersion");
+  if (ackVersion && typeof APP_VERSION !== "undefined") {
     ackVersion.textContent = `v${APP_VERSION}`;
   }
 };
@@ -86,61 +86,40 @@ const populateAckModal = () => {
  * Loads changelog information from docs/CHANGELOG.md and populates the About modal
  */
 const loadChangelog = async () => {
-  const latestList = document.getElementById('aboutChangelogLatest');
-  const previousSection = document.getElementById('aboutChangelogPreviousSection');
-  const prevTitle = document.getElementById('aboutChangelogPreviousTitle');
-  const prevList = document.getElementById('aboutChangelogPrevious');
-  
+  const latestList = document.getElementById("aboutChangelogLatest");
   if (!latestList) return;
-  
+
   try {
     // Try to fetch from docs/CHANGELOG.md first, then fallback to README.md
     let res, text;
     try {
-      res = await fetch('docs/CHANGELOG.md');
-      if (!res.ok) throw new Error('CHANGELOG.md not found');
+      res = await fetch("docs/CHANGELOG.md");
+      if (!res.ok) throw new Error("CHANGELOG.md not found");
       text = await res.text();
     } catch (e) {
-      res = await fetch('README.md');
-      if (!res.ok) throw new Error('README.md not found');
+      res = await fetch("README.md");
+      if (!res.ok) throw new Error("README.md not found");
       text = await res.text();
     }
-    
+
     // Parse changelog sections - look for version headers
-    const versionPattern = /###\s+Version\s+([\d.]+)[^\n]*\n([\s\S]*?)(?=###\s+Version|$)/g;
+    const versionPattern =
+      /###\s+Version\s+([\d.]+)[^\n]*\n([\s\S]*?)(?=###\s+Version|$)/g;
     const matches = [...text.matchAll(versionPattern)];
-    
+
     if (matches.length > 0) {
       // Get the latest version changes
       const [, latestVersion, latestContent] = matches[0];
       const latestItems = extractChangelogItems(latestContent);
-      
+
       if (latestItems.length > 0) {
         latestList.innerHTML = latestItems
           .slice(0, 5) // Show max 5 latest items
-          .map(item => `<li>${item}</li>`)
-          .join('');
+          .map((item) => `<li>${item}</li>`)
+          .join("");
       } else {
-        latestList.innerHTML = '<li>Enhanced about modal and user interface improvements</li>';
-      }
-      
-      // Get previous version if available
-      if (matches.length > 1 && prevTitle && prevList && previousSection) {
-        const [, prevVersion, prevContent] = matches[1];
-        const prevItems = extractChangelogItems(prevContent);
-        
-        prevTitle.textContent = `📋 Changes in v${prevVersion}`;
-        
-        if (prevItems.length > 0) {
-          prevList.innerHTML = prevItems
-            .slice(0, 3) // Show max 3 previous items
-            .map(item => `<li>${item}</li>`)
-            .join('');
-        } else {
-          previousSection.style.display = 'none';
-        }
-      } else if (previousSection) {
-        previousSection.style.display = 'none';
+        latestList.innerHTML =
+          "<li>Enhanced about modal and user interface improvements</li>";
       }
     } else {
       // Fallback content if no versions found
@@ -151,13 +130,9 @@ const loadChangelog = async () => {
         <li>Enhanced user interface and theming</li>
         <li>Improved data backup and security features</li>
       `;
-      
-      if (previousSection) {
-        previousSection.style.display = 'none';
-      }
     }
   } catch (e) {
-    console.warn('Could not load changelog', e);
+    console.warn("Could not load changelog", e);
     // Provide fallback content
     latestList.innerHTML = `
       <li>Enhanced about modal with comprehensive information</li>
@@ -165,10 +140,6 @@ const loadChangelog = async () => {
       <li>Better data backup and security features</li>
       <li>See documentation for complete feature list</li>
     `;
-    
-    if (previousSection) {
-      previousSection.style.display = 'none';
-    }
   }
 };
 
@@ -176,20 +147,21 @@ const loadChangelog = async () => {
  * Extracts changelog items from content, filtering for meaningful changes
  */
 const extractChangelogItems = (content) => {
-  const lines = content.split('\n')
-    .map(line => line.trim())
-    .filter(line => line.startsWith('-') || line.startsWith('*'))
-    .map(line => line.replace(/^[-*]\s*/, ''))
-    .filter(line => line.length > 10) // Filter out very short items
-    .map(line => {
+  const lines = content
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("-") || line.startsWith("*"))
+    .map((line) => line.replace(/^[-*]\s*/, ""))
+    .filter((line) => line.length > 10) // Filter out very short items
+    .map((line) => {
       const safe = sanitizeHtml(line);
       // Clean up markdown formatting
       return safe
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-        .replace(/`(.*?)`/g, '<code>$1</code>') // Code
-        .replace(/\[(.*?)\]\(.*?\)/g, '$1'); // Remove links but keep text
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+        .replace(/`(.*?)`/g, "<code>$1</code>") // Code
+        .replace(/\[(.*?)\]\(.*?\)/g, "$1"); // Remove links but keep text
     });
-  
+
   return lines;
 };
 
@@ -199,36 +171,38 @@ const extractChangelogItems = (content) => {
 const showFullChangelog = () => {
   // Try to open changelog documentation
   const urls = [
-    'docs/CHANGELOG.md',
-    'https://github.com/lbruton/Precious-Metals-Inventory/blob/main/docs/CHANGELOG.md',
-    'README.md'
+    "docs/CHANGELOG.md",
+    "https://github.com/lbruton/Precious-Metals-Inventory/blob/main/docs/CHANGELOG.md",
+    "README.md",
   ];
-  
+
   // Open the first available URL
-  window.open(urls[1], '_blank', 'noopener,noreferrer');
+  window.open(urls[1], "_blank", "noopener,noreferrer");
 };
 
 /**
  * Sets up event listeners for about modal elements
  */
 const setupAboutModalEvents = () => {
-  const aboutCloseBtn = document.getElementById('aboutCloseBtn');
-  const aboutShowChangelogBtn = document.getElementById('aboutShowChangelogBtn');
-  const aboutModal = document.getElementById('aboutModal');
+  const aboutCloseBtn = document.getElementById("aboutCloseBtn");
+  const aboutShowChangelogBtn = document.getElementById(
+    "aboutShowChangelogBtn",
+  );
+  const aboutModal = document.getElementById("aboutModal");
 
   // Close button
   if (aboutCloseBtn) {
-    aboutCloseBtn.addEventListener('click', hideAboutModal);
+    aboutCloseBtn.addEventListener("click", hideAboutModal);
   }
 
   // Show changelog button
   if (aboutShowChangelogBtn) {
-    aboutShowChangelogBtn.addEventListener('click', showFullChangelog);
+    aboutShowChangelogBtn.addEventListener("click", showFullChangelog);
   }
 
   // Click outside to close
   if (aboutModal) {
-    aboutModal.addEventListener('click', (e) => {
+    aboutModal.addEventListener("click", (e) => {
       if (e.target === aboutModal) {
         hideAboutModal();
       }
@@ -236,8 +210,12 @@ const setupAboutModalEvents = () => {
   }
 
   // Escape key to close
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && aboutModal && aboutModal.style.display === 'flex') {
+  document.addEventListener("keydown", (e) => {
+    if (
+      e.key === "Escape" &&
+      aboutModal &&
+      aboutModal.style.display === "flex"
+    ) {
       hideAboutModal();
     }
   });
@@ -247,35 +225,35 @@ const setupAboutModalEvents = () => {
  * Sets up event listeners for acknowledgment modal elements
  */
 const setupAckModalEvents = () => {
-  const ackCloseBtn = document.getElementById('ackCloseBtn');
-  const ackAcceptBtn = document.getElementById('ackAcceptBtn');
-  const ackModal = document.getElementById('ackModal');
+  const ackCloseBtn = document.getElementById("ackCloseBtn");
+  const ackAcceptBtn = document.getElementById("ackAcceptBtn");
+  const ackModal = document.getElementById("ackModal");
 
   if (ackCloseBtn) {
-    ackCloseBtn.addEventListener('click', hideAckModal);
+    ackCloseBtn.addEventListener("click", hideAckModal);
   }
 
   if (ackAcceptBtn) {
-    ackAcceptBtn.addEventListener('click', acceptAck);
+    ackAcceptBtn.addEventListener("click", acceptAck);
   }
 
   if (ackModal) {
-    ackModal.addEventListener('click', (e) => {
+    ackModal.addEventListener("click", (e) => {
       if (e.target === ackModal) {
         hideAckModal();
       }
     });
   }
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && ackModal && ackModal.style.display === 'flex') {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && ackModal && ackModal.style.display === "flex") {
       hideAckModal();
     }
   });
 };
 
 // Expose globally for access from other modules
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.showAboutModal = showAboutModal;
   window.hideAboutModal = hideAboutModal;
   window.showAckModal = showAckModal;
