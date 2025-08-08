@@ -8,7 +8,11 @@
 
 ## 📋 Version History
 
-### Version 3.1.11 – Documentation Consolidation (2025-08-08)
+### Version 3.1.11 – UI Enhancements and Documentation Consolidation (2025-08-08)
+- **UI Improvements**: Enhanced table usability and visual organization
+  - Color-coded table items for improved visual distinction and organization
+  - Enhanced click-to-sort functionality across all table columns
+  - Added dedicated Notes button for quick access to item notes
 - **Documentation Improvement**: Consolidated AI assistant guidance into comprehensive workflow system
   - Removed redundant `docs/LLM.md` file (archived to `docs/archive/LLM.md`)
   - Replaced with enhanced `docs/MULTI_AGENT_WORKFLOW.md` providing complete project context
