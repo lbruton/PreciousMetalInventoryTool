@@ -142,16 +142,23 @@ label {
    ============================================================================= */
 
 .app-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
   width: 100%;
   padding: var(--spacing);
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-}
+    box-shadow: var(--shadow-sm);
+  }
+
+  .sources-btn {
+    position: fixed;
+    bottom: var(--spacing);
+    left: var(--spacing);
+    z-index: 1000;
+  }
 
 .container {
   display: grid;
@@ -836,17 +843,50 @@ td input:checked + .slider:before {
 }
 
 .modal-content {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
-  max-width: 600px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-lg);
-  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* About modal styling */
+  #aboutModal .modal-header {
+    background: var(--primary);
+    color: #fff;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    margin: calc(-1 * var(--spacing-xl)) calc(-1 * var(--spacing-xl)) var(--spacing-xl);
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+  }
+
+  #aboutModal .modal-body p {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  #aboutModal .section {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  #aboutModal .section-title {
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  #aboutModal ul {
+    margin-left: 1.25rem;
+    list-style: disc;
+  }
+
+  #aboutModal .modal-actions {
+    text-align: right;
+  }
 
 .details-modal-content {
   background: var(--bg-card);

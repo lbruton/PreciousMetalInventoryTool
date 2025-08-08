@@ -11,7 +11,9 @@
 ### Version 3.1.12 – About Modal and Disclaimer (2025-08-08)
 - **User Notice**: Added mandatory about/disclaimer modal informing users that data is stored locally and advising regular backups
 - **About Access**: New About button in header provides version info and change history
+- **Sources Button**: Fixed bottom-left link to project repository
 - **Persistence**: Acceptance stored in localStorage to prevent repeated prompts
+- **Styling**: Refreshed modal header with prominent version display
 
 ### Version 3.1.11 – UI Enhancements and Documentation Consolidation (2025-08-08)
 - **UI Improvements**: Enhanced table usability and visual organization

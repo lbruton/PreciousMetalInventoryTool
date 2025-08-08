@@ -48,9 +48,10 @@
 <button class="btn" id="apiBtn" title="API Configuration">API</button>
   <button class="btn" id="aboutBtn" title="About">About</button>
   <button class="btn" id="themeToggle">Dark Mode</button>
-</div>
-</div>
-<div class="container">
+  </div>
+  </div>
+  <a class="btn sources-btn" href="https://github.com/lbruton/Precious-Metals-Inventory" target="_blank" rel="noopener">Sources</a>
+  <div class="container">
 <!-- =============================================================================
          SPOT PRICES SECTION
          
@@ -785,23 +786,26 @@
        ============================================================================= -->
 <div class="modal" id="aboutModal" style="display: none;">
   <div class="modal-content">
-    <h2 style="margin-bottom: 1rem; color: var(--primary);">About <span id="aboutVersion"></span></h2>
-    <p style="margin-bottom: 1rem;">All data is stored locally in your browser. Back up often and use at your own risk.</p>
-    <p style="margin-bottom: 1rem;"><a href="https://github.com/jlarmstrongiv/Precious-Metals-Inventory" target="_blank" style="color: var(--primary);">View on GitHub</a></p>
-    <div style="margin-bottom: 1rem;">
-      <div style="font-weight: 600; margin-bottom: 0.5rem;">What's New</div>
-      <ul style="margin-left: 1.25rem; list-style: disc;">
-        <li>Added disclaimer splash requiring acceptance</li>
-        <li>About button for quick access to app details</li>
-      </ul>
+    <div class="modal-header">
+      <h2>Precious Metals Inventory Tool <span id="aboutVersion"></span></h2>
     </div>
-    <div style="margin-bottom: 1rem;">
-      <div style="font-weight: 600; margin-bottom: 0.5rem;">Changes from v3.1.11</div>
-      <ul style="margin-left: 1.25rem; list-style: disc;">
-        <li>UI enhancements and documentation improvements</li>
-      </ul>
+    <div class="modal-body">
+      <p>All data is stored locally in your browser. Back up often and use at your own risk.</p>
+      <div class="section">
+        <div class="section-title">What's New</div>
+        <ul>
+          <li>Added disclaimer splash requiring acceptance</li>
+          <li>About button for quick access to app details</li>
+        </ul>
+      </div>
+      <div class="section">
+        <div class="section-title">Changes from v3.1.11</div>
+        <ul>
+          <li>UI enhancements and documentation improvements</li>
+        </ul>
+      </div>
+      <div class="modal-actions"><button class="btn" id="aboutAcceptBtn" style="background: var(--success);">Accept & Continue</button></div>
     </div>
-    <div style="text-align: right;"><button class="btn" id="aboutAcceptBtn" style="background: var(--success);">Accept & Continue</button></div>
   </div>
 </div>
 <!-- =============================================================================

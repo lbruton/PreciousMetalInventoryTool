@@ -20,7 +20,7 @@ The tool features a **modular JavaScript architecture** with separate files for 
 
 ## ✨ Latest Changes (3.1.x Series)
 
-- **v3.1.12 - About Modal & Disclaimer**: Added mandatory disclaimer splash and About button with version info
+- **v3.1.12 - About Modal & Disclaimer**: Added mandatory disclaimer splash, About header button, and Sources link; modal now includes styled header with version info
 - **v3.1.11 - UI Enhancements & Documentation**: Improved table usability and AI assistant guidance
   - Color-coded table items for better visual organization
   - Enhanced click-to-sort functionality across all table columns
