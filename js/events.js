@@ -68,17 +68,6 @@ const setupColumnResizing = () => {
 
     const resizeHandle = document.createElement('div');
     resizeHandle.className = 'resize-handle';
-    resizeHandle.style.cssText = `
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 6px;
-      height: 100%;
-      background: transparent;
-      cursor: col-resize;
-      z-index: 10;
-      transition: background-color 0.2s;
-    `;
 
     header.style.position = 'relative';
     header.appendChild(resizeHandle);
@@ -136,7 +125,9 @@ const setupColumnResizing = () => {
  * Sets up all primary event listeners for the application
  */
 const setupEventListeners = () => {
-  debugLog('Setting up event listeners (v3.1.4)...');
+
+  console.log(`Setting up event listeners (v${APP_VERSION})...`);
+ dev
 
   try {
     // CRITICAL HEADER BUTTONS

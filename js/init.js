@@ -43,7 +43,9 @@ function safeGetElement(id, required = false) {
  * @returns {void} Fully initializes the application interface
  */
 document.addEventListener('DOMContentLoaded', () => {
-  debugLog('=== APPLICATION INITIALIZATION STARTED (v3.1.4) ===');
+
+  console.log(`=== APPLICATION INITIALIZATION STARTED (v${APP_VERSION}) ===`);
+dev
   
   try {
     // Phase 1: Initialize Core DOM Elements

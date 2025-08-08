@@ -87,45 +87,45 @@ Each inventory item includes:
 ## Project Structure
 
 ```
-├── STRUCTURE.md
-├── app
-│   ├── css
-│   │   └── styles.css                    # Complete theming and responsive styling
-│   ├── index.html                       # Main application interface
-│   ├── js
-│   │   ├── charts.js                    # Chart.js utilities and pie chart rendering
-│   │   ├── constants.js                 # Global constants including metal configs and version
-│   │   ├── detailsModal.js              # Analytics modal with breakdown charts
-│   │   ├── events.js                    # DOM event listener setup and management
-│   │   ├── init.js                      # Application bootstrap and initialization
-│   │   ├── inventory.js                 # CRUD operations, calculations, and import/export
-│   │   ├── pagination.js                # Table pagination controls and logic
-│   │   ├── search.js                    # Search and filtering functionality including notes
-│   │   ├── sorting.js                   # Table column sorting utilities
-│   │   ├── spot.js                      # Spot price handling and history management
-│   │   ├── state.js                     # Global application state and DOM caching
-│   │   ├── theme.js                     # Dark/light theme management
-│   │   └── utils.js                     # Utility functions, validation, and helpers
-│   └── structure.md                     # Module-specific structure documentation
-├── docs
-│   ├── CHANGELOG.md                     # Detailed history of application changes
-│   ├── MULTI_AGENT_WORKFLOW.md          # AI assistant development workflow and coordination
-│   ├── VERSIONING.md                   # Version management notes
-│   ├── README.md                       # Detailed project information
+├── css/
+│   └── styles.css                      # Complete theming and responsive styling
+├── debug/                              # Development artifacts
+├── docs/
+│   ├── CHANGELOG.md                    # Detailed history of application changes
+│   ├── IMPLEMENTATION_SUMMARY.md        # Summary of major development work
+│   ├── MULTI_AGENT_WORKFLOW.md         # AI assistant development workflow and coordination
+│   ├── ROADMAP.md                      # Planned features and subtasks
 │   ├── STATUS.md                       # Project status and features overview
-│   └── STRUCTURE.md                    # This file documenting folder and file organization
-├── index.html                          # Landing page / version selector
+│   ├── STRUCTURE.md                    # Documentation of folder and file organization
+│   └── VERSIONING.md                   # Version management notes
+├── js/
+│   ├── api.js
+│   ├── charts.js
+│   ├── constants.js
+│   ├── detailsModal.js
+│   ├── events.js
+│   ├── init.js
+│   ├── inventory.js
+│   ├── pagination.js
+│   ├── search.js
+│   ├── sorting.js
+│   ├── spot.js
+│   ├── state.js
+│   ├── theme.js
+│   └── utils.js
+├── index.html                         # Main application interface
 ├── sample.csv                         # Sample inventory data with notes for import testing
+├── structure.md                       # Detailed project structure reference
 └── README.md                          # Root project summary and documentation
 ```
 
 **Key Notes:**
 
-- The `app` folder contains the entire main application, including CSS and modular JavaScript files.
+- The `css` and `js` directories contain the application's styling and modular JavaScript files.
 - JavaScript is split into specialized modules to promote maintainability and separation of concerns.
 - Styles use CSS custom properties supporting dark/light themes and responsive layouts.
 - Documentation files in the `docs` folder keep changelogs, versioning info, project status, and development guides.
-- The root `index.html` serves as a landing/version selector page leading to the main app interface.
+- The root `index.html` hosts the main application interface.
 
 ## Documentation
 - **[docs/README.md](docs/README.md)** - Detailed project information.
