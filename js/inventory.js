@@ -441,8 +441,10 @@ const getColor = (map, key) => {
 
 const filterLink = (field, value, color) => {
   const handler = `applyColumnFilter('${field}', ${JSON.stringify(value)})`;
+  // Escape double quotes for safe inline handler usage
+  const escaped = handler.replace(/"/g, '&quot;');
   const safe = sanitizeHtml(value);
-  return `<span class="filter-text" style="color: ${color};" onclick="${handler}" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' ')${handler}" title="Filter by ${safe}">${safe}</span>`;
+  return `<span class="filter-text" style="color: ${color};" onclick="${escaped}" tabindex="0" role="button" onkeydown="if(event.key==='Enter'||event.key===' ')${escaped}" title="Filter by ${safe}">${safe}</span>`;
 };
 
 const getTypeColor = type => getColor(typeColors, type);
