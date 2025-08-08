@@ -6,6 +6,7 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 - **About Modal**: Mandatory disclaimer splash with version info and refreshed styling
 - **About Button**: Quick access to application details from header
 - **Sources Link**: GitHub repository accessible from About modal
+- **Dynamic Changelog**: About modal now auto-populates release notes from this README
 
 ## 🆕 What's New in v3.1.11
 - **UI Enhancements**: Improved table usability and visual organization
