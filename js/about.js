@@ -23,30 +23,10 @@ const hideAboutModal = () => {
 };
 
 /**
- * Accepts the disclaimer and stores acceptance in localStorage
+ * Accepts the disclaimer and simply hides the modal
  */
 const acceptAbout = () => {
-  try {
-    localStorage.setItem(ABOUT_ACCEPTED_KEY, 'true');
-  } catch (e) {
-    console.warn('Could not access localStorage for disclaimer acceptance', e);
-  }
   hideAboutModal();
-};
-
-/**
- * Checks if the disclaimer has been accepted; shows modal if not
- */
-const checkAboutAcceptance = () => {
-  let accepted = false;
-  try {
-    accepted = localStorage.getItem(ABOUT_ACCEPTED_KEY) === 'true';
-  } catch (e) {
-    console.warn('Could not read disclaimer acceptance from localStorage', e);
-  }
-  if (!accepted) {
-    showAboutModal();
-  }
 };
 
 /**
@@ -240,7 +220,6 @@ if (typeof window !== 'undefined') {
   window.showAboutModal = showAboutModal;
   window.hideAboutModal = hideAboutModal;
   window.acceptAbout = acceptAbout;
-  window.checkAboutAcceptance = checkAboutAcceptance;
   window.loadChangelog = loadChangelog;
   window.setupAboutModalEvents = setupAboutModalEvents;
   window.populateAboutModal = populateAboutModal;
