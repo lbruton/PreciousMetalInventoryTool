@@ -856,9 +856,7 @@ td input:checked + .slider:before {
 
 .about-modal-content {
   width: 75vw;
-  height: 75vh;
   max-width: 1200px;
-  max-height: none;
   padding: 0;
   overflow: hidden;
 }
@@ -911,7 +909,6 @@ td input:checked + .slider:before {
 .about-modal-body {
   padding: var(--spacing-xl);
   overflow-y: auto;
-  max-height: calc(75vh - 120px);
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--bg-secondary);
 }
@@ -1192,7 +1189,6 @@ td input:checked + .slider:before {
 @media (max-width: 768px) {
   .about-modal-content {
     width: 95vw;
-    height: 90vh;
     margin: var(--spacing-sm);
   }
 
@@ -1210,7 +1206,6 @@ td input:checked + .slider:before {
 
   .about-modal-body {
     padding: var(--spacing);
-    max-height: calc(90vh - 120px);
   }
 
   .about-alert .alert-content {
