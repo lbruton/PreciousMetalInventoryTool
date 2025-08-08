@@ -14,18 +14,13 @@ const API_PROVIDERS = {
     name: 'Metals.dev',
     baseUrl: 'https://api.metals.dev/v1',
     endpoints: {
-      silver: '/latest/XAG',
-      gold: '/latest/XAU',
-      platinum: '/latest/XPT',
-      palladium: '/latest/XPD'
+      silver: '/metal/spot?api_key={API_KEY}&metal=silver&currency=USD',
+      gold: '/metal/spot?api_key={API_KEY}&metal=gold&currency=USD',
+      platinum: '/metal/spot?api_key={API_KEY}&metal=platinum&currency=USD',
+      palladium: '/metal/spot?api_key={API_KEY}&metal=palladium&currency=USD'
     },
-    parseResponse: (data, metal) => {
-      // Expected format: { "XAG": { "USD": 25.50 } }
-      const metalCode = metal === 'silver' ? 'XAG' : metal === 'gold' ? 'XAU' : 
-                       metal === 'platinum' ? 'XPT' : 'XPD';
-      return data[metalCode]?.USD || null;
-    },
-    documentation: 'https://metals.dev/docs'
+    parseResponse: (data) => data.rate?.price || null,
+    documentation: 'https://www.metals.dev/docs'
   },
   METALS_API: {
     name: 'Metals-API.com',
@@ -147,3 +142,6 @@ const METALS = {
 };
 
 // =============================================================================
+
+// Expose globals
+if(typeof window!=='undefined'){window.API_PROVIDERS=API_PROVIDERS; window.METALS=METALS;}
