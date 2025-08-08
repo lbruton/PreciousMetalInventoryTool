@@ -25,7 +25,7 @@
     ├── structure.md
 ├── docs
     ├── CHANGELOG.md             # Detailed History of Application Changes
-    ├── LLM.md                   # LLM Friendly technical summary of the complete implementation
+    ├── MULTI_AGENT_WORKFLOW.md  # AI assistant development workflow and coordination
     ├── VERSIONING.md            # Versioning notes
 ├── index.html
 ├── README.md                    # Human Readable Application Summary

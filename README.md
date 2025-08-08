@@ -109,7 +109,7 @@ Each inventory item includes:
 │   └── structure.md                     # Module-specific structure documentation
 ├── docs
 │   ├── CHANGELOG.md                     # Detailed history of application changes
-│   ├── LLM.md                          # LLM-friendly technical summary of the complete implementation
+│   ├── MULTI_AGENT_WORKFLOW.md          # AI assistant development workflow and coordination
 │   ├── VERSIONING.md                   # Version management notes
 │   ├── README.md                       # Detailed project information
 │   ├── STATUS.md                       # Project status and features overview
@@ -129,7 +129,7 @@ Each inventory item includes:
 
 ## Documentation
 - **[docs/README.md](docs/README.md)** - Detailed project information.
-- **[docs/LLM.md](docs/LLM.md)** - Development guide for AI assistants.
+- **[docs/MULTI_AGENT_WORKFLOW.md](docs/MULTI_AGENT_WORKFLOW.md)** - AI assistant development workflow.
 - **[docs/CHANGELOG.md](docs/CHANGELOG.md)** - Version history and features.
 - **[docs/STATUS.md](docs/STATUS.md)** - Current project status.
 - **[docs/STRUCTURE.md](docs/STRUCTURE.md)** - Project organization.
