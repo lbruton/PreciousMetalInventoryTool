@@ -440,6 +440,10 @@ const hideApiModal = () => {
   }
 };
 
+// Make API modal controls available globally
+window.showApiModal = showApiModal;
+window.hideApiModal = hideApiModal;
+
 /**
  * Updates provider information panel in modal
  * @param {string} providerKey - Provider key

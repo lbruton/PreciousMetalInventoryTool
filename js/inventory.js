@@ -739,6 +739,7 @@ const showNotes = (idx) => {
   }
 };
 
+
 /**
  * Prepares and displays edit modal for specified inventory item
  *
@@ -1713,3 +1714,8 @@ const exportHtml = () => {
 };
 
 // =============================================================================
+// Expose inventory actions globally for inline event handlers
+window.toggleCollectable = toggleCollectable;
+window.editItem = editItem;
+window.deleteItem = deleteItem;
+window.showNotes = showNotes;

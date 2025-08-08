@@ -170,3 +170,7 @@ const closeDetailsModal = () => {
 };
 
 // =============================================================================
+
+// Expose details modal functions globally for inline handlers
+window.showDetailsModal = showDetailsModal;
+window.closeDetailsModal = closeDetailsModal;
