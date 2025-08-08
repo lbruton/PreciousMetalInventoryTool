@@ -147,6 +147,16 @@ const setupEventListeners = () => {
       console.error('API button element not found!');
     }
 
+    // About Button
+    if (elements.aboutBtn) {
+      safeAttachListener(elements.aboutBtn, 'click', (e) => {
+        e.preventDefault();
+        if (typeof showAboutModal === 'function') {
+          showAboutModal();
+        }
+      }, 'About Button');
+    }
+
     // Theme Toggle Button
     if (elements.themeToggle) {
       safeAttachListener(elements.themeToggle, 'click', (e) => {
@@ -177,6 +187,16 @@ const setupEventListeners = () => {
       }, 'Theme Toggle');
     } else {
       console.error('Theme toggle button element not found!');
+    }
+
+    // About Modal Accept
+    if (elements.aboutAcceptBtn) {
+      safeAttachListener(elements.aboutAcceptBtn, 'click', (e) => {
+        e.preventDefault();
+        if (typeof acceptAbout === 'function') {
+          acceptAbout();
+        }
+      }, 'About accept');
     }
 
     // Details modal buttons
