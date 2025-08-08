@@ -742,32 +742,6 @@ th:nth-child(15) { width: 50px; }  /* Delete */
   outline-offset: 1px;
 }
 
-/* Delete cell styling */
-.delete-cell {
-  text-align: center;
-  vertical-align: middle;
-}
-
-.delete-cell .btn {
-  margin: 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  font-size: 0.9rem;
-  font-weight: bold;
-  border-radius: 50%;
-  transition: all 0.2s;
-}
-
-.delete-cell .btn:hover {
-  transform: scale(1.1);
-  box-shadow: var(--shadow);
-}
-
 /* Make buttons in table cells smaller */
 td .btn {
   padding: 0.25rem 0.5rem;

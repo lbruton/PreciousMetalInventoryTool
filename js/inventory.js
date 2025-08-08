@@ -451,7 +451,7 @@ const renderTable = () => {
       <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${sanitizeHtml(item.name)} as collectable" title="Mark as collectable">
       </td>
       <td><button class="btn" onclick="showNotes(${originalIdx})" aria-label="View notes" title="View notes">Notes</button></td>
-      <td class="delete-cell"><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item">&times;</button></td>
+      <td><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item" title="Delete item">Delete</button></td>
       </tr>
       `);
     }
