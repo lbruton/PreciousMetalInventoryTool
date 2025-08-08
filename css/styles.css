@@ -859,6 +859,9 @@ td input:checked + .slider:before {
   max-width: 1200px;
   padding: 0;
   overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .about-modal-header {
@@ -909,6 +912,7 @@ td input:checked + .slider:before {
 .about-modal-body {
   padding: var(--spacing-xl);
   overflow-y: auto;
+  flex: 1;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--bg-secondary);
 }
@@ -1191,6 +1195,7 @@ td input:checked + .slider:before {
   .about-modal-content {
     width: 95vw;
     margin: var(--spacing-sm);
+    max-height: 95vh;
   }
 
   .about-title {
