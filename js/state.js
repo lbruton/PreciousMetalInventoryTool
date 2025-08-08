@@ -99,6 +99,8 @@ const elements = {
   detailsModalTitle: null,
   typeBreakdown: null,
   locationBreakdown: null,
+  closeDetailsBtn: null,
+  detailsButtons: null,
 
   // Chart canvas elements
   typeChart: null,

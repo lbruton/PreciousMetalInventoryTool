@@ -179,6 +179,26 @@ const setupEventListeners = () => {
       console.error('Theme toggle button element not found!');
     }
 
+    // Details modal buttons
+    if (elements.detailsButtons && elements.detailsButtons.length) {
+      elements.detailsButtons.forEach(btn => {
+        safeAttachListener(btn, 'click', () => {
+          const metal = btn.dataset.metal;
+          if (typeof showDetailsModal === 'function') {
+            showDetailsModal(metal);
+          }
+        }, `Details button (${btn.dataset.metal})`);
+      });
+    }
+
+    if (elements.closeDetailsBtn) {
+      safeAttachListener(elements.closeDetailsBtn, 'click', () => {
+        if (typeof closeDetailsModal === 'function') {
+          closeDetailsModal();
+        }
+      }, 'Close details modal');
+    }
+
     // TABLE HEADER SORTING
     debugLog('Setting up table sorting...');
     const inventoryTable = document.getElementById('inventoryTable');

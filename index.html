@@ -45,7 +45,7 @@
 <div class="app-header">
 <h1>Precious Metals Inventory Tool</h1>
 <div style="margin-left: auto; display: flex; gap: 0.5rem;">
-<button class="btn" id="apiBtn" title="API Configuration" onclick="if(typeof showApiModal==='function'){showApiModal()}else{alert('API configuration interface')}">API</button>
+<button class="btn" id="apiBtn" title="API Configuration">API</button>
 <button class="btn" id="themeToggle">Dark Mode</button>
 </div>
 </div>
@@ -221,7 +221,7 @@
 <span class="total-value" id="lossProfitSilver">$0.00</span>
 </div>
 </div>
-<button class="details-btn" onclick="showDetailsModal('Silver')">View Details</button>
+<button class="details-btn" data-metal="Silver">View Details</button>
 </div>
 <!-- Gold totals card -->
 <div class="total-card gold">
@@ -272,7 +272,7 @@
 <span class="total-value" id="lossProfitGold">$0.00</span>
 </div>
 </div>
-<button class="details-btn" onclick="showDetailsModal('Gold')">View Details</button>
+<button class="details-btn" data-metal="Gold">View Details</button>
 </div>
 <!-- Platinum totals card -->
 <div class="total-card platinum">
@@ -323,7 +323,7 @@
 <span class="total-value" id="lossProfitPlatinum">$0.00</span>
 </div>
 </div>
-<button class="details-btn" onclick="showDetailsModal('Platinum')">View Details</button>
+<button class="details-btn" data-metal="Platinum">View Details</button>
 </div>
 <!-- Palladium totals card -->
 <div class="total-card palladium">
@@ -374,7 +374,7 @@
 <span class="total-value" id="lossProfitPalladium">$0.00</span>
 </div>
 </div>
-<button class="details-btn" onclick="showDetailsModal('Palladium')">View Details</button>
+<button class="details-btn" data-metal="Palladium">View Details</button>
 </div>
 </div>
 </section>
@@ -772,7 +772,7 @@
 </div>
 </div>
 </div>
-<button class="close-details-btn" onclick="closeDetailsModal()">Close</button>
+<button class="close-details-btn" id="closeDetailsBtn">Close</button>
 </div>
 </div>
 <!-- =============================================================================
