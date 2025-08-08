@@ -224,6 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (aboutVersion) {
       aboutVersion.textContent = `v${APP_VERSION}`;
     }
+    if (typeof loadChangelog === 'function') {
+      loadChangelog();
+    }
 
     // Phase 12: Data Initialization
     debugLog('Phase 12: Loading application data...');

@@ -12,6 +12,7 @@
 - **User Notice**: Added mandatory about/disclaimer modal informing users that data is stored locally and advising regular backups
 - **About Access**: New About button in header provides version info and change history
 - **Sources Link**: GitHub repository accessible from About modal
+- **Dynamic Changelog**: About modal auto-loads release notes from README
 - **Persistence**: Acceptance stored in localStorage to prevent repeated prompts
 - **Styling**: Refreshed modal header with prominent version display
 

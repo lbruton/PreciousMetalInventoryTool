@@ -46,10 +46,51 @@ const checkAboutAcceptance = () => {
   }
 };
 
+/**
+ * Loads changelog information from README and populates the About modal
+ */
+const loadChangelog = async () => {
+  const latestList = document.getElementById('aboutChangelogLatest');
+  const previousSection = document.getElementById('aboutChangelogPreviousSection');
+  const prevTitle = document.getElementById('aboutChangelogPreviousTitle');
+  const prevList = document.getElementById('aboutChangelogPrevious');
+  if (!latestList) return;
+  try {
+    const res = await fetch('README.md');
+    if (!res.ok) throw new Error('Failed to fetch README');
+    const text = await res.text();
+    const matches = [...text.matchAll(/##[^\n]*What's New in v([\d.]+)[^\n]*\n((?:- .*\n)+)/g)];
+    if (matches.length > 0) {
+      const [, , latestContent] = matches[0];
+      latestList.innerHTML = latestContent
+        .trim()
+        .split('\n')
+        .map(line => `<li>${sanitizeHtml(line.replace(/^-\s*/, ''))}</li>`) .join('');
+    }
+    if (matches.length > 1 && prevTitle && prevList && previousSection) {
+      const [prevVersion, prevContent] = [matches[1][1], matches[1][2]];
+      prevTitle.textContent = `Changes from v${prevVersion}`;
+      prevList.innerHTML = prevContent
+        .trim()
+        .split('\n')
+        .map(line => `<li>${sanitizeHtml(line.replace(/^-\s*/, ''))}</li>`) .join('');
+    } else if (previousSection) {
+      previousSection.style.display = 'none';
+    }
+  } catch (e) {
+    console.warn('Could not load changelog from README', e);
+    latestList.innerHTML = '<li>See README.md for recent changes</li>';
+    if (previousSection) {
+      previousSection.style.display = 'none';
+    }
+  }
+};
+
 // Expose globally for access from other modules
 if (typeof window !== 'undefined') {
   window.showAboutModal = showAboutModal;
   window.hideAboutModal = hideAboutModal;
   window.acceptAbout = acceptAbout;
   window.checkAboutAcceptance = checkAboutAcceptance;
+  window.loadChangelog = loadChangelog;
 }
