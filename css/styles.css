@@ -13,6 +13,8 @@
   --warning: #d97706;
   --danger: #dc2626;
   --danger-hover: #b91c1c;
+  --info: #0ea5e9;
+  --info-hover: #0284c7;
 
   /* Background Colors */
   --bg-primary: #ffffff;
@@ -56,6 +58,8 @@
   --primary-hover: #2563eb;
   --secondary: #6b7280;
   --secondary-hover: #9ca3af;
+  --info: #38bdf8;
+  --info-hover: #0ea5e9;
 
   /* Background Colors - Dark Mode */
   --bg-primary: #0f172a;
@@ -301,6 +305,14 @@ button, .btn, input[type="button"], input[type="submit"] {
 
 .btn.danger:hover {
   background: var(--danger-hover);
+}
+
+.btn.info {
+  background: var(--info);
+}
+
+.btn.info:hover {
+  background: var(--info-hover);
 }
 
 .btn.premium {
