@@ -629,6 +629,7 @@ const setupSearch = () => {
           elements.searchInput.value = '';
         }
         searchQuery = '';
+        columnFilter = { field: null, value: null };
         currentPage = 1;
         renderTable();
       }, 'Clear search button');

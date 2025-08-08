@@ -467,6 +467,7 @@ const renderTable = () => {
 
       rows.push(`
       <tr>
+      <td class="shrink">${formatDisplayDate(item.date)}</td>
       <td class="shrink">${filterLink('type', item.type, getTypeColor(item.type))}</td>
       <td class="shrink">${filterLink('metal', item.metal || 'Silver', METAL_COLORS[item.metal] || 'var(--primary)')}</td>
       <td class="shrink">${item.qty}</td>
@@ -477,7 +478,6 @@ const renderTable = () => {
       <td class="shrink" style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
       <td class="shrink">${filterLink('purchaseLocation', item.purchaseLocation, getPurchaseLocationColor(item.purchaseLocation))}</td>
       <td class="shrink">${filterLink('storageLocation', item.storageLocation || 'Unknown', getStorageLocationColor(item.storageLocation || 'Unknown'))}</td>
-      <td class="shrink">${item.date}</td>
       <td class="checkbox-cell shrink">
       <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${sanitizeHtml(item.name)} as collectable" title="Mark as collectable">
       </td>

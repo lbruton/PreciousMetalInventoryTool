@@ -21,6 +21,7 @@ const filterInventory = () => {
 
   const query = searchQuery.toLowerCase();
   return result.filter(item => {
+    const formattedDate = formatDisplayDate(item.date).toLowerCase();
     return (
       item.metal.toLowerCase().includes(query) ||
       item.name.toLowerCase().includes(query) ||
@@ -29,6 +30,7 @@ const filterInventory = () => {
       (item.storageLocation && item.storageLocation.toLowerCase().includes(query)) ||
       (item.notes && item.notes.toLowerCase().includes(query)) ||
       item.date.includes(query) ||
+      formattedDate.includes(query) ||
       item.qty.toString().includes(query) ||
       item.weight.toString().includes(query) ||
       item.price.toString().includes(query) ||
