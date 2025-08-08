@@ -322,3 +322,5 @@ window.showDetailsModal = showDetailsModal;
 window.closeDetailsModal = closeDetailsModal;
 window.editItem = editItem;
 window.deleteItem = deleteItem;
+window.showNotes = showNotes;
+window.applyColumnFilter = applyColumnFilter;
