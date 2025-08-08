@@ -840,7 +840,7 @@ td input:checked + .slider:before {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: var(--spacing-xl);
-    max-width: 600px;
+    max-width: 1200px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
@@ -855,12 +855,9 @@ td input:checked + .slider:before {
    ============================================================================= */
 
 .about-modal-content {
-  width: 75vw;
-  height: 75vh;
-  max-width: none;
-  max-height: none;
   padding: 0;
-  overflow: hidden;
+  max-height: none;
+  overflow: visible;
 }
 
 .about-modal-header {
@@ -910,8 +907,6 @@ td input:checked + .slider:before {
 
 .about-modal-body {
   padding: var(--spacing-xl);
-  overflow-y: auto;
-  max-height: calc(75vh - 120px);
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--bg-secondary);
 }
@@ -1030,7 +1025,7 @@ td input:checked + .slider:before {
   break-inside: avoid;
 }
 
-.about-alert .alert-actions {
+.alert-actions {
   margin-top: var(--spacing-lg);
   text-align: center;
 }
@@ -1190,8 +1185,6 @@ td input:checked + .slider:before {
 /* Responsive adjustments for about modal */
 @media (max-width: 768px) {
   .about-modal-content {
-    width: 95vw;
-    height: 90vh;
     margin: var(--spacing-sm);
   }
 
@@ -1209,7 +1202,6 @@ td input:checked + .slider:before {
 
   .about-modal-body {
     padding: var(--spacing);
-    max-height: calc(90vh - 120px);
   }
 
   .about-alert .alert-content {

@@ -2,7 +2,7 @@
 // =============================================================================
 
 /**
- * Shows the about/disclaimer modal and populates it with current data
+ * Shows the About modal and populates it with current data
  */
 const showAboutModal = () => {
   if (elements.aboutModal) {
@@ -13,7 +13,7 @@ const showAboutModal = () => {
 };
 
 /**
- * Hides the about/disclaimer modal
+ * Hides the About modal
  */
 const hideAboutModal = () => {
   if (elements.aboutModal) {
@@ -23,10 +23,31 @@ const hideAboutModal = () => {
 };
 
 /**
- * Accepts the disclaimer and simply hides the modal
+ * Shows the acknowledgment modal on load
  */
-const acceptAbout = () => {
-  hideAboutModal();
+const showAckModal = () => {
+  if (elements.ackModal) {
+    populateAckModal();
+    elements.ackModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+};
+
+/**
+ * Hides the acknowledgment modal
+ */
+const hideAckModal = () => {
+  if (elements.ackModal) {
+    elements.ackModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+};
+
+/**
+ * Accepts the acknowledgment and hides the modal
+ */
+const acceptAck = () => {
+  hideAckModal();
 };
 
 /**
@@ -36,17 +57,27 @@ const populateAboutModal = () => {
   // Update version displays
   const aboutVersion = document.getElementById('aboutVersion');
   const aboutCurrentVersion = document.getElementById('aboutCurrentVersion');
-  
+
   if (aboutVersion && typeof APP_VERSION !== 'undefined') {
     aboutVersion.textContent = `v${APP_VERSION}`;
   }
-  
+
   if (aboutCurrentVersion && typeof APP_VERSION !== 'undefined') {
     aboutCurrentVersion.textContent = `v${APP_VERSION}`;
   }
-  
+
   // Load changelog data
   loadChangelog();
+};
+
+/**
+ * Populates the acknowledgment modal with version information
+ */
+const populateAckModal = () => {
+  const ackVersion = document.getElementById('ackVersion');
+  if (ackVersion && typeof APP_VERSION !== 'undefined') {
+    ackVersion.textContent = `v${APP_VERSION}`;
+  }
 };
 
 /**
@@ -169,9 +200,12 @@ const showFullChangelog = () => {
     'https://github.com/lbruton/Precious-Metals-Inventory/blob/main/docs/CHANGELOG.md',
     'README.md'
   ];
-  
-  // Open the first available URL
-  window.open(urls[1], '_blank', 'noopener,noreferrer');
+
+  // Attempt to open the first available URL
+  for (const url of urls) {
+    const win = window.open(url, '_blank', 'noopener,noreferrer');
+    if (win) break;
+  }
 };
 
 /**
@@ -179,25 +213,19 @@ const showFullChangelog = () => {
  */
 const setupAboutModalEvents = () => {
   const aboutCloseBtn = document.getElementById('aboutCloseBtn');
-  const aboutAcceptBtn = document.getElementById('aboutAcceptBtn');
   const aboutShowChangelogBtn = document.getElementById('aboutShowChangelogBtn');
-  const aboutModal = document.getElementById('aboutModal');
-  
+  const aboutModal = elements.aboutModal;
+
   // Close button
   if (aboutCloseBtn) {
     aboutCloseBtn.addEventListener('click', hideAboutModal);
   }
-  
-  // Accept button
-  if (aboutAcceptBtn) {
-    aboutAcceptBtn.addEventListener('click', acceptAbout);
-  }
-  
+
   // Show changelog button
   if (aboutShowChangelogBtn) {
     aboutShowChangelogBtn.addEventListener('click', showFullChangelog);
   }
-  
+
   // Click outside to close
   if (aboutModal) {
     aboutModal.addEventListener('click', (e) => {
@@ -206,7 +234,7 @@ const setupAboutModalEvents = () => {
       }
     });
   }
-  
+
   // Escape key to close
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && aboutModal && aboutModal.style.display === 'flex') {
@@ -215,12 +243,47 @@ const setupAboutModalEvents = () => {
   });
 };
 
+/**
+ * Sets up event listeners for acknowledgment modal elements
+ */
+const setupAckModalEvents = () => {
+  const ackCloseBtn = document.getElementById('ackCloseBtn');
+  const ackAcceptBtn = elements.ackAcceptBtn;
+  const ackModal = elements.ackModal;
+
+  if (ackCloseBtn) {
+    ackCloseBtn.addEventListener('click', hideAckModal);
+  }
+
+  if (ackAcceptBtn) {
+    ackAcceptBtn.addEventListener('click', acceptAck);
+  }
+
+  if (ackModal) {
+    ackModal.addEventListener('click', (e) => {
+      if (e.target === ackModal) {
+        hideAckModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && ackModal && ackModal.style.display === 'flex') {
+      hideAckModal();
+    }
+  });
+};
+
 // Expose globally for access from other modules
 if (typeof window !== 'undefined') {
   window.showAboutModal = showAboutModal;
   window.hideAboutModal = hideAboutModal;
-  window.acceptAbout = acceptAbout;
+  window.showAckModal = showAckModal;
+  window.hideAckModal = hideAckModal;
+  window.acceptAck = acceptAck;
   window.loadChangelog = loadChangelog;
   window.setupAboutModalEvents = setupAboutModalEvents;
+  window.setupAckModalEvents = setupAckModalEvents;
   window.populateAboutModal = populateAboutModal;
+  window.populateAckModal = populateAckModal;
 }
