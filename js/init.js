@@ -43,11 +43,11 @@ function safeGetElement(id, required = false) {
  * @returns {void} Fully initializes the application interface
  */
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('=== APPLICATION INITIALIZATION STARTED (v3.1.4) ===');
+  debugLog('=== APPLICATION INITIALIZATION STARTED (v3.1.4) ===');
   
   try {
     // Phase 1: Initialize Core DOM Elements
-    console.log('Phase 1: Initializing core DOM elements...');
+    debugLog('Phase 1: Initializing core DOM elements...');
     
     // Core form elements
     elements.inventoryForm = safeGetElement('inventoryForm', true);
@@ -67,16 +67,16 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.itemDate = safeGetElement('itemDate', true);
 
     // Header buttons - CRITICAL
-    console.log('Phase 2: Initializing header buttons...');
+    debugLog('Phase 2: Initializing header buttons...');
     elements.apiBtn = safeGetElement('apiBtn', true);
     elements.themeToggle = safeGetElement('themeToggle', true);
     
     // Check if critical buttons exist
-    console.log('API Button found:', !!document.getElementById('apiBtn'));
-    console.log('Theme Toggle found:', !!document.getElementById('themeToggle'));
+    debugLog('API Button found:', !!document.getElementById('apiBtn'));
+    debugLog('Theme Toggle found:', !!document.getElementById('themeToggle'));
 
     // Import/Export elements
-    console.log('Phase 3: Initializing import/export elements...');
+    debugLog('Phase 3: Initializing import/export elements...');
     elements.importCsvFile = safeGetElement('importCsvFile');
     elements.importJsonFile = safeGetElement('importJsonFile');
     elements.importExcelFile = safeGetElement('importExcelFile');
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.boatingAccidentBtn = safeGetElement('boatingAccidentBtn');
 
     // Modal elements
-    console.log('Phase 4: Initializing modal elements...');
+    debugLog('Phase 4: Initializing modal elements...');
     elements.apiModal = safeGetElement('apiModal');
     elements.editModal = safeGetElement('editModal');
     elements.editForm = safeGetElement('editForm');
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.editSpotPrice = safeGetElement('editSpotPrice');
     
     // Pagination elements
-    console.log('Phase 5: Initializing pagination elements...');
+    debugLog('Phase 5: Initializing pagination elements...');
     elements.itemsPerPage = safeGetElement('itemsPerPage');
     elements.prevPage = safeGetElement('prevPage');
     elements.nextPage = safeGetElement('nextPage');
@@ -117,25 +117,25 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.paginationInfo = safeGetElement('paginationInfo');
     
     // Search elements
-    console.log('Phase 6: Initializing search elements...');
+    debugLog('Phase 6: Initializing search elements...');
     elements.searchInput = safeGetElement('searchInput');
     elements.clearSearchBtn = safeGetElement('clearSearchBtn');
     elements.searchResultsInfo = safeGetElement('searchResultsInfo');
 
     // Details modal elements
-    console.log('Phase 7: Initializing details modal elements...');
+    debugLog('Phase 7: Initializing details modal elements...');
     elements.detailsModal = safeGetElement('detailsModal');
     elements.detailsModalTitle = safeGetElement('detailsModalTitle');
     elements.typeBreakdown = safeGetElement('typeBreakdown');
     elements.locationBreakdown = safeGetElement('locationBreakdown');
 
     // Chart elements
-    console.log('Phase 8: Initializing chart elements...');
+    debugLog('Phase 8: Initializing chart elements...');
     elements.typeChart = safeGetElement('typeChart');
     elements.locationChart = safeGetElement('locationChart');
 
     // Phase 9: Initialize Metal-Specific Elements
-    console.log('Phase 9: Initializing metal-specific elements...');
+    debugLog('Phase 9: Initializing metal-specific elements...');
     
     // Initialize nested objects
     elements.spotPriceDisplay = {};
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const metalKey = metalConfig.key;
       const metalName = metalConfig.name;
       
-      console.log(`  Setting up ${metalName} elements...`);
+      debugLog(`  Setting up ${metalName} elements...`);
       
       // Spot price display elements with CORRECT IDs
       elements.spotPriceDisplay[metalKey] = safeGetElement(`spotPriceDisplay${metalName}`);
@@ -158,12 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
       // Debug log for each metal
       const displayEl = document.getElementById(`spotPriceDisplay${metalName}`);
       const inputEl = document.getElementById(`userSpotPrice${metalName}`);
-      console.log(`    - ${metalName} display element:`, !!displayEl);
-      console.log(`    - ${metalName} input element:`, !!inputEl);
+      debugLog(`    - ${metalName} display element:`, !!displayEl);
+      debugLog(`    - ${metalName} input element:`, !!inputEl);
     });
 
     // Phase 10: Initialize Totals Elements
-    console.log('Phase 10: Initializing totals elements...');
+    debugLog('Phase 10: Initializing totals elements...');
     
     if (!elements.totals) {
       elements.totals = {};
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Phase 11: Version Management
-    console.log('Phase 11: Updating version information...');
+    debugLog('Phase 11: Updating version information...');
     document.title = getAppTitle();
     const appHeader = document.querySelector('.app-header h1');
     if (appHeader) {
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Phase 12: Data Initialization
-    console.log('Phase 12: Loading application data...');
+    debugLog('Phase 12: Loading application data...');
     
     // Set default date
     if (elements.itemDate && elements.itemDate.value !== undefined) {
@@ -226,13 +226,13 @@ document.addEventListener('DOMContentLoaded', () => {
     apiCache = loadApiCache();
 
     // Phase 13: Initial Rendering
-    console.log('Phase 13: Rendering initial display...');
+    debugLog('Phase 13: Rendering initial display...');
     renderTable();
     fetchSpotPrice();
     updateSyncButtonStates();
 
     // Phase 14: Event Listeners Setup (Delayed)
-    console.log('Phase 14: Setting up event listeners...');
+    debugLog('Phase 14: Setting up event listeners...');
     
     // Use a small delay to ensure all DOM manipulation is complete
     setTimeout(() => {
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setupThemeToggle();
         setupColumnResizing();
         
-        console.log('✓ All event listeners setup complete');
+        debugLog('✓ All event listeners setup complete');
       } catch (eventError) {
         console.error('❌ Error setting up event listeners:', eventError);
         
@@ -253,15 +253,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 200); // Increased delay for better compatibility
     
     // Phase 15: Completion
-    console.log('=== INITIALIZATION COMPLETE ===');
-    console.log('✓ Version:', APP_VERSION);
-    console.log('✓ API configured:', !!apiConfig);
-    console.log('✓ Inventory items:', inventory.length);
-    console.log('✓ Critical elements check:');
-    console.log('  - API button:', !!elements.apiBtn);
-    console.log('  - Theme toggle:', !!elements.themeToggle);
-    console.log('  - Inventory form:', !!elements.inventoryForm);
-    console.log('  - Inventory table:', !!elements.inventoryTable);
+    debugLog('=== INITIALIZATION COMPLETE ===');
+    debugLog('✓ Version:', APP_VERSION);
+    debugLog('✓ API configured:', !!apiConfig);
+    debugLog('✓ Inventory items:', inventory.length);
+    debugLog('✓ Critical elements check:');
+    debugLog('  - API button:', !!elements.apiBtn);
+    debugLog('  - Theme toggle:', !!elements.themeToggle);
+    debugLog('  - Inventory form:', !!elements.inventoryForm);
+    debugLog('  - Inventory table:', !!elements.inventoryTable);
     
   } catch (error) {
     console.error('=== CRITICAL INITIALIZATION ERROR ===');
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * Basic event listener setup as fallback
  */
 function setupBasicEventListeners() {
-  console.log('Setting up basic event listeners as fallback...');
+  debugLog('Setting up basic event listeners as fallback...');
   
   // Theme toggle
   const themeBtn = document.getElementById('themeToggle');
@@ -312,7 +312,7 @@ function setupBasicEventListeners() {
     };
   }
   
-  console.log('Basic event listeners setup complete');
+  debugLog('Basic event listeners setup complete');
 }
 
 // Make functions available globally for inline event handlers

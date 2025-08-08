@@ -32,7 +32,7 @@ const safeAttachListener = (element, event, handler, description = '') => {
     try {
       // Method 2: Legacy event handler
       element['on' + event] = handler;
-      console.log(`✓ Fallback event handler attached: ${description}`);
+      debugLog(`✓ Fallback event handler attached: ${description}`);
       return true;
     } catch (fallbackError) {
       console.error(`All event attachment methods failed for ${description}:`, fallbackError);
@@ -136,17 +136,17 @@ const setupColumnResizing = () => {
  * Sets up all primary event listeners for the application
  */
 const setupEventListeners = () => {
-  console.log('Setting up event listeners (v3.1.4)...');
+  debugLog('Setting up event listeners (v3.1.4)...');
 
   try {
     // CRITICAL HEADER BUTTONS
-    console.log('Setting up header buttons...');
+    debugLog('Setting up header buttons...');
     
     // API Button
     if (elements.apiBtn) {
       safeAttachListener(elements.apiBtn, 'click', (e) => {
         e.preventDefault();
-        console.log('API button clicked');
+        debugLog('API button clicked');
         if (typeof showApiModal === 'function') {
           showApiModal();
         } else {
@@ -161,7 +161,7 @@ const setupEventListeners = () => {
     if (elements.themeToggle) {
       safeAttachListener(elements.themeToggle, 'click', (e) => {
         e.preventDefault();
-        console.log('Theme toggle clicked');
+        debugLog('Theme toggle clicked');
         
         if (typeof toggleTheme === 'function') {
           toggleTheme();
@@ -190,7 +190,7 @@ const setupEventListeners = () => {
     }
 
     // TABLE HEADER SORTING
-    console.log('Setting up table sorting...');
+    debugLog('Setting up table sorting...');
     const inventoryTable = document.getElementById('inventoryTable');
     if (inventoryTable) {
       const headers = inventoryTable.querySelectorAll('th');
@@ -219,7 +219,7 @@ const setupEventListeners = () => {
     }
 
     // MAIN FORM SUBMISSION
-    console.log('Setting up main form...');
+    debugLog('Setting up main form...');
     if (elements.inventoryForm) {
       safeAttachListener(elements.inventoryForm, 'submit', function(e) {
         e.preventDefault();
@@ -285,7 +285,7 @@ const setupEventListeners = () => {
     }
 
     // EDIT FORM SUBMISSION
-    console.log('Setting up edit form...');
+    debugLog('Setting up edit form...');
     if (elements.editForm) {
       safeAttachListener(elements.editForm, 'submit', function(e) {
         e.preventDefault();
@@ -371,7 +371,7 @@ const setupEventListeners = () => {
     }
 
     // SPOT PRICE EVENT LISTENERS
-    console.log('Setting up spot price listeners...');
+    debugLog('Setting up spot price listeners...');
     Object.values(METALS).forEach(metalConfig => {
       const metalKey = metalConfig.key;
       const metalName = metalConfig.name;
@@ -389,7 +389,7 @@ const setupEventListeners = () => {
       // Add button - shows manual input
       if (addBtn) {
         safeAttachListener(addBtn, 'click', () => {
-          console.log(`Add button clicked for ${metalName}`);
+          debugLog(`Add button clicked for ${metalName}`);
           const manualInput = document.getElementById(`manualInput${metalName}`);
           if (manualInput) {
             manualInput.style.display = 'block';
@@ -402,7 +402,7 @@ const setupEventListeners = () => {
       // Reset button
       if (resetBtn) {
         safeAttachListener(resetBtn, 'click', () => {
-          console.log(`Reset button clicked for ${metalName}`);
+          debugLog(`Reset button clicked for ${metalName}`);
           if (typeof resetSpotPrice === 'function') {
             resetSpotPrice(metalName);
           } else {
@@ -421,7 +421,7 @@ const setupEventListeners = () => {
       // Sync button
       if (syncBtn) {
         safeAttachListener(syncBtn, 'click', () => {
-          console.log(`Sync button clicked for ${metalName}`);
+          debugLog(`Sync button clicked for ${metalName}`);
           if (typeof syncSpotPricesFromApi === 'function') {
             syncSpotPricesFromApi(true);
           } else {
@@ -464,7 +464,7 @@ const setupEventListeners = () => {
     });
 
     // IMPORT/EXPORT EVENT LISTENERS
-    console.log('Setting up import/export listeners...');
+    debugLog('Setting up import/export listeners...');
     
     if (elements.importCsvFile) {
       safeAttachListener(elements.importCsvFile, 'change', function(e) {
@@ -553,10 +553,10 @@ const setupEventListeners = () => {
     }
     
     // API MODAL EVENT LISTENERS
-    console.log('Setting up API modal listeners...');
+    debugLog('Setting up API modal listeners...');
     setupApiEvents();
 
-    console.log('✓ All event listeners setup complete');
+    debugLog('✓ All event listeners setup complete');
     
   } catch (error) {
     console.error('❌ Error setting up event listeners:', error);
@@ -568,7 +568,7 @@ const setupEventListeners = () => {
  * Sets up pagination event listeners
  */
 const setupPagination = () => {
-  console.log('Setting up pagination listeners...');
+  debugLog('Setting up pagination listeners...');
   
   try {
     if (elements.itemsPerPage) {
@@ -612,7 +612,7 @@ const setupPagination = () => {
       }, 'Last page button');
     }
     
-    console.log('✓ Pagination listeners setup complete');
+    debugLog('✓ Pagination listeners setup complete');
   } catch (error) {
     console.error('❌ Error setting up pagination listeners:', error);
   }
@@ -622,7 +622,7 @@ const setupPagination = () => {
  * Sets up search event listeners
  */
 const setupSearch = () => {
-  console.log('Setting up search listeners...');
+  debugLog('Setting up search listeners...');
   
   try {
     if (elements.searchInput) {
@@ -644,7 +644,7 @@ const setupSearch = () => {
       }, 'Clear search button');
     }
     
-    console.log('✓ Search listeners setup complete');
+    debugLog('✓ Search listeners setup complete');
   } catch (error) {
     console.error('❌ Error setting up search listeners:', error);
   }
@@ -654,7 +654,7 @@ const setupSearch = () => {
  * Sets up theme toggle event listeners
  */
 const setupThemeToggle = () => {
-  console.log('Setting up theme toggle...');
+  debugLog('Setting up theme toggle...');
   
   try {
     // Initialize theme with system preference detection
@@ -671,7 +671,7 @@ const setupThemeToggle = () => {
       setupSystemThemeListener();
     }
     
-    console.log('✓ Theme toggle setup complete');
+    debugLog('✓ Theme toggle setup complete');
   } catch (error) {
     console.error('❌ Error setting up theme toggle:', error);
   }
@@ -681,7 +681,7 @@ const setupThemeToggle = () => {
  * Sets up API-related event listeners
  */
 const setupApiEvents = () => {
-  console.log('Setting up API events...');
+  debugLog('Setting up API events...');
   
   try {
     // API Modal Events
@@ -786,7 +786,7 @@ const setupApiEvents = () => {
       }
     }, 'ESC key modal close');
 
-    console.log('✓ API events setup complete');
+    debugLog('✓ API events setup complete');
   } catch (error) {
     console.error('❌ Error setting up API events:', error);
   }
