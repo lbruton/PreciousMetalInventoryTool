@@ -799,21 +799,6 @@
         PDF, and HTML.
       </div>
       
-      <!-- Key Features -->
-      <div class="about-features">
-        <div class="features-title">✨ Key Features</div>
-        <div class="features-grid">
-          <div class="feature-item">📊 Live Spot Price Tracking</div>
-          <div class="feature-item">💰 Premium & Profit Calculations</div>
-          <div class="feature-item">📈 Advanced Analytics & Charts</div>
-          <div class="feature-item">📁 Multi-Format Import/Export</div>
-          <div class="feature-item">🔍 Real-time Search & Filtering</div>
-          <div class="feature-item">🏦 Storage Location Tracking</div>
-          <div class="feature-item">🎨 Dark/Light Theme Support</div>
-          <div class="feature-item">🔒 100% Local Storage</div>
-        </div>
-      </div>
-      
       <!-- Important Notice -->
       <div class="about-alert">
         <div class="alert-header">
@@ -829,33 +814,58 @@
           
           <p><strong>Spot Price Accuracy:</strong> Prices displayed are for reference only and may not reflect real-time market conditions. Always confirm current pricing with your dealer or official market sources before making transactions.</p>
         </div>
+        <div class="alert-actions">
+          <div class="acceptance-text">
+            By continuing, you acknowledge that you understand this tool stores data locally,
+            you are responsible for backing up your data, and you use this application at your own risk.
+          </div>
+          <button class="btn btn-primary about-accept-btn" id="aboutAcceptBtn">
+            ✅ I Understand - Continue to Application
+          </button>
+        </div>
       </div>
-      
-      <!-- What's New Section -->
-      <div class="about-section">
-        <div class="section-title">🚀 What's New in <span id="aboutCurrentVersion"></span></div>
-        <ul id="aboutChangelogLatest" class="changelog-list"></ul>
+
+      <!-- Key Features -->
+      <div class="about-features">
+        <div class="features-title">✨ Key Features</div>
+        <div class="features-grid">
+          <div class="feature-item">📊 Live Spot Price Tracking</div>
+          <div class="feature-item">💰 Premium & Profit Calculations</div>
+          <div class="feature-item">📈 Advanced Analytics & Charts</div>
+          <div class="feature-item">📁 Multi-Format Import/Export</div>
+          <div class="feature-item">🔍 Real-time Search & Filtering</div>
+          <div class="feature-item">🏦 Storage Location Tracking</div>
+          <div class="feature-item">🎨 Dark/Light Theme Support</div>
+          <div class="feature-item">🔒 100% Local Storage</div>
+        </div>
       </div>
-      
+
+      <!-- What's New and Roadmap -->
+      <div class="about-info-grid">
+        <div class="about-section">
+          <div class="section-title">🚀 What's New in <span id="aboutCurrentVersion"></span></div>
+          <ul id="aboutChangelogLatest" class="changelog-list"></ul>
+        </div>
+
+        <div class="about-section" id="aboutRoadmapSection">
+          <div class="section-title">🗺️ Development Roadmap</div>
+          <div class="roadmap-content">
+            <p>This project is actively maintained with regular updates and improvements. Future enhancements may include:</p>
+            <ul class="roadmap-list">
+              <li>Multi-currency support for international users</li>
+              <li>Enhanced backup encryption for sensitive data</li>
+              <li>Additional API provider integrations</li>
+              <li>Advanced reporting and analytics features</li>
+              <li>Mobile application companion</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <!-- Previous Version Changes -->
       <div class="about-section" id="aboutChangelogPreviousSection">
         <div class="section-title" id="aboutChangelogPreviousTitle">📋 Previous Changes</div>
         <ul id="aboutChangelogPrevious" class="changelog-list"></ul>
-      </div>
-      
-      <!-- Roadmap Section -->
-      <div class="about-section" id="aboutRoadmapSection">
-        <div class="section-title">🗺️ Development Roadmap</div>
-        <div class="roadmap-content">
-          <p>This project is actively maintained with regular updates and improvements. Future enhancements may include:</p>
-          <ul class="roadmap-list">
-            <li>Multi-currency support for international users</li>
-            <li>Enhanced backup encryption for sensitive data</li>
-            <li>Additional API provider integrations</li>
-            <li>Advanced reporting and analytics features</li>
-            <li>Mobile application companion</li>
-          </ul>
-        </div>
       </div>
       
       <!-- Resources Section -->
@@ -871,22 +881,9 @@
           <button class="resource-btn" id="aboutShowChangelogBtn">
             📜 View Full Changelog
           </button>
-          <button class="resource-btn" id="aboutBackupBtn">
-            💾 Backup Data Now
-          </button>
         </div>
       </div>
       
-      <!-- Modal Actions -->
-      <div class="about-modal-actions">
-        <div class="acceptance-text">
-          By continuing, you acknowledge that you understand this tool stores data locally, 
-          you are responsible for backing up your data, and you use this application at your own risk.
-        </div>
-        <button class="btn btn-primary about-accept-btn" id="aboutAcceptBtn">
-          ✅ I Understand - Continue to Application
-        </button>
-      </div>
     </div>
   </div>
 </div>

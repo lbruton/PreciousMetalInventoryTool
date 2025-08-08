@@ -74,9 +74,6 @@ const SPOT_HISTORY_KEY = 'metalSpotHistory';
 /** @constant {string} THEME_KEY - LocalStorage key for theme preference */
 const THEME_KEY = 'appTheme';
 
-/** @constant {string} ABOUT_ACCEPTED_KEY - LocalStorage key for disclaimer acceptance */
-const ABOUT_ACCEPTED_KEY = 'aboutAccepted';
-
 /** @constant {string} API_KEY_STORAGE_KEY - LocalStorage key for API provider information */
 const API_KEY_STORAGE_KEY = 'metalApiConfig';
 

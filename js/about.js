@@ -23,30 +23,10 @@ const hideAboutModal = () => {
 };
 
 /**
- * Accepts the disclaimer and stores acceptance in localStorage
+ * Accepts the disclaimer and simply hides the modal
  */
 const acceptAbout = () => {
-  try {
-    localStorage.setItem(ABOUT_ACCEPTED_KEY, 'true');
-  } catch (e) {
-    console.warn('Could not access localStorage for disclaimer acceptance', e);
-  }
   hideAboutModal();
-};
-
-/**
- * Checks if the disclaimer has been accepted; shows modal if not
- */
-const checkAboutAcceptance = () => {
-  let accepted = false;
-  try {
-    accepted = localStorage.getItem(ABOUT_ACCEPTED_KEY) === 'true';
-  } catch (e) {
-    console.warn('Could not read disclaimer acceptance from localStorage', e);
-  }
-  if (!accepted) {
-    showAboutModal();
-  }
 };
 
 /**
@@ -180,17 +160,6 @@ const extractChangelogItems = (content) => {
 };
 
 /**
- * Handles backup button click from about modal
- */
-const handleAboutBackup = () => {
-  if (typeof window.backupAllData === 'function') {
-    window.backupAllData();
-  } else {
-    console.warn('Backup function not available');
-  }
-};
-
-/**
  * Shows full changelog in a new window or navigates to documentation
  */
 const showFullChangelog = () => {
@@ -211,7 +180,6 @@ const showFullChangelog = () => {
 const setupAboutModalEvents = () => {
   const aboutCloseBtn = document.getElementById('aboutCloseBtn');
   const aboutAcceptBtn = document.getElementById('aboutAcceptBtn');
-  const aboutBackupBtn = document.getElementById('aboutBackupBtn');
   const aboutShowChangelogBtn = document.getElementById('aboutShowChangelogBtn');
   const aboutModal = document.getElementById('aboutModal');
   
@@ -223,11 +191,6 @@ const setupAboutModalEvents = () => {
   // Accept button
   if (aboutAcceptBtn) {
     aboutAcceptBtn.addEventListener('click', acceptAbout);
-  }
-  
-  // Backup button
-  if (aboutBackupBtn) {
-    aboutBackupBtn.addEventListener('click', handleAboutBackup);
   }
   
   // Show changelog button
@@ -257,7 +220,6 @@ if (typeof window !== 'undefined') {
   window.showAboutModal = showAboutModal;
   window.hideAboutModal = hideAboutModal;
   window.acceptAbout = acceptAbout;
-  window.checkAboutAcceptance = checkAboutAcceptance;
   window.loadChangelog = loadChangelog;
   window.setupAboutModalEvents = setupAboutModalEvents;
   window.populateAboutModal = populateAboutModal;

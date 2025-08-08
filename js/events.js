@@ -189,16 +189,6 @@ const setupEventListeners = () => {
       console.error('Theme toggle button element not found!');
     }
 
-    // About Modal Accept
-    if (elements.aboutAcceptBtn) {
-      safeAttachListener(elements.aboutAcceptBtn, 'click', (e) => {
-        e.preventDefault();
-        if (typeof acceptAbout === 'function') {
-          acceptAbout();
-        }
-      }, 'About accept');
-    }
-
     // Details modal buttons
     if (elements.detailsButtons && elements.detailsButtons.length) {
       elements.detailsButtons.forEach(btn => {

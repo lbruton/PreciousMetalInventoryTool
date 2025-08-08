@@ -110,6 +110,14 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.editDate = safeGetElement('editDate');
     elements.editSpotPrice = safeGetElement('editSpotPrice');
 
+    // Show About modal immediately and set up its events
+    if (typeof setupAboutModalEvents === 'function') {
+      setupAboutModalEvents();
+    }
+    if (typeof showAboutModal === 'function') {
+      showAboutModal();
+    }
+
     // Notes modal elements
     elements.notesModal = safeGetElement('notesModal');
     elements.notesTextarea = safeGetElement('notesTextarea');
@@ -261,10 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setupSearch();
         setupThemeToggle();
         setupColumnResizing();
-        if (typeof checkAboutAcceptance === 'function') {
-          checkAboutAcceptance();
-        }
-        
         debugLog('✓ All event listeners setup complete');
       } catch (eventError) {
         console.error('❌ Error setting up event listeners:', eventError);
