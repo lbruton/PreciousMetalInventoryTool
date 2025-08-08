@@ -106,6 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.editNotes = safeGetElement('editNotes');
     elements.editDate = safeGetElement('editDate');
     elements.editSpotPrice = safeGetElement('editSpotPrice');
+
+    // Notes modal elements
+    elements.notesModal = safeGetElement('notesModal');
+    elements.notesTextarea = safeGetElement('notesTextarea');
+    elements.saveNotesBtn = safeGetElement('saveNotes');
+    elements.cancelNotesBtn = safeGetElement('cancelNotes');
     
     // Pagination elements
     debugLog('Phase 5: Initializing pagination elements...');
@@ -129,6 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.detailsModalTitle = safeGetElement('detailsModalTitle');
     elements.typeBreakdown = safeGetElement('typeBreakdown');
     elements.locationBreakdown = safeGetElement('locationBreakdown');
+    elements.closeDetailsBtn = safeGetElement('closeDetailsBtn');
+    elements.detailsButtons = document.querySelectorAll('.details-btn');
 
     // Chart elements
     debugLog('Phase 8: Initializing chart elements...');
@@ -322,3 +330,5 @@ window.showDetailsModal = showDetailsModal;
 window.closeDetailsModal = closeDetailsModal;
 window.editItem = editItem;
 window.deleteItem = deleteItem;
+window.showNotes = showNotes;
+window.applyColumnFilter = applyColumnFilter;

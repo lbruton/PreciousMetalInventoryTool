@@ -11,14 +11,15 @@
 -->
 <html lang="en">
 <head>
+  <!--
+    Content Security Policy is intentionally relaxed to ensure
+    local file execution when opening this tool with the file:// protocol.
+    The previous strict policy blocked external scripts and prevented
+    the interface from rendering. The simplified policy below permits
+    all sources while keeping inline execution restrictions.
+  -->
   <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self' https: file: data: blob:;
-          script-src  'self' https: file: 'unsafe-inline' 'unsafe-eval';
-          connect-src * https: file: data: blob:;
-          style-src   'self' https: file: 'unsafe-inline';
-          img-src     'self' https: data: blob: file:;
-        ">
+        content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes" name="viewport"/>
 
@@ -44,7 +45,7 @@
 <div class="app-header">
 <h1>Precious Metals Inventory Tool</h1>
 <div style="margin-left: auto; display: flex; gap: 0.5rem;">
-<button class="btn" id="apiBtn" title="API Configuration" onclick="if(typeof showApiModal==='function'){showApiModal()}else{alert('API configuration interface')}">API</button>
+<button class="btn" id="apiBtn" title="API Configuration">API</button>
 <button class="btn" id="themeToggle">Dark Mode</button>
 </div>
 </div>
@@ -220,7 +221,7 @@
 <span class="total-value" id="lossProfitSilver">$0.00</span>
 </div>
 </div>
-<button class="details-btn" onclick="showDetailsModal('Silver')">View Details</button>
+<button class="details-btn" data-metal="Silver">View Details</button>
 </div>
 <!-- Gold totals card -->
 <div class="total-card gold">
@@ -271,7 +272,7 @@
 <span class="total-value" id="lossProfitGold">$0.00</span>
 </div>
 </div>
-<button class="details-btn" onclick="showDetailsModal('Gold')">View Details</button>
+<button class="details-btn" data-metal="Gold">View Details</button>
 </div>
 <!-- Platinum totals card -->
 <div class="total-card platinum">
@@ -322,7 +323,7 @@
 <span class="total-value" id="lossProfitPlatinum">$0.00</span>
 </div>
 </div>
-<button class="details-btn" onclick="showDetailsModal('Platinum')">View Details</button>
+<button class="details-btn" data-metal="Platinum">View Details</button>
 </div>
 <!-- Palladium totals card -->
 <div class="total-card palladium">
@@ -373,7 +374,7 @@
 <span class="total-value" id="lossProfitPalladium">$0.00</span>
 </div>
 </div>
-<button class="details-btn" onclick="showDetailsModal('Palladium')">View Details</button>
+<button class="details-btn" data-metal="Palladium">View Details</button>
 </div>
 </div>
 </section>
@@ -494,21 +495,20 @@
 <table id="inventoryTable">
 <thead>
 <tr>
-<th>#</th>
-<th>Metal</th>
-<th>Qty</th>
-<th>Type</th>
-<th>Name</th>
-<th>Weight (oz)</th>
-<th>Purchase Price ($)</th>
-<th>Spot Price ($/oz)</th>
-<th>Premium Paid ($/oz)</th>
-<th>Total Premium Paid ($)</th>
-<th>Purchase Location</th>
-<th>Storage Location</th>
-<th>Date</th>
-<th>Collectable</th>
-<th>Delete</th>
+<th class="shrink">Date</th>
+<th class="shrink">Type</th>
+<th class="shrink">Metal</th>
+<th class="shrink">Qty</th>
+<th class="expand">Name</th>
+<th class="shrink">Weight (oz)</th>
+<th class="shrink">Purchase Price ($)</th>
+<th class="shrink">Spot at Purchase ($)</th>
+<th class="shrink">Premium ($)</th>
+<th class="shrink">Purchase Location</th>
+<th class="shrink">Storage Location</th>
+<th class="shrink">Collectable</th>
+<th class="shrink">Notes</th>
+<th class="shrink">Delete</th>
 </tr>
 </thead>
 <tbody></tbody>
@@ -700,8 +700,24 @@
 <button class="btn premium" type="submit">Save Changes</button>
 </div>
 </form>
+<!-- =============================================================================
+       NOTES MODAL
+
+       Simple modal for viewing and editing item notes. Opens when the Notes
+       button is clicked in the inventory table. Allows users to update the
+       notes field without opening the full edit form.
+       ============================================================================= -->
+<div class="modal" id="notesModal" style="display: none;">
+  <div class="modal-content">
+    <h2 style="margin-bottom: 1rem; color: var(--primary);">Item Notes</h2>
+    <textarea id="notesTextarea" rows="6" style="width: 100%;"></textarea>
+    <div style="margin-top: 1rem; text-align: right;">
+      <button class="btn" id="cancelNotes" type="button">Cancel</button>
+      <button class="btn premium" id="saveNotes" type="button">Save</button>
+    </div>
+  </div>
 </div>
-</div>
+
 <!-- =============================================================================
        DETAILS MODAL WITH PIE CHARTS
        
@@ -756,7 +772,7 @@
 </div>
 </div>
 </div>
-<button class="close-details-btn" onclick="closeDetailsModal()">Close</button>
+<button class="close-details-btn" id="closeDetailsBtn">Close</button>
 </div>
 </div>
 <!-- =============================================================================

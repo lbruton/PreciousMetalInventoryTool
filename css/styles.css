@@ -33,11 +33,11 @@
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
-  /* Metal-specific Colors */
-  --silver: #a8a8a8;
-  --gold: #ffd700;
-  --platinum: #e5e4e2;
-  --palladium: #c0c0ee;
+  /* Metal-specific Colors - tuned for light mode */
+  --silver: #6b7280;
+  --gold: #b45309;
+  --platinum: #4b5563;
+  --palladium: #7c3aed;
 
   /* Component Spacing */
   --radius: 8px;
@@ -58,6 +58,12 @@
   --secondary: #6b7280;
   --secondary-hover: #9ca3af;
   --info: #38bdf8;
+
+  /* Metal-specific Colors - dark mode */
+  --silver: #d1d5db;
+  --gold: #fbbf24;
+  --platinum: #f3f4f6;
+  --palladium: #d8b4fe;
 
   /* Background Colors - Dark Mode */
   --bg-primary: #0f172a;
@@ -601,7 +607,7 @@ table {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  table-layout: fixed; /* Enable column width control */
+table-layout: auto; /* Allow columns to size based on content */
 }
 
 th {
@@ -620,7 +626,6 @@ th {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  min-width: 60px;
 }
 
 th:hover {
@@ -656,22 +661,19 @@ tr:hover {
   font-size: 0.7rem;
 }
 
-/* Column width presets for better initial layout */
-th:nth-child(1) { width: 40px; }   /* # */
-th:nth-child(2) { width: 60px; }   /* Metal */
-th:nth-child(3) { width: 45px; }   /* Qty */
-th:nth-child(4) { width: 60px; }   /* Type */
-th:nth-child(5) { width: 120px; }  /* Name - clickable */
-th:nth-child(6) { width: 80px; }   /* Weight */
-th:nth-child(7) { width: 90px; }   /* Purchase Price */
-th:nth-child(8) { width: 85px; }   /* Spot Price */
-th:nth-child(9) { width: 85px; }   /* Premium */
-th:nth-child(10) { width: 100px; } /* Total Premium */
-th:nth-child(11) { width: 110px; } /* Purchase Location */
-th:nth-child(12) { width: 110px; } /* Storage Location */
-th:nth-child(13) { width: 80px; }  /* Date */
-th:nth-child(14) { width: 70px; }  /* Collectable - checkbox */
-th:nth-child(15) { width: 50px; }  /* Delete */
+/* Utility column width classes */
+.shrink {
+  width: 1%;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.expand {
+  width: auto;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
 
 /* Clickable name cell styling */
 .clickable-name {
@@ -742,38 +744,22 @@ th:nth-child(15) { width: 50px; }  /* Delete */
   outline-offset: 1px;
 }
 
-/* Delete cell styling */
-.delete-cell {
-  text-align: center;
-  vertical-align: middle;
-}
-
-.delete-cell .btn {
-  margin: 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  font-size: 0.9rem;
-  font-weight: bold;
-  border-radius: 50%;
-  transition: all 0.2s;
-}
-
-.delete-cell .btn:hover {
-  transform: scale(1.1);
-  box-shadow: var(--shadow);
-}
-
 /* Make buttons in table cells smaller */
 td .btn {
   padding: 0.25rem 0.5rem;
   font-size: 0.7rem;
   min-height: 1.8rem;
   line-height: 1;
+}
+
+td .filter-text {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+td .filter-text:hover,
+td .filter-text:focus {
+  text-decoration: underline;
 }
 
 /* Make toggle switches smaller */
@@ -1464,22 +1450,6 @@ input:disabled + .slider {
     font-size: 0.7rem;
     padding: 0.2rem;
   }
-  
-  th:nth-child(1) { width: 30px; }   /* # */
-  th:nth-child(2) { width: 50px; }   /* Metal */
-  th:nth-child(3) { width: 35px; }   /* Qty */
-  th:nth-child(4) { width: 50px; }   /* Type */
-  th:nth-child(5) { width: 100px; }  /* Name */
-  th:nth-child(6) { width: 70px; }   /* Weight */
-  th:nth-child(7) { width: 80px; }   /* Purchase Price */
-  th:nth-child(8) { width: 75px; }   /* Spot Price */
-  th:nth-child(9) { width: 75px; }   /* Premium */
-  th:nth-child(10) { width: 85px; }  /* Total Premium */
-  th:nth-child(11) { width: 90px; }  /* Purchase Location */
-  th:nth-child(12) { width: 90px; }  /* Storage Location */
-  th:nth-child(13) { width: 70px; }  /* Date */
-  th:nth-child(14) { width: 60px; }  /* Collectable */
-  th:nth-child(15) { width: 40px; }  /* Delete */
 }
 
 @media (max-width: 480px) {

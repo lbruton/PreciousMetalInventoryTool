@@ -179,14 +179,34 @@ const setupEventListeners = () => {
       console.error('Theme toggle button element not found!');
     }
 
+    // Details modal buttons
+    if (elements.detailsButtons && elements.detailsButtons.length) {
+      elements.detailsButtons.forEach(btn => {
+        safeAttachListener(btn, 'click', () => {
+          const metal = btn.dataset.metal;
+          if (typeof showDetailsModal === 'function') {
+            showDetailsModal(metal);
+          }
+        }, `Details button (${btn.dataset.metal})`);
+      });
+    }
+
+    if (elements.closeDetailsBtn) {
+      safeAttachListener(elements.closeDetailsBtn, 'click', () => {
+        if (typeof closeDetailsModal === 'function') {
+          closeDetailsModal();
+        }
+      }, 'Close details modal');
+    }
+
     // TABLE HEADER SORTING
     debugLog('Setting up table sorting...');
     const inventoryTable = document.getElementById('inventoryTable');
     if (inventoryTable) {
       const headers = inventoryTable.querySelectorAll('th');
       headers.forEach((header, index) => {
-        // Skip # column (0) and Delete column (last column)
-        if (index === 0 || index >= headers.length - 1) {
+        // Skip Notes/Delete columns (last two)
+        if (index >= headers.length - 2) {
           return;
         }
 
@@ -358,6 +378,26 @@ const setupEventListeners = () => {
         elements.editModal.style.display = 'none';
         editingIndex = null;
       }, 'Cancel edit button');
+    }
+
+    // NOTES MODAL BUTTONS
+    if (elements.saveNotesBtn) {
+      safeAttachListener(elements.saveNotesBtn, 'click', () => {
+        if (notesIndex === null) return;
+        const text = elements.notesTextarea.value.trim();
+        inventory[notesIndex].notes = text;
+        saveInventory();
+        renderTable();
+        elements.notesModal.style.display = 'none';
+        notesIndex = null;
+      }, 'Save notes button');
+    }
+
+    if (elements.cancelNotesBtn) {
+      safeAttachListener(elements.cancelNotesBtn, 'click', () => {
+        elements.notesModal.style.display = 'none';
+        notesIndex = null;
+      }, 'Cancel notes button');
     }
 
     // SPOT PRICE EVENT LISTENERS
@@ -629,6 +669,7 @@ const setupSearch = () => {
           elements.searchInput.value = '';
         }
         searchQuery = '';
+        columnFilter = { field: null, value: null };
         currentPage = 1;
         renderTable();
       }, 'Clear search button');

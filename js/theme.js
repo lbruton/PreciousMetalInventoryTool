@@ -20,6 +20,9 @@ const setTheme = (theme) => {
       elements.themeToggle.textContent = 'Dark Mode';
     }
   }
+  if (typeof renderTable === 'function') {
+    renderTable();
+  }
 };
 
 /**
@@ -59,5 +62,10 @@ const setupSystemThemeListener = () => {
     });
   }
 };
+
+// Expose theme controls globally for inline handlers and fallbacks
+window.setTheme = setTheme;
+window.toggleTheme = toggleTheme;
+window.initTheme = initTheme;
 
 // =============================================================================

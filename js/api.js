@@ -407,8 +407,12 @@ const updateApiStatus = () => {
  * Shows API configuration modal
  */
 const showApiModal = () => {
-  const modal = elements.apiModal;
+  // Re-query the DOM in case the cached element wasn't populated yet
+  const modal = document.getElementById('apiModal');
   if (!modal) return;
+
+  // Ensure future calls have a valid reference
+  elements.apiModal = modal;
 
   // Load current configuration
   const currentConfig = loadApiConfig();
@@ -434,11 +438,15 @@ const showApiModal = () => {
  * Hides API configuration modal
  */
 const hideApiModal = () => {
-  const modal = elements.apiModal;
+  const modal = document.getElementById('apiModal');
   if (modal) {
     modal.style.display = 'none';
   }
 };
+
+// Make API modal controls available globally
+window.showApiModal = showApiModal;
+window.hideApiModal = hideApiModal;
 
 /**
  * Updates provider information panel in modal

@@ -7,6 +7,8 @@ let sortDirection = 'asc';    // 'asc' or 'desc' - current sort direction
 
 /** @type {number|null} Index of item being edited (null = no edit in progress) */
 let editingIndex = null;
+/** @type {number|null} Index of item whose notes are being edited */
+let notesIndex = null;
 
 /** @type {Object} Pagination state */
 let currentPage = 1;          // Current page number (1-based)
@@ -14,6 +16,9 @@ let itemsPerPage = 25;        // Number of items to display per page
 
 /** @type {string} Current search query */
 let searchQuery = '';
+
+/** @type {{field: string|null, value: string|null}} Active column filter */
+let columnFilter = { field: null, value: null };
 
 /** @type {Object} Chart instances for proper cleanup */
 let chartInstances = {
@@ -83,11 +88,19 @@ const elements = {
   editDate: null,
   editSpotPrice: null,
 
+  // Notes modal elements
+  notesModal: null,
+  notesTextarea: null,
+  saveNotesBtn: null,
+  cancelNotesBtn: null,
+
   // Details modal elements
   detailsModal: null,
   detailsModalTitle: null,
   typeBreakdown: null,
   locationBreakdown: null,
+  closeDetailsBtn: null,
+  detailsButtons: null,
 
   // Chart canvas elements
   typeChart: null,

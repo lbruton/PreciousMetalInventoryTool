@@ -209,8 +209,20 @@ function parseDate(dateStr) {
 }
 
 /**
+ * Formats a date string into a user-friendly format
+ *
+ * @param {string} dateStr - Date in any parseable format
+ * @returns {string} Formatted date like "Jan 1, 2024"
+ */
+const formatDisplayDate = (dateStr) => {
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+};
+
+/**
  * Formats a number as a dollar amount with two decimal places
- * 
+ *
  * @param {number|string} n - Number to format
  * @returns {string} Formatted dollar string (e.g., "$1,234.56")
  */
