@@ -118,7 +118,7 @@ const loadChangelog = async () => {
       if (latestItems.length > 0) {
         latestList.innerHTML = latestItems
           .slice(0, 5) // Show max 5 latest items
-          .map(item => `<li>${sanitizeHtml(item)}</li>`)
+          .map(item => `<li>${item}</li>`)
           .join('');
       } else {
         latestList.innerHTML = '<li>Enhanced about modal and user interface improvements</li>';
@@ -134,7 +134,7 @@ const loadChangelog = async () => {
         if (prevItems.length > 0) {
           prevList.innerHTML = prevItems
             .slice(0, 3) // Show max 3 previous items
-            .map(item => `<li>${sanitizeHtml(item)}</li>`)
+            .map(item => `<li>${item}</li>`)
             .join('');
         } else {
           previousSection.style.display = 'none';
@@ -182,8 +182,9 @@ const extractChangelogItems = (content) => {
     .map(line => line.replace(/^[-*]\s*/, ''))
     .filter(line => line.length > 10) // Filter out very short items
     .map(line => {
+      const safe = sanitizeHtml(line);
       // Clean up markdown formatting
-      return line
+      return safe
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
         .replace(/`(.*?)`/g, '<code>$1</code>') // Code
         .replace(/\[(.*?)\]\(.*?\)/g, '$1'); // Remove links but keep text

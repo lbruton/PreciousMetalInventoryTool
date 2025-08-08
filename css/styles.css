@@ -1164,6 +1164,7 @@ td input:checked + .slider:before {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
 
 .about-accept-btn {
