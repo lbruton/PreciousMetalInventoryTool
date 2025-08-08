@@ -45,8 +45,7 @@ function safeGetElement(id, required = false) {
 document.addEventListener('DOMContentLoaded', () => {
 
   console.log(`=== APPLICATION INITIALIZATION STARTED (v${APP_VERSION}) ===`);
-dev
-  
+
   try {
     // Phase 1: Initialize Core DOM Elements
     debugLog('Phase 1: Initializing core DOM elements...');

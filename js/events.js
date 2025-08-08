@@ -127,7 +127,6 @@ const setupColumnResizing = () => {
 const setupEventListeners = () => {
 
   console.log(`Setting up event listeners (v${APP_VERSION})...`);
- dev
 
   try {
     // CRITICAL HEADER BUTTONS
