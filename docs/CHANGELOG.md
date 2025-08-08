@@ -8,6 +8,15 @@
 
 ## 📋 Version History
 
+### Version 3.1.10 – File Cleanup and Project Maintenance (2025-08-08)
+- **Project Cleanup**: Removed orphaned backup and debug files for improved maintainability
+  - Removed `js/init_backup.js` - backup copy no longer needed
+  - Removed `js/events_backup.js` - backup copy no longer needed
+  - Removed `debug/file-protocol-test.html` - development test file
+  - Removed `debug/debug_buttons.html` - development test file
+- **Maintenance**: Streamlined project structure by removing unused development artifacts
+- **Documentation**: Updated version references to use version families (e.g., 3.1.x) where appropriate
+
 ### Version 3.1.9 – API Modal Button Styling Fix (2025-08-07)
 - **UI Consistency**: Added `--info` CSS variable and updated Clear Cache button to ensure visible, uniform styling across themes.
 
