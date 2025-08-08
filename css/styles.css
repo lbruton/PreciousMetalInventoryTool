@@ -1625,8 +1625,15 @@ input:disabled + .slider {
 }
 
 /* =============================================================================
-   BOATING ACCIDENT SECTION
+   BACKUP AND BOATING ACCIDENT SECTIONS
    ============================================================================= */
+
+
+/* Backup section */
+.backup-section {
+  margin-top: var(--spacing-xl);
+  text-align: center;
+}
 
 .boating-accident-section {
   margin-top: var(--spacing-xl);
