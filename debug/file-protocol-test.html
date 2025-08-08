@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Protocol Button Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        .btn { 
+            padding: 0.75rem 1.5rem; 
+            background: #2563eb; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 0.5rem; 
+            pointer-events: auto !important;
+        }
+        .btn:hover { background: #1d4ed8; }
+        .test-results { 
+            margin-top: 2rem; 
+            padding: 1rem; 
+            background: #f8fafc; 
+            border-radius: 8px; 
+            white-space: pre-wrap; 
+        }
+        .status { 
+            padding: 0.5rem; 
+            margin: 0.5rem 0; 
+            border-radius: 4px; 
+        }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #dc2626; }
+    </style>
+</head>
+<body>
+    <h1>File:// Protocol Button Test</h1>
+    <p>This page tests whether buttons work properly when loaded via file:// protocol.</p>
+    
+    <div>
+        <h3>Test Buttons:</h3>
+        <button class="btn" id="testBtn1" onclick="logResult('Inline onclick works!')">Inline Onclick</button>
+        <button class="btn" id="testBtn2">Standard addEventListener</button>
+        <button class="btn" id="testBtn3">File Protocol Safe Method</button>
+        <button class="btn" onclick="testThemeToggle()">Test Theme Toggle</button>
+    </div>
+    
+    <div class="test-results" id="results">
+        Test results will appear here...\n
+        Protocol: <span id="protocol"></span>\n
+        File protocol fixes available: <span id="fixesAvailable">Checking...</span>\n
+    </div>
+
+    <!-- Load the file protocol fix -->
+    <script src="js/file-protocol-fix.js"></script>
+    
+    <script>
+        function logResult(message) {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            results.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        }
+        
+        function testThemeToggle() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            if (newTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.body.style.background = '#1e293b';
+                document.body.style.color = '#f8fafc';
+                logResult('Switched to dark theme');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                document.body.style.background = '';
+                document.body.style.color = '';
+                logResult('Switched to light theme');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show protocol info
+            document.getElementById('protocol').textContent = window.location.protocol;
+            document.getElementById('fixesAvailable').textContent = 
+                window.fileProtocolFixes ? 'YES' : 'NO';
+            
+            logResult('DOM Content Loaded');
+            
+            // Test standard addEventListener
+            const btn2 = document.getElementById('testBtn2');
+            try {
+                btn2.addEventListener('click', function() {
+                    logResult('Standard addEventListener works!');
+                });
+                logResult('Standard addEventListener attached successfully');
+            } catch (error) {
+                logResult('Standard addEventListener failed: ' + error.message);
+            }
+            
+            // Test file protocol safe method
+            const btn3 = document.getElementById('testBtn3');
+            if (window.fileProtocolFixes) {
+                const success = window.fileProtocolFixes.attachEventListenerSafely(
+                    btn3, 
+                    'click', 
+                    () => logResult('File protocol safe method works!'),
+                    'Test Button 3'
+                );
+                logResult('File protocol safe method setup: ' + (success ? 'SUCCESS' : 'FAILED'));
+            } else {
+                logResult('File protocol fixes not available');
+            }
+            
+            // Test if buttons are clickable
+            setTimeout(() => {
+                const buttons = document.querySelectorAll('.btn');
+                buttons.forEach((btn, index) => {
+                    const hasClick = btn.onclick || btn.click;
+                    const hasListeners = btn.addEventListener;
+                    logResult(`Button ${index + 1}: onclick=${!!btn.onclick}, addEventListener=${!!hasListeners}`);
+                });
+            }, 500);
+        });
+        
+        // Test immediate execution
+        logResult('Script loaded immediately');
+    </script>
+</body>
+</html>

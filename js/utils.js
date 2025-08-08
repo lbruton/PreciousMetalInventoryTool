@@ -1,0 +1,389 @@
+// UTILITY FUNCTIONS
+/**
+ * Returns formatted version string
+ * 
+ * @param {string} [prefix='v'] - Prefix to add before version
+ * @returns {string} Formatted version string (e.g., "v3.0.1")
+ */
+const getVersionString = (prefix = 'v') => `${prefix}${APP_VERSION}`;
+
+/**
+ * Returns full application title with version
+ * 
+ * @param {string} [baseTitle='Precious Metals Inventory Tool'] - Base application title
+ * @returns {string} Full title with version
+ */
+const getAppTitle = (baseTitle = 'Precious Metals Inventory Tool') => `${baseTitle} ${getVersionString()}`;
+
+/**
+ * Performance monitoring utility
+ * 
+ * @param {Function} fn - Function to monitor
+ * @param {string} name - Name for logging
+ * @param {...any} args - Arguments to pass to function
+ * @returns {any} Result of function execution
+ */
+const monitorPerformance = (fn, name, ...args) => {
+  const startTime = performance.now();
+  const result = fn(...args);
+  const endTime = performance.now();
+  
+  const duration = endTime - startTime;
+  if (duration > 100) {
+    console.warn(`Performance warning: ${name} took ${duration.toFixed(2)}ms`);
+  } else {
+    console.debug(`Performance: ${name} took ${duration.toFixed(2)}ms`);
+  }
+  
+  return result;
+};
+
+/**
+ * Gets the most recent timestamp for a specific metal from spot history
+ * 
+ * @param {string} metalName - Metal name ('Silver', 'Gold', 'Platinum', 'Palladium')
+ * @returns {string|null} Formatted timestamp or null if no data
+ */
+const getLastUpdateTime = (metalName) => {
+  if (!spotHistory || spotHistory.length === 0) return null;
+  
+  // Find the most recent entry for this metal
+  const metalEntries = spotHistory.filter(entry => entry.metal === metalName);
+  if (metalEntries.length === 0) return null;
+  
+  const latestEntry = metalEntries[metalEntries.length - 1];
+  const timestamp = new Date(latestEntry.timestamp);
+  const now = new Date();
+  const diffMs = now - timestamp;
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  let timeText;
+  if (diffMins < 1) {
+    timeText = 'Just now';
+  } else if (diffMins < 60) {
+    timeText = `${diffMins} min${diffMins === 1 ? '' : 's'} ago`;
+  } else if (diffHours < 24) {
+    timeText = `${diffHours} hr${diffHours === 1 ? '' : 's'} ago`;
+  } else if (diffDays < 30) {
+    timeText = `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
+  } else {
+    timeText = timestamp.toLocaleDateString();
+  }
+  
+  const sourceText = latestEntry.source === 'api' ? 'API' : 
+                    latestEntry.source === 'manual' ? 'Manual' :
+                    latestEntry.source === 'cached' ? 'Cached' :
+                    latestEntry.source === 'default' ? 'Default' : 'Stored';
+  
+  return `${timeText} (${sourceText})`;
+};
+
+// =============================================================================
+
+/**
+ * Pads a number with leading zeros to ensure two-digit format
+ * 
+ * @param {number} n - Number to pad
+ * @returns {string} Two-digit string representation
+ * @example pad2(5) returns "05", pad2(12) returns "12"
+ */
+const pad2 = n => n.toString().padStart(2, '0');
+
+/**
+ * Returns current date as ISO string (YYYY-MM-DD)
+ * 
+ * @returns {string} Current date in ISO format
+ */
+const todayStr = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+};
+
+/**
+ * Parses various date formats into standard YYYY-MM-DD format
+ * 
+ * Handles:
+ * - ISO format (YYYY-MM-DD)
+ * - US format (MM/DD/YYYY)
+ * - European format (DD/MM/YYYY)
+ * - Year-first format (YYYY/MM/DD)
+ * 
+ * Uses intelligent parsing to distinguish between US and European formats
+ * based on date values and context clues.
+ * 
+ * @param {string} dateStr - Date string in any supported format
+ * @returns {string} Date in YYYY-MM-DD format, or today's date if parsing fails
+ */
+function parseDate(dateStr) {
+  if (!dateStr) return todayStr();
+
+  // Clean the input string
+  const cleanDateStr = dateStr.trim();
+
+  // Try ISO format (YYYY-MM-DD) first - most reliable
+  if (/^\d{4}-\d{2}-\d{2}$/.test(cleanDateStr)) {
+    const date = new Date(cleanDateStr);
+    if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+      return cleanDateStr;
+    }
+  }
+
+  // Try YYYY/MM/DD format (unambiguous)
+  const ymdMatch = cleanDateStr.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if (ymdMatch) {
+    const year = parseInt(ymdMatch[1], 10);
+    const month = parseInt(ymdMatch[2], 10) - 1;
+    const day = parseInt(ymdMatch[3], 10);
+
+    if (month >= 0 && month <= 11 && day >= 1 && day <= 31) {
+      const date = new Date(year, month, day);
+      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+        return date.toISOString().split('T')[0];
+      }
+    }
+  }
+
+  // Handle ambiguous MM/DD/YYYY vs DD/MM/YYYY formats
+  const ambiguousMatch = cleanDateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (ambiguousMatch) {
+    const first = parseInt(ambiguousMatch[1], 10);
+    const second = parseInt(ambiguousMatch[2], 10);
+    const year = parseInt(ambiguousMatch[3], 10);
+
+    // If first number > 12, it must be DD/MM/YYYY (European)
+    if (first > 12 && second <= 12) {
+      const date = new Date(year, second - 1, first);
+      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+        return date.toISOString().split('T')[0];
+      }
+    }
+    // If second number > 12, it must be MM/DD/YYYY (US)
+    else if (second > 12 && first <= 12) {
+      const date = new Date(year, first - 1, second);
+      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+        return date.toISOString().split('T')[0];
+      }
+    }
+    // Both numbers <= 12, ambiguous - default to US format (MM/DD/YYYY)
+    else if (first <= 12 && second <= 12) {
+      // Try US format first
+      let date = new Date(year, first - 1, second);
+      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+        return date.toISOString().split('T')[0];
+      }
+      
+      // Fallback to European format
+      date = new Date(year, second - 1, first);
+      if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+        return date.toISOString().split('T')[0];
+      }
+    }
+  }
+
+  // Try parsing as a general date string (fallback)
+  try {
+    const date = new Date(cleanDateStr);
+    if (!isNaN(date) && date.toString() !== 'Invalid Date') {
+      return date.toISOString().split('T')[0];
+    }
+  } catch (e) {
+    // Continue to fallback
+  }
+
+  // If all parsing fails, return today's date
+  console.warn(`Could not parse date: "${dateStr}", using today's date`);
+  return todayStr();
+}
+
+/**
+ * Formats a number as a dollar amount with two decimal places
+ * 
+ * @param {number|string} n - Number to format
+ * @returns {string} Formatted dollar string (e.g., "$1,234.56")
+ */
+const formatDollar = n => `$${parseFloat(n).toFixed(2)}`;
+
+/**
+ * Formats a profit/loss value with color coding
+ * 
+ * @param {number} value - Profit/loss value
+ * @returns {string} HTML string with appropriate color styling
+ */
+const formatLossProfit = (value) => {
+  const formatted = formatDollar(value);
+  if (value > 0) {
+    return `<span style="color: var(--success);">${formatted}</span>`;
+  } else if (value < 0) {
+    return `<span style="color: var(--danger);">${formatted}</span>`;
+  }
+  return formatted;
+};
+
+/**
+ * Sanitizes text input for safe HTML display
+ * Prevents XSS attacks by encoding HTML special characters
+ * 
+ * @param {string} text - Text to sanitize
+ * @returns {string} Sanitized text safe for HTML insertion
+ */
+const sanitizeHtml = (text) => {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text.toString();
+  return div.innerHTML;
+};
+
+/**
+ * Saves data to localStorage with JSON serialization
+ * 
+ * @param {string} key - Storage key
+ * @param {any} data - Data to store
+ */
+const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+
+/**
+ * Loads data from localStorage with error handling
+ * 
+ * @param {string} key - Storage key
+ * @param {any} [defaultValue=[]] - Default value if no data found
+ * @returns {any} Parsed data or default value
+ */
+const loadData = (key, defaultValue = []) => {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || defaultValue;
+  } catch (e) {
+    return defaultValue;
+  }
+};
+
+/**
+ * Sorts inventory by date (newest first)
+ * 
+ * @param {Array} [data=inventory] - Data to sort
+ * @returns {Array} Sorted inventory data
+ */
+const sortInventoryByDateNewestFirst = (data = inventory) => {
+  return [...data].sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA; // Descending order (newest first)
+  });
+};
+
+/**
+ * Validates inventory item data
+ * 
+ * @param {Object} item - Inventory item to validate
+ * @returns {Object} Validation result with isValid flag and errors array
+ */
+const validateInventoryItem = (item) => {
+  const errors = [];
+  
+  // Required fields
+  if (!item.name || typeof item.name !== 'string' || item.name.trim().length === 0) {
+    errors.push('Name is required');
+  } else if (item.name.length > 100) {
+    errors.push('Name must be 100 characters or less');
+  }
+  
+  if (!item.metal || !['Silver', 'Gold', 'Platinum', 'Palladium'].includes(item.metal)) {
+    errors.push('Valid metal type is required');
+  }
+  
+  // Numeric validations
+  if (!item.qty || !Number.isInteger(Number(item.qty)) || Number(item.qty) < 1) {
+    errors.push('Quantity must be a positive integer');
+  }
+  
+  if (!item.weight || isNaN(Number(item.weight)) || Number(item.weight) <= 0) {
+    errors.push('Weight must be a positive number');
+  }
+  
+  if (!item.price || isNaN(Number(item.price)) || Number(item.price) <= 0) {
+    errors.push('Price must be a positive number');
+  }
+  
+  // Optional field validations
+  if (item.storageLocation && item.storageLocation.length > 50) {
+    errors.push('Storage location must be 50 characters or less');
+  }
+  
+  if (item.purchaseLocation && item.purchaseLocation.length > 100) {
+    errors.push('Purchase location must be 100 characters or less');
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+};
+
+/**
+ * Handles errors with user-friendly messaging
+ * 
+ * @param {Error|string} error - Error to handle
+ * @param {string} context - Context where error occurred
+ */
+const handleError = (error, context = '') => {
+  const errorMessage = error instanceof Error ? error.message : error.toString();
+  
+  console.error(`Error in ${context}:`, error);
+  
+  // Show user-friendly message
+  const userMessage = getUserFriendlyMessage(errorMessage);
+  alert(`Error: ${userMessage}`);
+};
+
+/**
+ * Converts technical error messages to user-friendly ones
+ * 
+ * @param {string} errorMessage - Technical error message
+ * @returns {string} User-friendly error message
+ */
+const getUserFriendlyMessage = (errorMessage) => {
+  if (errorMessage.includes('localStorage')) {
+    return 'Unable to save data. Please check your browser settings.';
+  }
+  if (errorMessage.includes('parse') || errorMessage.includes('JSON')) {
+    return 'The file format is not supported or corrupted.';
+  }
+  if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+    return 'Network connection issue. Please check your internet connection.';
+  }
+  
+  // Default fallback
+  return errorMessage || 'An unexpected error occurred.';
+};
+
+/**
+ * Downloads a file with the specified content and filename
+ * 
+ * @param {string} filename - Name of the file to download
+ * @param {string} content - Content of the file
+ * @param {string} mimeType - MIME type of the file (default: text/plain)
+ */
+const downloadFile = (filename, content, mimeType = 'text/plain') => {
+  try {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    
+    link.href = url;
+    link.download = filename;
+    link.style.display = 'none';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Clean up the object URL after a short delay
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    handleError(error, 'file download');
+  }
+};
+
+// =============================================================================
