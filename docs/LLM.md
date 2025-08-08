@@ -16,7 +16,7 @@
 
 ## 1. Purpose
 
-Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Metals Inventory Tool v3.1.8** to guide development, documentation, and QA tasks.
+Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Metals Inventory Tool v3.1.9** to guide development, documentation, and QA tasks.
 
 ## 2. Project Snapshot
 
@@ -29,7 +29,7 @@ Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Me
   - **Comprehensive backup ZIP system** with all data formats and restoration guides
   - Responsive & accessible UI (mobile-first, ARIA, keyboard support)  
   - Modular JS architecture (constants, state, events, utils, inventory)  
-- **Version**: 3.1.8 (backup ZIP functionality)  
+- **Version**: 3.1.9 (API modal button styling fix)
 - **Last Updated**: August 7, 2025  
 
 ## 3. Project Structure
@@ -87,16 +87,12 @@ PreciousMetalInventoryTool/
 5. **Import/Export Schema**  
    - Ensure all fields (notes, storage, overrides) are serialized/deserialized  
 
-## 6. v3.1.8 Spotlight
+## 6. v3.1.9 Spotlight
 
-- **Comprehensive Backup ZIP System**:  
-  - **createBackupZip()**: Generates complete archive with all data formats  
-  - **Archive Contents**: JSON data, CSV/Excel exports, HTML reports, settings, spot history  
-  - **Restoration Guide**: Detailed README.txt with recovery instructions  
-  - **Dependencies**: Added JSZip library for reliable ZIP file creation  
-  - **User Experience**: Loading indicator, success confirmation, error handling  
-- **Data Integrity**: Multiple format redundancy ensures recovery options  
-- **Privacy**: All processing client-side, no data transmission  
+- **UI Consistency Improvement**:
+  - Added `--info` CSS variable for theming
+  - Clear Cache button in API settings popup now visibly styled across light and dark modes
+  - Ensures uniform appearance with other action buttons
 
 ---
 
