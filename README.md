@@ -1,8 +1,13 @@
-# Precious Metals Inventory Tool v3.1.6
+# Precious Metals Inventory Tool v3.1.8
 
 The Precious Metals Inventory Tool is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics and enhanced tracking capabilities.
 
-## 🆕 What's New in v3.1.6
+## 🆕 What's New in v3.1.8
+- **Full Backup System**: "Backup All Data" button creates a timestamped ZIP archive of the entire application state.
+- **Comprehensive Archive**: Includes inventory JSON, settings, spot price history, and exports (CSV, Excel, HTML) with restoration instructions.
+- **Client-Side Processing**: Uses JSZip to generate archives locally so your data never leaves the device.
+
+## What's New in v3.1.6
 - **Fixed Theme Toggle**: Removed conflicting inline onclick handler, added system preference detection
 - **Enhanced Theme Management**: Auto-adapts to OS dark/light mode changes
 - **Improved Initialization**: Theme loads properly on startup with fallback handling
@@ -11,12 +16,12 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 ## What's New in v3.1.2
 - **Improved Event Listener Setup**: Enhanced event listener attachment for robustness across browsers and protocols.
 - **Manual Input Workflow**:
-  1. Click "Add" button to show manual price input form. *(Currently not functional; see Known Issues)*
+  1. Click "Add" button to show manual price input form.
   2. Enter desired spot price and click "Save" or press Enter.
   3. Form hides and updates the price.
   4. "Cancel" aborts and hides the input form without changes.
 - **Reset Functionality**:
-  - Clicking "Reset" restores the price to default or API cached value. *(Currently not functional; see Known Issues)*
+  - Clicking "Reset" restores the price to default or API cached value.
   - Price history updates accordingly with source tracking.
 - **API Integration**:
   - Sync buttons are enabled/disabled based on API configuration.
@@ -59,7 +64,7 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 7. **View Analytics**: Click "View Details" on summary cards for breakdowns.
 
 ## Version Management
-This application uses a dynamic version management system. The version is automatically updated throughout the application from `app/js/constants.js`. The HTML files now use this dynamic system instead of hardcoded version numbers. See [docs/VERSIONING.md](docs/VERSIONING.md) for details on how to update versions.
+This application uses a dynamic version management system. The version is automatically updated throughout the application from `js/constants.js`. The HTML files now use this dynamic system instead of hardcoded version numbers. See [docs/VERSIONING.md](docs/VERSIONING.md) for details on how to update versions.
 
 ## Data Structure
 Each inventory item includes:
@@ -147,15 +152,11 @@ Works in all modern browsers that support:
 
 ## Known Issues / Bugs
 
-- **Spot Price Add and Reset Buttons Non-Functional**:  
-  Currently, the "Add" and "Reset" buttons for spot price management on all metals (Silver, Gold, Platinum, Palladium) do not respond when clicked.  
-  - Pressing "Add" does not open the manual price override form.  
-  - Pressing "Reset" does not restore the default or cached spot price.  
-  This issue is acknowledged and scheduled to be fixed in a future release.
+Currently, no major issues are known.
 
 ## Contributing
 This project is designed to be maintainable and extensible. When making changes:
-1. Update the version in `app/js/constants.js`
+1. Update the version in `js/constants.js`
 2. Document changes in `docs/CHANGELOG.md`
 3. Update relevant documentation files
 4. Test backwards compatibility
@@ -165,9 +166,9 @@ This project is designed to be maintainable and extensible. When making changes:
 This project is open source and available for personal use.
 
 ---
-**Current Version**: 3.1.6  
-**Last Updated**: August 7, 2025  
-**Status**: Feature Complete, theme toggle fixed, with spot price button issues pending fix
+**Current Version**: 3.1.8
+**Last Updated**: August 7, 2025
+**Status**: Feature complete with comprehensive backup functionality
 
 
 
