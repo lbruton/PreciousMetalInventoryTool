@@ -1,6 +1,13 @@
 // API INTEGRATION FUNCTIONS
 // =============================================================================
 
+// Track provider connection status for settings UI
+const providerStatuses = {
+  METALS_DEV: "disconnected",
+  METALS_API: "disconnected",
+  METAL_PRICE_API: "disconnected",
+};
+
 /**
  * Loads API configuration from localStorage
  * @returns {Object|null} API configuration or null if not set
@@ -48,7 +55,7 @@ const saveApiConfig = (config) => {
     });
     localStorage.setItem(API_KEY_STORAGE_KEY, JSON.stringify(configToSave));
     apiConfig = config;
-    updateApiStatus();
+    updateSyncButtonStates();
   } catch (error) {
     console.error("Error saving API config:", error);
   }
@@ -62,7 +69,9 @@ const clearApiConfig = () => {
   localStorage.removeItem(API_CACHE_KEY);
   apiConfig = { provider: "", keys: {} };
   apiCache = null;
-  updateApiStatus();
+  Object.keys(providerStatuses).forEach((p) =>
+    setProviderStatus(p, "disconnected"),
+  );
   updateSyncButtonStates();
 };
 
@@ -72,8 +81,58 @@ const clearApiConfig = () => {
 const clearApiCache = () => {
   localStorage.removeItem(API_CACHE_KEY);
   apiCache = null;
-  updateApiStatus();
   alert("API cache cleared. Next sync will pull fresh data from the API.");
+};
+
+/**
+ * Sets connection status for a provider in the settings UI
+ * @param {string} provider
+ * @param {"connected"|"disconnected"|"error"} status
+ */
+const setProviderStatus = (provider, status) => {
+  providerStatuses[provider] = status;
+  const block = document.querySelector(
+    `.api-provider[data-provider="${provider}"] .provider-status`,
+  );
+  if (!block) return;
+  block.classList.remove(
+    "status-connected",
+    "status-disconnected",
+    "status-error",
+  );
+  block.classList.add(`status-${status}`);
+  const text = block.querySelector(".status-text");
+  if (text) {
+    text.textContent =
+      status === "connected"
+        ? "Connected"
+        : status === "error"
+          ? "Error"
+          : "Disconnected";
+  }
+};
+
+/**
+ * Updates default provider selection in config
+ * @param {string} provider
+ */
+const setDefaultProvider = (provider) => {
+  const config = loadApiConfig();
+  config.provider = provider;
+  saveApiConfig(config);
+};
+
+/**
+ * Clears stored API key for a provider
+ * @param {string} provider
+ */
+const clearApiKey = (provider) => {
+  const config = loadApiConfig();
+  delete config.keys[provider];
+  saveApiConfig(config);
+  const input = document.getElementById(`apiKey_${provider}`);
+  if (input) input.value = "";
+  setProviderStatus(provider, "disconnected");
 };
 
 /**
@@ -150,7 +209,6 @@ const saveApiCache = (data) => {
     };
     localStorage.setItem(API_CACHE_KEY, JSON.stringify(cacheObject));
     apiCache = cacheObject;
-    updateApiStatus();
   } catch (error) {
     console.error("Error saving API cache:", error);
   }
@@ -306,6 +364,8 @@ const syncSpotPricesFromApi = async (
       // Update summary calculations
       updateSummary();
 
+      setProviderStatus(apiConfig.provider, "connected");
+
       if (showProgress) {
         alert(
           `Successfully synced ${updatedCount} metal prices from ${API_PROVIDERS[apiConfig.provider].name}`,
@@ -314,10 +374,12 @@ const syncSpotPricesFromApi = async (
 
       return true;
     } else {
+      setProviderStatus(apiConfig.provider, "error");
       throw new Error("No valid prices were retrieved from API");
     }
   } catch (error) {
     console.error("API sync error:", error);
+    setProviderStatus(apiConfig.provider, "error");
     if (showProgress) {
       alert(`Failed to sync prices: ${error.message}`);
     }
@@ -400,11 +462,13 @@ const handleProviderSync = async (provider) => {
   config.timestamp = new Date().getTime();
   saveApiConfig(config);
   updateSyncButtonStates();
+  setProviderStatus(provider, "disconnected");
 
   // Test connection
   const ok = await testApiConnection(provider, apiKey);
   if (!ok) {
     alert("API connection test failed.");
+    setProviderStatus(provider, "error");
     return;
   }
 
@@ -425,14 +489,17 @@ const handleProviderSync = async (provider) => {
     if (updatedCount > 0) {
       saveApiCache(data);
       updateSummary();
+      setProviderStatus(provider, "connected");
       alert(
         `Successfully synced ${updatedCount} metal prices from ${API_PROVIDERS[provider].name}`,
       );
     } else {
+      setProviderStatus(provider, "error");
       alert("No valid prices retrieved from API");
     }
   } catch (error) {
     console.error("API sync error:", error);
+    setProviderStatus(provider, "error");
     alert("Failed to sync prices: " + error.message);
   }
 };
@@ -462,59 +529,17 @@ const updateSyncButtonStates = (syncing = false) => {
 /**
  * Updates API status display in modal
  */
-const updateApiStatus = () => {
-  const statusDisplay = document.getElementById("apiStatusDisplay");
-  const statusText = document.getElementById("apiStatusText");
-  const cacheInfo = document.getElementById("apiCacheInfo");
-
-  if (!statusDisplay || !statusText) return;
-
-  // Reset classes
-  statusDisplay.className = "";
-  statusDisplay.style.cssText = statusDisplay.style.cssText.replace(
-    /background[^;]*;?/g,
-    "",
-  );
-  statusDisplay.style.cssText = statusDisplay.style.cssText.replace(
-    /border-color[^;]*;?/g,
-    "",
-  );
-
-  if (apiConfig && apiConfig.provider && apiConfig.keys[apiConfig.provider]) {
-    statusText.textContent = `Default: ${API_PROVIDERS[apiConfig.provider].name}`;
-    statusDisplay.classList.add("api-status-connected");
-
-    if (cacheInfo && apiCache && apiCache.timestamp) {
-      const cacheAge = new Date().getTime() - apiCache.timestamp;
-      const hoursAgo = Math.floor(cacheAge / (1000 * 60 * 60));
-      const minutesAgo = Math.floor(cacheAge / (1000 * 60));
-
-      if (hoursAgo > 0) {
-        cacheInfo.textContent = `Last synced: ${hoursAgo} hours ago`;
-      } else if (minutesAgo > 0) {
-        cacheInfo.textContent = `Last synced: ${minutesAgo} minutes ago`;
-      } else {
-        cacheInfo.textContent = "Just synced";
-      }
-    } else if (cacheInfo) {
-      cacheInfo.textContent = "No cached data";
-    }
-  } else {
-    statusText.textContent = "No API configured";
-    if (cacheInfo) {
-      cacheInfo.textContent = "";
-    }
-  }
-};
-
 /**
  * Shows settings modal and populates API fields
  */
 const showSettingsModal = () => {
   const modal = document.getElementById("settingsModal");
   if (!modal) return;
-
-  const currentConfig = loadApiConfig() || { provider: "", keys: {} };
+  let currentConfig = loadApiConfig() || { provider: "", keys: {} };
+  if (!currentConfig.provider) {
+    currentConfig.provider = Object.keys(API_PROVIDERS)[0];
+    saveApiConfig(currentConfig);
+  }
 
   Object.keys(API_PROVIDERS).forEach((prov) => {
     const input = document.getElementById(`apiKey_${prov}`);
@@ -523,9 +548,9 @@ const showSettingsModal = () => {
     );
     if (input) input.value = currentConfig.keys?.[prov] || "";
     if (radio) radio.checked = currentConfig.provider === prov;
+    setProviderStatus(prov, providerStatuses[prov] || "disconnected");
   });
 
-  updateApiStatus();
   modal.style.display = "flex";
 };
 
@@ -591,6 +616,9 @@ window.showProviderInfo = showProviderInfo;
 window.hideProviderInfo = hideProviderInfo;
 
 window.handleProviderSync = handleProviderSync;
+window.clearApiKey = clearApiKey;
+window.clearApiCache = clearApiCache;
+window.setDefaultProvider = setDefaultProvider;
 
 /**
  * Shows manual price input for a specific metal

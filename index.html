@@ -1223,27 +1223,6 @@
         <div class="settings-section">
           <h3 style="margin-bottom: 1rem">API Configuration</h3>
 
-          <div
-            id="apiStatusDisplay"
-            style="
-              margin-bottom: 1rem;
-              padding: 0.75rem;
-              border-radius: var(--radius);
-              background: var(--bg-secondary);
-              border: 1px solid var(--border);
-            "
-          >
-            <div id="apiStatusText">No API configured</div>
-            <div
-              id="apiCacheInfo"
-              style="
-                font-size: 0.75rem;
-                color: var(--text-muted);
-                margin-top: 0.25rem;
-              "
-            ></div>
-          </div>
-
           <div class="api-providers">
             <div class="api-provider" data-provider="METALS_DEV">
               <div class="provider-header">
@@ -1253,20 +1232,10 @@
                     type="radio"
                     name="defaultProvider"
                     value="METALS_DEV"
+                    checked
                   />
                   Default</label
                 >
-              </div>
-              <label for="apiKey_METALS_DEV" class="api-key-label"
-                >API Key</label
-              >
-              <input
-                type="password"
-                id="apiKey_METALS_DEV"
-                placeholder="Enter your API key"
-              />
-              <div class="api-key-note">
-                Your API key is stored locally and never shared.
               </div>
               <div class="provider-actions">
                 <button
@@ -1283,6 +1252,28 @@
                 >
                   Test & Sync
                 </button>
+                <button
+                  type="button"
+                  class="btn api-clear-btn"
+                  data-provider="METALS_DEV"
+                >
+                  Clear Key
+                </button>
+              </div>
+              <div class="api-key-row">
+                <label for="apiKey_METALS_DEV">Key:</label>
+                <input
+                  type="password"
+                  id="apiKey_METALS_DEV"
+                  placeholder="Enter your API key"
+                />
+              </div>
+              <div class="api-key-note">
+                Your API key is stored locally and never shared.
+              </div>
+              <div class="provider-status">
+                <span class="status-dot"></span>
+                <span class="status-text">Disconnected</span>
               </div>
             </div>
 
@@ -1298,17 +1289,6 @@
                   Default</label
                 >
               </div>
-              <label for="apiKey_METALS_API" class="api-key-label"
-                >API Key</label
-              >
-              <input
-                type="password"
-                id="apiKey_METALS_API"
-                placeholder="Enter your API key"
-              />
-              <div class="api-key-note">
-                Your API key is stored locally and never shared.
-              </div>
               <div class="provider-actions">
                 <button
                   type="button"
@@ -1324,6 +1304,28 @@
                 >
                   Test & Sync
                 </button>
+                <button
+                  type="button"
+                  class="btn api-clear-btn"
+                  data-provider="METALS_API"
+                >
+                  Clear Key
+                </button>
+              </div>
+              <div class="api-key-row">
+                <label for="apiKey_METALS_API">Key:</label>
+                <input
+                  type="password"
+                  id="apiKey_METALS_API"
+                  placeholder="Enter your API key"
+                />
+              </div>
+              <div class="api-key-note">
+                Your API key is stored locally and never shared.
+              </div>
+              <div class="provider-status">
+                <span class="status-dot"></span>
+                <span class="status-text">Disconnected</span>
               </div>
             </div>
 
@@ -1339,17 +1341,6 @@
                   Default</label
                 >
               </div>
-              <label for="apiKey_METAL_PRICE_API" class="api-key-label"
-                >API Key</label
-              >
-              <input
-                type="password"
-                id="apiKey_METAL_PRICE_API"
-                placeholder="Enter your API key"
-              />
-              <div class="api-key-note">
-                Your API key is stored locally and never shared.
-              </div>
               <div class="provider-actions">
                 <button
                   type="button"
@@ -1365,8 +1356,36 @@
                 >
                   Test & Sync
                 </button>
+                <button
+                  type="button"
+                  class="btn api-clear-btn"
+                  data-provider="METAL_PRICE_API"
+                >
+                  Clear Key
+                </button>
+              </div>
+              <div class="api-key-row">
+                <label for="apiKey_METAL_PRICE_API">Key:</label>
+                <input
+                  type="password"
+                  id="apiKey_METAL_PRICE_API"
+                  placeholder="Enter your API key"
+                />
+              </div>
+              <div class="api-key-note">
+                Your API key is stored locally and never shared.
+              </div>
+              <div class="provider-status">
+                <span class="status-dot"></span>
+                <span class="status-text">Disconnected</span>
               </div>
             </div>
+          </div>
+
+          <div class="settings-actions">
+            <button type="button" class="btn" id="clearApiCacheBtn">
+              Clear API Cache
+            </button>
           </div>
         </div>
 

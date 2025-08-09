@@ -2,8 +2,8 @@
 // =============================================================================
 
 /** @type {Object} Sorting state tracking */
-let sortColumn = null;        // Currently sorted column index (null = unsorted)
-let sortDirection = 'asc';    // 'asc' or 'desc' - current sort direction
+let sortColumn = null; // Currently sorted column index (null = unsorted)
+let sortDirection = "asc"; // 'asc' or 'desc' - current sort direction
 
 /** @type {number|null} Index of item being edited (null = no edit in progress) */
 let editingIndex = null;
@@ -11,11 +11,11 @@ let editingIndex = null;
 let notesIndex = null;
 
 /** @type {Object} Pagination state */
-let currentPage = 1;          // Current page number (1-based)
-let itemsPerPage = 25;        // Number of items to display per page
+let currentPage = 1; // Current page number (1-based)
+let itemsPerPage = 25; // Number of items to display per page
 
 /** @type {string} Current search query */
-let searchQuery = '';
+let searchQuery = "";
 
 /** @type {{field: string|null, value: string|null}} Active column filter */
 let columnFilter = { field: null, value: null };
@@ -23,7 +23,7 @@ let columnFilter = { field: null, value: null };
 /** @type {Object} Chart instances for proper cleanup */
 let chartInstances = {
   typeChart: null,
-  locationChart: null
+  locationChart: null,
 };
 
 /** @type {Object} Cached DOM elements for performance */
@@ -53,8 +53,6 @@ const elements = {
   saveSpotBtnGold: null,
   resetSpotBtnSilver: null,
   resetSpotBtnGold: null,
-
-
 
   // Import elements
   importCsvFile: null,
@@ -135,7 +133,6 @@ const elements = {
   settingsBtn: null,
   settingsModal: null,
   apiInfoModal: null,
-  apiStatusDisplay: null,
 
   // Spot price action buttons
   spotSyncBtn: null,
@@ -145,16 +142,16 @@ const elements = {
   // Totals display elements (organized by metal type)
   totals: {
     silver: {
-      items: null,       // Total item count
-      weight: null,      // Total weight in ounces
-      value: null,       // Current market value
-      purchased: null,   // Total purchase price
-      avgPrice: null,    // Average price per ounce
-      avgPremium: null,  // Average premium per ounce
-      avgCollectablePrice: null,    // Average collectable price per ounce
+      items: null, // Total item count
+      weight: null, // Total weight in ounces
+      value: null, // Current market value
+      purchased: null, // Total purchase price
+      avgPrice: null, // Average price per ounce
+      avgPremium: null, // Average premium per ounce
+      avgCollectablePrice: null, // Average collectable price per ounce
       avgNonCollectablePrice: null, // Average non-collectable price per ounce
-      premium: null,     // Total premium paid
-      lossProfit: null   // Total loss/profit
+      premium: null, // Total premium paid
+      lossProfit: null, // Total loss/profit
     },
     gold: {
       // Same structure as silver
@@ -166,8 +163,8 @@ const elements = {
       avgPremium: null,
       avgCollectablePrice: null,
       avgNonCollectablePrice: null,
-      premium: null,     // Total premium paid
-      lossProfit: null   // Total loss/profit
+      premium: null, // Total premium paid
+      lossProfit: null, // Total loss/profit
     },
     platinum: {
       items: null,
@@ -178,8 +175,8 @@ const elements = {
       avgPremium: null,
       avgCollectablePrice: null,
       avgNonCollectablePrice: null,
-      premium: null,     // Total premium paid
-      lossProfit: null   // Total loss/profit
+      premium: null, // Total premium paid
+      lossProfit: null, // Total loss/profit
     },
     palladium: {
       items: null,
@@ -190,8 +187,8 @@ const elements = {
       avgPremium: null,
       avgCollectablePrice: null,
       avgNonCollectablePrice: null,
-      premium: null,     // Total premium paid
-      lossProfit: null   // Total loss/profit
+      premium: null, // Total premium paid
+      lossProfit: null, // Total loss/profit
     },
     all: {
       // Combined totals for all metals
@@ -203,10 +200,10 @@ const elements = {
       avgPremium: null,
       avgCollectablePrice: null,
       avgNonCollectablePrice: null,
-      premium: null,     // Total premium paid
-      lossProfit: null   // Total loss/profit
-    }
-  }
+      premium: null, // Total premium paid
+      lossProfit: null, // Total loss/profit
+    },
+  },
 };
 
 /** @type {Array} Main inventory data structure */
@@ -217,7 +214,7 @@ let spotPrices = {
   silver: 0,
   gold: 0,
   platinum: 0,
-  palladium: 0
+  palladium: 0,
 };
 
 /** @type {Array} Historical spot price records */

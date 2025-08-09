@@ -445,25 +445,6 @@ input[type="submit"] {
   margin-bottom: var(--spacing-sm);
 }
 
-/* API Status Indicators */
-.api-status-connected {
-  background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important;
-  border-color: var(--success) !important;
-}
-
-.api-status-error {
-  background: linear-gradient(135deg, #fee2e2, #fecaca) !important;
-  border-color: var(--danger) !important;
-}
-
-[data-theme="dark"] .api-status-connected {
-  background: linear-gradient(135deg, #064e3b, #065f46) !important;
-}
-
-[data-theme="dark"] .api-status-error {
-  background: linear-gradient(135deg, #7f1d1d, #991b1b) !important;
-}
-
 /* Settings Modal - API Provider Blocks */
 .settings-section {
   margin-top: 1rem;
@@ -480,12 +461,6 @@ input[type="submit"] {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-}
-
-.api-key-label {
-  display: block;
-  margin-bottom: 0.25rem;
-  font-weight: 600;
 }
 
 .api-provider input[type="password"] {
@@ -509,7 +484,54 @@ input[type="submit"] {
 .provider-actions {
   display: flex;
   gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.api-key-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.provider-status {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
   margin-top: 0.5rem;
+}
+
+.provider-status .status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--warning);
+}
+
+.provider-status .status-text {
+  color: var(--warning);
+}
+
+.provider-status.status-connected .status-dot {
+  background: var(--success);
+}
+
+.provider-status.status-connected .status-text {
+  color: var(--success);
+}
+
+.provider-status.status-error .status-dot {
+  background: var(--danger);
+}
+
+.provider-status.status-error .status-text {
+  color: var(--danger);
+}
+
+.settings-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* Info modal sizing */
