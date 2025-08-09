@@ -1514,12 +1514,16 @@ td input:checked + .slider:before {
 .ack-options {
   margin-top: 1rem;
   color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .ack-options label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 0.875rem;
 }
 
 .about-modal-body::-webkit-scrollbar {
