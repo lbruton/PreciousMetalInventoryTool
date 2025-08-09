@@ -66,8 +66,13 @@ appHeader.textContent = getAppTitle();
 ## Version Format
 Use semantic versioning: `MAJOR.MINOR.PATCH`
 - **MAJOR**: Breaking changes or major new features
-- **MINOR**: New features that are backwards compatible  
+- **MINOR**: New features that are backwards compatible
 - **PATCH**: Bug fixes and small improvements
+
+### Numbering Guidelines
+- **Major**: 1-x
+- **Minor**: 1-9
+- **Patch**: 1-x (aim for fewer than 100 patches before incrementing the minor version)
 
 ## Example Usage in Code
 ```javascript
