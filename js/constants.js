@@ -1,7 +1,7 @@
 // CONFIGURATION & GLOBAL CONSTANTS
 /**
  * API Provider configurations for metals pricing services
- * 
+ *
  * Each provider configuration contains:
  * @property {string} name - Display name for the provider
  * @property {string} baseUrl - Base API endpoint URL
@@ -11,77 +11,119 @@
  */
 const API_PROVIDERS = {
   METALS_DEV: {
-    name: 'Metals.dev',
-    baseUrl: 'https://api.metals.dev/v1',
+    name: "Metals.dev",
+    baseUrl: "https://api.metals.dev/v1",
     endpoints: {
-      silver: '/metal/spot?api_key={API_KEY}&metal=silver&currency=USD',
-      gold: '/metal/spot?api_key={API_KEY}&metal=gold&currency=USD',
-      platinum: '/metal/spot?api_key={API_KEY}&metal=platinum&currency=USD',
-      palladium: '/metal/spot?api_key={API_KEY}&metal=palladium&currency=USD'
+      silver: "/metal/spot?api_key={API_KEY}&metal=silver&currency=USD",
+      gold: "/metal/spot?api_key={API_KEY}&metal=gold&currency=USD",
+      platinum: "/metal/spot?api_key={API_KEY}&metal=platinum&currency=USD",
+      palladium: "/metal/spot?api_key={API_KEY}&metal=palladium&currency=USD",
     },
     parseResponse: (data) => data.rate?.price || null,
-    documentation: 'https://www.metals.dev/docs'
+    documentation: "https://www.metals.dev/docs",
   },
   METALS_API: {
-    name: 'Metals-API.com',
-    baseUrl: 'https://metals-api.com/api',
+    name: "Metals-API.com",
+    baseUrl: "https://metals-api.com/api",
     endpoints: {
-      silver: '/latest?access_key={API_KEY}&base=USD&symbols=XAG',
-      gold: '/latest?access_key={API_KEY}&base=USD&symbols=XAU',
-      platinum: '/latest?access_key={API_KEY}&base=USD&symbols=XPT',
-      palladium: '/latest?access_key={API_KEY}&base=USD&symbols=XPD'
+      silver: "/latest?access_key={API_KEY}&base=USD&symbols=XAG",
+      gold: "/latest?access_key={API_KEY}&base=USD&symbols=XAU",
+      platinum: "/latest?access_key={API_KEY}&base=USD&symbols=XPT",
+      palladium: "/latest?access_key={API_KEY}&base=USD&symbols=XPD",
     },
     parseResponse: (data, metal) => {
       // Expected format: { "success": true, "rates": { "XAG": 0.04 } }
-      const metalCode = metal === 'silver' ? 'XAG' : metal === 'gold' ? 'XAU' : 
-                       metal === 'platinum' ? 'XPT' : 'XPD';
+      const metalCode =
+        metal === "silver"
+          ? "XAG"
+          : metal === "gold"
+            ? "XAU"
+            : metal === "platinum"
+              ? "XPT"
+              : "XPD";
       const rate = data.rates?.[metalCode];
-      return rate ? (1 / rate) : null; // Convert from metal per USD to USD per ounce
+      return rate ? 1 / rate : null; // Convert from metal per USD to USD per ounce
     },
-    documentation: 'https://metals-api.com/documentation'
+    documentation: "https://metals-api.com/documentation",
   },
   METAL_PRICE_API: {
-    name: 'MetalPriceAPI.com',
-    baseUrl: 'https://api.metalpriceapi.com/v1',
+    name: "MetalPriceAPI.com",
+    baseUrl: "https://api.metalpriceapi.com/v1",
     endpoints: {
-      silver: '/latest?api_key={API_KEY}&base=USD&currencies=XAG',
-      gold: '/latest?api_key={API_KEY}&base=USD&currencies=XAU',
-      platinum: '/latest?api_key={API_KEY}&base=USD&currencies=XPT',
-      palladium: '/latest?api_key={API_KEY}&base=USD&currencies=XPD'
+      silver: "/latest?api_key={API_KEY}&base=USD&currencies=XAG",
+      gold: "/latest?api_key={API_KEY}&base=USD&currencies=XAU",
+      platinum: "/latest?api_key={API_KEY}&base=USD&currencies=XPT",
+      palladium: "/latest?api_key={API_KEY}&base=USD&currencies=XPD",
     },
     parseResponse: (data, metal) => {
       // Expected format: { "success": true, "rates": { "XAG": 0.04 } }
-      const metalCode = metal === 'silver' ? 'XAG' : metal === 'gold' ? 'XAU' : 
-                       metal === 'platinum' ? 'XPT' : 'XPD';
+      const metalCode =
+        metal === "silver"
+          ? "XAG"
+          : metal === "gold"
+            ? "XAU"
+            : metal === "platinum"
+              ? "XPT"
+              : "XPD";
       const rate = data.rates?.[metalCode];
-      return rate ? (1 / rate) : null; // Convert from metal per USD to USD per ounce
+      return rate ? 1 / rate : null; // Convert from metal per USD to USD per ounce
     },
-    documentation: 'https://metalpriceapi.com/documentation'
-  }
+    documentation: "https://metalpriceapi.com/documentation",
+  },
+  CUSTOM: {
+    name: "Custom",
+    baseUrl: "",
+    endpoints: {},
+    parseResponse: (data, metal) => {
+      if (typeof data === "number") return data;
+      if (data?.price) return data.price;
+      const symbol = METAL_SYMBOLS[metal];
+      return (
+        data?.[metal] ??
+        data?.[metal.toUpperCase()] ??
+        data?.[symbol] ??
+        data?.[symbol?.toLowerCase()] ??
+        null
+      );
+    },
+    documentation: "",
+  },
 };
 
 // =============================================================================
 
+/**
+ * Mapping of metal keys to common market symbols
+ */
+const METAL_SYMBOLS = {
+  silver: "XAG",
+  gold: "XAU",
+  platinum: "XPT",
+  palladium: "XPD",
+};
+
 /** @constant {string} APP_VERSION - Application version */
-const APP_VERSION = '3.1.12';
+const APP_VERSION = "3.1.12";
 
 /** @constant {string} LS_KEY - LocalStorage key for inventory data */
-const LS_KEY = 'metalInventory';
+const LS_KEY = "metalInventory";
 
 /** @constant {string} SPOT_HISTORY_KEY - LocalStorage key for spot price history */
-const SPOT_HISTORY_KEY = 'metalSpotHistory';
+const SPOT_HISTORY_KEY = "metalSpotHistory";
 
 /** @constant {string} THEME_KEY - LocalStorage key for theme preference */
-const THEME_KEY = 'appTheme';
+const THEME_KEY = "appTheme";
 
 /** @constant {string} API_KEY_STORAGE_KEY - LocalStorage key for API provider information */
-const API_KEY_STORAGE_KEY = 'metalApiConfig';
+const API_KEY_STORAGE_KEY = "metalApiConfig";
 
 /** @constant {string} API_CACHE_KEY - LocalStorage key for cached API data */
-const API_CACHE_KEY = 'metalApiCache';
+const API_CACHE_KEY = "metalApiCache";
 
-/** @constant {number} API_CACHE_DURATION - Cache duration in milliseconds (24 hours) */
-const API_CACHE_DURATION = 24 * 60 * 60 * 1000;
+/**
+ * @constant {number} DEFAULT_API_CACHE_DURATION - Default cache duration in milliseconds (24 hours)
+ */
+const DEFAULT_API_CACHE_DURATION = 24 * 60 * 60 * 1000;
 
 /** @constant {boolean} DEV_MODE - Enables verbose debug logging when true */
 const DEV_MODE = false;
@@ -92,31 +134,31 @@ const DEV_MODE = false;
  */
 let DEBUG = DEV_MODE;
 
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   const params = new URLSearchParams(window.location.search);
-  if (params.has('debug')) {
-    const value = params.get('debug');
-    DEBUG = value === null || value === '' || value === '1' || value === 'true';
+  if (params.has("debug")) {
+    const value = params.get("debug");
+    DEBUG = value === null || value === "" || value === "1" || value === "true";
   }
 }
 
 /**
  * Metal configuration object - Central registry for all metal-related information
- * 
+ *
  * This configuration drives the entire application's metal handling by defining:
  * - Display names for user interface elements
  * - Key identifiers for data structures and calculations
  * - DOM element ID patterns for dynamic element selection
  * - LocalStorage keys for persistent data storage
  * - CSS color variables for styling and theming
- * 
+ *
  * Each metal configuration contains:
  * @property {string} name - Display name used in UI elements and forms
  * @property {string} key - Lowercase identifier for data objects and calculations
  * @property {string} spotKey - DOM ID pattern for spot price input elements
  * @property {string} localStorageKey - Key for storing spot prices in localStorage
  * @property {string} color - CSS custom property name for metal-specific styling
- * 
+ *
  * Adding a new metal type requires:
  * 1. Adding configuration here
  * 2. Adding corresponding HTML elements following the naming pattern
@@ -124,45 +166,46 @@ if (typeof window !== 'undefined') {
  * 4. The application will automatically handle the rest through iteration
  */
 const METALS = {
-  SILVER: { 
-    name: 'Silver', 
-    key: 'silver', 
-    spotKey: 'spotSilver',
-    localStorageKey: 'spotSilver',
-    color: 'silver',
-    defaultPrice: 25.00
+  SILVER: {
+    name: "Silver",
+    key: "silver",
+    spotKey: "spotSilver",
+    localStorageKey: "spotSilver",
+    color: "silver",
+    defaultPrice: 25.0,
   },
-  GOLD: { 
-    name: 'Gold', 
-    key: 'gold', 
-    spotKey: 'spotGold',
-    localStorageKey: 'spotGold',
-    color: 'gold',
-    defaultPrice: 2500.00
+  GOLD: {
+    name: "Gold",
+    key: "gold",
+    spotKey: "spotGold",
+    localStorageKey: "spotGold",
+    color: "gold",
+    defaultPrice: 2500.0,
   },
-  PLATINUM: { 
-    name: 'Platinum', 
-    key: 'platinum', 
-    spotKey: 'spotPlatinum',
-    localStorageKey: 'spotPlatinum',
-    color: 'platinum',
-    defaultPrice: 1000.00
+  PLATINUM: {
+    name: "Platinum",
+    key: "platinum",
+    spotKey: "spotPlatinum",
+    localStorageKey: "spotPlatinum",
+    color: "platinum",
+    defaultPrice: 1000.0,
   },
-  PALLADIUM: { 
-    name: 'Palladium', 
-    key: 'palladium', 
-    spotKey: 'spotPalladium',
-    localStorageKey: 'spotPalladium',
-    color: 'palladium',
-    defaultPrice: 1000.00
-  }
+  PALLADIUM: {
+    name: "Palladium",
+    key: "palladium",
+    spotKey: "spotPalladium",
+    localStorageKey: "spotPalladium",
+    color: "palladium",
+    defaultPrice: 1000.0,
+  },
 };
 
 // =============================================================================
 
 // Expose globals
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.API_PROVIDERS = API_PROVIDERS;
   window.METALS = METALS;
+  window.METAL_SYMBOLS = METAL_SYMBOLS;
   window.DEBUG = DEBUG;
 }
