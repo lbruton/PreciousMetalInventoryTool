@@ -776,47 +776,25 @@ const setupEventListeners = () => {
       );
     }
 
-    // Backup All Button
+    // Backup/Restore Button
     if (elements.backupAllBtn) {
       safeAttachListener(
         elements.backupAllBtn,
         "click",
         async () => {
-          if (typeof createBackupZip === "function") {
-            await createBackupZip();
+          if (
+            confirm(
+              "Create a complete backup? Click Cancel to restore from a backup file.",
+            )
+          ) {
+            if (typeof createBackupZip === "function") {
+              await createBackupZip();
+            } else {
+              alert("Creating backup using export functions...");
+              exportCsv();
+              exportJson();
+            }
           } else {
-            alert("Creating backup using export functions...");
-            exportCsv();
-            exportJson();
-          }
-        },
-        "Backup all button",
-      );
-    }
-
-    // BOATING ACCIDENT BUTTON
-    const updateBoatingAccidentButton = () => {
-      const btn = elements.boatingAccidentBtn;
-      if (!btn) return;
-      const hasData = !!localStorage.getItem(LS_KEY);
-      if (hasData) {
-        btn.classList.add("danger");
-        btn.classList.remove("success");
-        btn.textContent = "🏴‍☠️ So you had a boating accident? 🏴‍☠️";
-      } else {
-        btn.classList.remove("danger");
-        btn.classList.add("success");
-        btn.textContent = "💎 All that glitters is not gold 💎";
-      }
-    };
-    if (elements.boatingAccidentBtn) {
-      updateBoatingAccidentButton();
-      safeAttachListener(
-        elements.boatingAccidentBtn,
-        "click",
-        async function () {
-          const hasData = !!localStorage.getItem(LS_KEY);
-          if (!hasData) {
             const input = document.createElement("input");
             input.type = "file";
             input.accept = ".zip";
@@ -825,49 +803,46 @@ const setupEventListeners = () => {
                 e.target.files.length > 0 &&
                 typeof restoreBackupZip === "function"
               ) {
-                restoreBackupZip(e.target.files[0]).then(() => {
-                  updateBoatingAccidentButton();
-                });
+                restoreBackupZip(e.target.files[0]);
               }
             });
             input.click();
-            return;
           }
+        },
+        "Backup all button",
+      );
+    }
 
+    // Boating Accident Button
+    if (elements.boatingAccidentBtn) {
+      safeAttachListener(
+        elements.boatingAccidentBtn,
+        "click",
+        function () {
           if (
             confirm(
-              "This will export all data and then erase it. Continue?",
+              "Did you really lose it all in a boating accident? This will wipe all local data.",
             )
           ) {
-            if (typeof createBackupZip === "function") {
-              await createBackupZip();
-            }
-            if (
-              confirm(
-                "All local data will be removed after export. Proceed?",
-              )
-            ) {
-              localStorage.removeItem(LS_KEY);
-              localStorage.removeItem(SPOT_HISTORY_KEY);
-              localStorage.removeItem(API_KEY_STORAGE_KEY);
-              localStorage.removeItem(API_CACHE_KEY);
-              Object.values(METALS).forEach((metalConfig) => {
-                localStorage.removeItem(metalConfig.localStorageKey);
-              });
-              sessionStorage.clear();
+            localStorage.removeItem(LS_KEY);
+            localStorage.removeItem(SPOT_HISTORY_KEY);
+            localStorage.removeItem(API_KEY_STORAGE_KEY);
+            localStorage.removeItem(API_CACHE_KEY);
+            Object.values(METALS).forEach((metalConfig) => {
+              localStorage.removeItem(metalConfig.localStorageKey);
+            });
+            sessionStorage.clear();
 
-              loadInventory();
-              renderTable();
-              loadSpotHistory();
-              fetchSpotPrice();
+            loadInventory();
+            renderTable();
+            loadSpotHistory();
+            fetchSpotPrice();
 
-              apiConfig = { provider: "", keys: {} };
-              apiCache = null;
-              updateSyncButtonStates();
+            apiConfig = { provider: "", keys: {} };
+            apiCache = null;
+            updateSyncButtonStates();
 
-              alert("All data has been erased.");
-              updateBoatingAccidentButton();
-            }
+            alert("All data has been erased. Hope your scuba gear is ready!");
           }
         },
         "Boating accident button",

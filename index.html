@@ -1252,15 +1252,15 @@
             <p class="settings-subtext">Import or export your data files.</p>
             <div class="import-section import-export-grid">
               <label class="btn" id="importCsvBtn">
-                Import CSV 📥
+                Import CSV <span class="import-icon">⬇️</span>
                 <input accept=".csv" hidden id="importCsvFile" type="file" />
               </label>
               <label class="btn" id="importJsonBtn">
-                Import JSON 📥
+                Import JSON <span class="import-icon">⬇️</span>
                 <input accept=".json" hidden id="importJsonFile" type="file" />
               </label>
               <label class="btn" id="importExcelBtn">
-                Import Excel 📥
+                Import Excel <span class="import-icon">⬇️</span>
                 <input
                   accept=".xlsx,.xls"
                   hidden
@@ -1268,6 +1268,7 @@
                   type="file"
                 />
               </label>
+              <button class="btn secondary" id="cloudSyncBtn">Cloud Sync ☁️</button>
             </div>
             <progress
               class="import-progress"
@@ -1277,20 +1278,34 @@
             ></progress>
             <div class="import-progress-text" id="importProgressText"></div>
             <div class="export-section import-export-grid">
-              <button class="btn" id="exportCsvBtn">Export CSV 📤</button>
-              <button class="btn" id="exportJsonBtn">Export JSON 📤</button>
-              <button class="btn" id="exportExcelBtn">Export Excel 📤</button>
-              <button class="btn" id="exportPdfBtn">Export PDF 📤</button>
-              <button class="btn" id="exportHtmlBtn">Export HTML 📤</button>
-              <button class="btn secondary" id="cloudSyncBtn">Cloud Sync ☁️</button>
+              <button class="btn" id="exportCsvBtn">
+                Export CSV <span class="export-icon">⬆️</span>
+              </button>
+              <button class="btn" id="exportJsonBtn">
+                Export JSON <span class="export-icon">⬆️</span>
+              </button>
+              <button class="btn" id="exportExcelBtn">
+                Export Excel <span class="export-icon">⬆️</span>
+              </button>
+              <button class="btn" id="exportPdfBtn">
+                Export PDF <span class="export-icon">⬆️</span>
+              </button>
+              <button class="btn" id="exportHtmlBtn">
+                Export HTML <span class="export-icon">⬆️</span>
+              </button>
             </div>
           </div>
 
           <div class="settings-section boating-accident-section">
             <p class="settings-subtext">Backup or restore all data.</p>
-            <button class="btn danger" id="boatingAccidentBtn">
-              🏴‍☠️ So you had a boating accident? 🏴‍☠️
-            </button>
+            <div class="backup-buttons">
+              <button class="btn success" id="backupAllBtn">
+                💎 All That Glitters 💎
+              </button>
+              <button class="btn danger" id="boatingAccidentBtn">
+                🏴‍☠️ Had a boating accident? 🏴‍☠️
+              </button>
+            </div>
           </div>
         </div>
       </div>
