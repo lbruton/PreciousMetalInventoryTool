@@ -120,10 +120,12 @@ const elements = {
   pageNumbers: null,
 
   // Change log elements
-  changeLogLink: null,
+  changeLogBtn: null,
   changeLogModal: null,
   changeLogCloseBtn: null,
   changeLogTable: null,
+  storageUsage: null,
+  storageReportLink: null,
 
   // Search elements
   searchInput: null,
