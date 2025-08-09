@@ -833,6 +833,28 @@ const toggleCollectable = (idx, checkbox) => {
 // IMPORT/EXPORT FUNCTIONS
 // =============================================================================
 
+// Import progress utilities
+const startImportProgress = (total) => {
+  if (!elements.importProgress || !elements.importProgressText) return;
+  elements.importProgress.max = total;
+  elements.importProgress.value = 0;
+  elements.importProgress.style.display = 'block';
+  elements.importProgressText.style.display = 'block';
+  elements.importProgressText.textContent = `0 / ${total} items imported`;
+};
+
+const updateImportProgress = (processed, imported, total) => {
+  if (!elements.importProgress || !elements.importProgressText) return;
+  elements.importProgress.value = processed;
+  elements.importProgressText.textContent = `${imported} / ${total} items imported`;
+};
+
+const endImportProgress = () => {
+  if (!elements.importProgress || !elements.importProgressText) return;
+  elements.importProgress.style.display = 'none';
+  elements.importProgressText.style.display = 'none';
+};
+
 /**
  * Imports inventory data from CSV file with comprehensive validation and error handling
  * 
@@ -868,10 +890,15 @@ const importCsv = (file) => {
       header: true,
       skipEmptyLines: true,
       complete: function(results) {
-      let imported = [];
-      let skipped = 0;
+      const imported = [];
+      const skippedDetails = [];
+      const totalRows = results.data.length;
+      startImportProgress(totalRows);
+      let processed = 0;
+      let importedCount = 0;
 
-      for (let row of results.data) {
+      for (const [index, row] of results.data.entries()) {
+        processed++;
         const metal = row['Metal'] || 'Silver';
         const name = row['Name'] || row['name'];
         const qty = parseInt(row['Qty'] || row['qty'] || 1, 10);
@@ -932,18 +959,31 @@ const importCsv = (file) => {
         // Validate the item
         const validation = validateInventoryItem(itemToValidate);
         if (!validation.isValid) {
-          console.warn('Skipping invalid CSV row:', validation.errors.join(', '));
-          skipped++;
+          const reason = validation.errors.join(', ');
+          skippedDetails.push(`Row ${index + 2}: ${reason}`);
+          updateImportProgress(processed, importedCount, totalRows);
           continue;
         }
 
         imported.push(itemToValidate);
+        importedCount++;
+        updateImportProgress(processed, importedCount, totalRows);
+      }
+
+      for (const err of results.errors) {
+        skippedDetails.push(`Row ${err.row + 1}: ${err.message}`);
+      }
+
+      endImportProgress();
+
+      if (skippedDetails.length > 0) {
+        alert('Skipped entries:\n' + skippedDetails.join('\n'));
       }
 
       if (imported.length === 0) return alert("No valid items to import.");
 
       let msg = "Replace current inventory with imported file?";
-      if (skipped > 0) msg += `\n(Skipped ${skipped} invalid rows)`;
+      if (skippedDetails.length > 0) msg += `\n(${skippedDetails.length} rows skipped)`;
 
       if (confirm(msg)) {
         inventory = imported;
@@ -954,10 +994,12 @@ const importCsv = (file) => {
         this.value = "";
       },
       error: function(error) {
+        endImportProgress();
         handleError(error, 'CSV import');
       }
     });
   } catch (error) {
+    endImportProgress();
     handleError(error, 'CSV import initialization');
   }
 };
@@ -1030,14 +1072,14 @@ const importJson = (file) => {
 
       // Process each item
       const imported = [];
-      let skipped = 0;
+      const skippedDetails = [];
+      const totalItems = data.length;
+      startImportProgress(totalItems);
+      let processed = 0;
+      let importedCount = 0;
 
-      for (const item of data) {
-        // Basic validation
-        if (!item.name || !item.metal || isNaN(item.qty) || isNaN(item.weight) || isNaN(item.price)) {
-          skipped++;
-          continue;
-        }
+      for (const [index, item] of data.entries()) {
+        processed++;
 
         // Ensure required fields with defaults
         const processedItem = {
@@ -1064,7 +1106,24 @@ const importJson = (file) => {
           processedItem.totalPremium = processedItem.premiumPerOz * processedItem.qty * processedItem.weight;
         }
 
+        // Validate the item
+        const validation = validateInventoryItem(processedItem);
+        if (!validation.isValid) {
+          const reason = validation.errors.join(', ');
+          skippedDetails.push(`Item ${index + 1}: ${reason}`);
+          updateImportProgress(processed, importedCount, totalItems);
+          continue;
+        }
+
         imported.push(processedItem);
+        importedCount++;
+        updateImportProgress(processed, importedCount, totalItems);
+      }
+
+      endImportProgress();
+
+      if (skippedDetails.length > 0) {
+        alert('Skipped entries:\n' + skippedDetails.join('\n'));
       }
 
       if (imported.length === 0) {
@@ -1072,8 +1131,8 @@ const importJson = (file) => {
       }
 
       let msg = `Import ${imported.length} items?`;
-      if (skipped > 0) {
-        msg += `\n(Skipped ${skipped} invalid items)`;
+      if (skippedDetails.length > 0) {
+        msg += `\n(${skippedDetails.length} invalid items skipped)`;
       }
 
       if (confirm(msg)) {
@@ -1082,6 +1141,7 @@ const importJson = (file) => {
         renderTable();
       }
     } catch (error) {
+      endImportProgress();
       alert("Error parsing JSON file: " + error.message);
     }
   };
@@ -1149,9 +1209,14 @@ const importExcel = (file) => {
 
       // Process data
       const imported = [];
-      let skipped = 0;
+      const skippedDetails = [];
+      const totalRows = jsonData.length;
+      startImportProgress(totalRows);
+      let processed = 0;
+      let importedCount = 0;
 
-      for (const row of jsonData) {
+      for (const [index, row] of jsonData.entries()) {
+        processed++;
         const metal = row['Metal'] || 'Silver';
         const name = row['Name'] || row['name'];
         const qty = parseInt(row['Qty'] || row['qty'] || 1, 10);
@@ -1191,18 +1256,13 @@ const importExcel = (file) => {
           totalPremium = premiumPerOz * qty * weight;
         }
 
-        if (!name || isNaN(qty) || isNaN(weight) || isNaN(price) || qty < 1 || !Number.isInteger(qty)) {
-          skipped++;
-          continue;
-        }
-
-        imported.push({ 
-          metal, 
-          name, 
-          qty, 
-          type, 
-          weight, 
-          price, 
+        const itemToValidate = {
+          metal,
+          name,
+          qty,
+          type,
+          weight,
+          price,
           date,
           purchaseLocation,
           storageLocation,
@@ -1211,13 +1271,31 @@ const importExcel = (file) => {
           premiumPerOz,
           totalPremium,
           isCollectable
-        });
+        };
+
+        const validation = validateInventoryItem(itemToValidate);
+        if (!validation.isValid) {
+          const reason = validation.errors.join(', ');
+          skippedDetails.push(`Row ${index + 2}: ${reason}`);
+          updateImportProgress(processed, importedCount, totalRows);
+          continue;
+        }
+
+        imported.push(itemToValidate);
+        importedCount++;
+        updateImportProgress(processed, importedCount, totalRows);
+      }
+
+      endImportProgress();
+
+      if (skippedDetails.length > 0) {
+        alert('Skipped entries:\n' + skippedDetails.join('\n'));
       }
 
       if (imported.length === 0) return alert("No valid items to import.");
 
       let msg = "Replace current inventory with imported file?";
-      if (skipped > 0) msg += `\n(Skipped ${skipped} invalid rows)`;
+      if (skippedDetails.length > 0) msg += `\n(${skippedDetails.length} rows skipped)`;
 
       if (confirm(msg)) {
         inventory = imported;
@@ -1225,6 +1303,7 @@ const importExcel = (file) => {
         renderTable();
       }
     } catch (error) {
+      endImportProgress();
       alert("Error importing Excel file: " + error.message);
     }
   };

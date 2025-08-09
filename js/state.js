@@ -60,6 +60,8 @@ const elements = {
   importCsvFile: null,
   importJsonFile: null,
   importExcelFile: null,
+  importProgress: null,
+  importProgressText: null,
 
   // Export elements
   exportCsvBtn: null,

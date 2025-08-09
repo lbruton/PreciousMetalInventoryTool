@@ -1565,6 +1565,20 @@ td input:checked + .slider:before {
   cursor: pointer;
 }
 
+.import-progress {
+  width: 100%;
+  margin-top: var(--spacing-sm);
+  display: none;
+}
+
+.import-progress-text {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: var(--spacing-sm);
+  display: none;
+}
+
 /* =============================================================================
    TOGGLE SWITCHES
    ============================================================================= */
