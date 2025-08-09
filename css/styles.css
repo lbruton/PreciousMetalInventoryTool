@@ -957,6 +957,36 @@ input[type="submit"] {
   background-color: var(--primary-hover);
 }
 
+/* Cloud Sync modal layout */
+#cloudSyncModal .modal-content {
+  max-width: 400px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+#cloudSyncModal .modal-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+  padding: var(--spacing-xl);
+  position: relative;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--shadow);
+}
+
+#cloudSyncModal .modal-header h2 {
+  margin: 0;
+  color: white;
+  text-align: center;
+}
+
+#cloudSyncModal .modal-body {
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
 /* API Providers modal layout */
 #apiProvidersModal .modal-content {
   width: 90vw;
