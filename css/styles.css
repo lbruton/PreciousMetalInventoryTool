@@ -1325,6 +1325,13 @@ td .btn {
   line-height: 1;
 }
 
+td .action-btn {
+  width: 4.5rem;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
 td .filter-text {
   cursor: pointer;
   font-weight: 600;
@@ -2453,6 +2460,9 @@ input:disabled + .slider {
     padding: 0.2rem 0.3rem;
     font-size: 0.65rem;
     min-height: 1.5rem;
+  }
+  td .action-btn {
+    width: 4rem;
   }
 }
 
