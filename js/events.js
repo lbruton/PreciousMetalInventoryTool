@@ -1266,7 +1266,6 @@ const setupApiEvents = () => {
         "API quota save",
       );
     }
-
     const flushCacheBtn = document.getElementById("flushCacheBtn");
     if (flushCacheBtn) {
       safeAttachListener(
