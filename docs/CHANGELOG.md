@@ -8,6 +8,9 @@
 
 ## 📋 Version History
 
+### Version 3.2.01 – Cloud Sync Modal Fix (2025-08-08)
+- Cloud Sync placeholder modal now uses standard themed header with internal close button
+
 ### Version 3.2.0 – Settings & History Polish (2025-08-08)
 - Appearance section moved above API configuration in Settings
 - Sync All displays confirmation with records updated
