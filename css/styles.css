@@ -1400,6 +1400,12 @@ td input:checked + .slider:before {
   box-shadow: var(--shadow);
 }
 
+.about-modal-header h1 {
+  margin: 0;
+  color: white;
+  text-align: center;
+}
+
 .about-title {
   font-size: 1.875rem;
   font-weight: 700;
