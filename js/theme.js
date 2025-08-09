@@ -3,24 +3,30 @@
 
 /**
  * Sets application theme and updates localStorage
- * 
- * @param {string} theme - 'dark' or 'light'
+ *
+ * @param {string} theme - 'dark', 'light', or 'system'
  */
 const setTheme = (theme) => {
-  if (theme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    localStorage.setItem(THEME_KEY, 'dark');
-    if (elements.themeToggle) {
-      elements.themeToggle.textContent = 'Light Mode';
-    }
+  if (theme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    localStorage.setItem(THEME_KEY, "dark");
   } else {
-    document.documentElement.removeAttribute('data-theme');
-    localStorage.setItem(THEME_KEY, 'light');
-    if (elements.themeToggle) {
-      elements.themeToggle.textContent = 'Dark Mode';
+    if (theme === "light") {
+      document.documentElement.removeAttribute("data-theme");
+      localStorage.setItem(THEME_KEY, "light");
+    } else {
+      localStorage.removeItem(THEME_KEY);
+      const systemPrefersDark =
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (systemPrefersDark) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+      }
     }
   }
-  if (typeof renderTable === 'function') {
+  if (typeof renderTable === "function") {
     renderTable();
   }
 };
@@ -30,14 +36,14 @@ const setTheme = (theme) => {
  */
 const initTheme = () => {
   const savedTheme = localStorage.getItem(THEME_KEY);
-  const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const systemPrefersDark =
+    window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
 
   if (savedTheme) {
     setTheme(savedTheme);
-  } else if (systemPrefersDark) {
-    setTheme('dark');
   } else {
-    setTheme('light');
+    setTheme(systemPrefersDark ? "dark" : "light");
   }
 };
 
@@ -45,8 +51,8 @@ const initTheme = () => {
  * Toggles between dark and light themes
  */
 const toggleTheme = () => {
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  const currentTheme = document.documentElement.getAttribute("data-theme");
+  setTheme(currentTheme === "dark" ? "light" : "dark");
 };
 
 /**
@@ -54,12 +60,14 @@ const toggleTheme = () => {
  */
 const setupSystemThemeListener = () => {
   if (window.matchMedia) {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      // Only auto-switch if user hasn't set a preference
-      if (!localStorage.getItem(THEME_KEY)) {
-        setTheme(e.matches ? 'dark' : 'light');
-      }
-    });
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        // Only auto-switch if user hasn't set a preference
+        if (!localStorage.getItem(THEME_KEY)) {
+          setTheme(e.matches ? "dark" : "light");
+        }
+      });
   }
 };
 

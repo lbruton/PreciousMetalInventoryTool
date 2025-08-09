@@ -501,6 +501,7 @@ input[type="submit"] {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  justify-content: flex-end;
 }
 
 .cache-duration-row {
@@ -557,6 +558,12 @@ input[type="submit"] {
   justify-content: flex-end;
 }
 
+.theme-options {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
 /* Info modal sizing */
 #apiInfoModal .modal-content {
   max-width: 500px;
@@ -609,36 +616,44 @@ input[type="submit"] {
 }
 
 #settingsModal .modal-header {
-  padding: var(--spacing-lg) var(--spacing-xl);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: var(--bg-card);
-  z-index: 1;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+  padding: var(--spacing-xl);
+  position: relative;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--shadow);
 }
 
 #settingsModal .modal-header h2 {
   margin: 0;
-  color: var(--primary);
+  color: white;
+  text-align: center;
 }
 
 #settingsModal .modal-body {
   padding: var(--spacing-xl);
   overflow-y: auto;
   flex: 1;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--bg-secondary);
 }
 
 #settingsModal .modal-body::-webkit-scrollbar {
-  display: none;
+  width: 8px;
 }
 
-#settingsModal .modal-footer {
-  padding: var(--spacing-lg) var(--spacing-xl);
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: flex-end;
+#settingsModal .modal-body::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+}
+
+#settingsModal .modal-body::-webkit-scrollbar-thumb {
+  background-color: var(--primary);
+  border-radius: var(--radius);
+}
+
+#settingsModal .modal-body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary-hover);
 }
 
 /* =============================================================================

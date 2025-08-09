@@ -69,8 +69,9 @@
       <h1>Precious Metals Inventory Tool</h1>
       <div style="margin-left: auto; display: flex; gap: 0.5rem">
         <button class="btn" id="aboutBtn" title="About">About</button>
-        <button class="btn" id="settingsBtn" title="Settings">Settings</button>
-        <button class="btn" id="themeToggle">Dark Mode</button>
+        <button class="btn" id="settingsBtn" title="Settings">
+          ⚙️ Settings
+        </button>
       </div>
     </div>
     <div class="container">
@@ -1200,12 +1201,6 @@
               </button>
             </div>
           </div>
-
-          <div class="about-section boating-accident-section">
-            <button id="boatingAccidentBtn">
-              So you had a boating accident?
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -1220,8 +1215,33 @@
       <div class="modal-content">
         <div class="modal-header">
           <h2>Settings</h2>
+          <button
+            aria-label="Close modal"
+            class="modal-close"
+            id="settingsCloseBtn"
+          >
+            ×
+          </button>
         </div>
         <div class="modal-body">
+          <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="theme-options">
+              <label
+                ><input type="radio" name="themePreference" value="light" />
+                Light Default</label
+              >
+              <label
+                ><input type="radio" name="themePreference" value="dark" /> Dark
+                Default</label
+              >
+              <label
+                ><input type="radio" name="themePreference" value="system" />
+                Follow System</label
+              >
+            </div>
+          </div>
+
           <div class="settings-section">
             <h3 style="margin-bottom: 1rem">API Configuration</h3>
 
@@ -1398,9 +1418,12 @@
               </button>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn" id="settingsCloseBtn">Close</button>
+
+          <div class="settings-section boating-accident-section">
+            <button id="boatingAccidentBtn">
+              So you had a boating accident?
+            </button>
+          </div>
         </div>
       </div>
     </div>

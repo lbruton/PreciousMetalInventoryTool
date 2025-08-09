@@ -120,9 +120,6 @@ const elements = {
   clearSearchBtn: null,
   searchResultsInfo: null,
 
-  // Theme toggle
-  themeToggle: null,
-
   // About & acknowledgment modal elements
   aboutBtn: null,
   aboutModal: null,

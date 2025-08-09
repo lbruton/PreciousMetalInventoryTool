@@ -608,6 +608,13 @@ const showSettingsModal = () => {
     saveApiConfig(currentConfig);
   }
 
+  const savedTheme = localStorage.getItem(THEME_KEY);
+  const themeValue = savedTheme ? savedTheme : "system";
+  const themeRadio = document.querySelector(
+    `input[name="themePreference"][value="${themeValue}"]`,
+  );
+  if (themeRadio) themeRadio.checked = true;
+
   Object.keys(API_PROVIDERS).forEach((prov) => {
     const input = document.getElementById(`apiKey_${prov}`);
     const radio = document.querySelector(

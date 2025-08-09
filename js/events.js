@@ -194,43 +194,23 @@ const setupEventListeners = () => {
       );
     }
 
-    // Theme Toggle Button
-    if (elements.themeToggle) {
+    // Theme preference radios
+    const themeRadios = document.querySelectorAll(
+      'input[name="themePreference"]',
+    );
+    themeRadios.forEach((radio) => {
       safeAttachListener(
-        elements.themeToggle,
-        "click",
-        (e) => {
-          e.preventDefault();
-          debugLog("Theme toggle clicked");
-
-          if (typeof toggleTheme === "function") {
-            toggleTheme();
-          } else if (typeof setTheme === "function") {
-            // Fallback to manual toggle
-            const currentTheme = localStorage.getItem(THEME_KEY) || "light";
-            const newTheme = currentTheme === "dark" ? "light" : "dark";
-            setTheme(newTheme);
-          } else {
-            // Ultimate fallback
-            const currentTheme =
-              document.documentElement.getAttribute("data-theme");
-            const newTheme = currentTheme === "dark" ? "light" : "dark";
-            if (newTheme === "dark") {
-              document.documentElement.setAttribute("data-theme", "dark");
-              localStorage.setItem(THEME_KEY, "dark");
-              elements.themeToggle.textContent = "Light Mode";
-            } else {
-              document.documentElement.removeAttribute("data-theme");
-              localStorage.setItem(THEME_KEY, "light");
-              elements.themeToggle.textContent = "Dark Mode";
-            }
+        radio,
+        "change",
+        () => {
+          const value = radio.value;
+          if (typeof setTheme === "function") {
+            setTheme(value);
           }
         },
-        "Theme Toggle",
+        "Theme preference change",
       );
-    } else {
-      console.error("Theme toggle button element not found!");
-    }
+    });
 
     // Details modal buttons
     if (elements.detailsButtons && elements.detailsButtons.length) {
@@ -776,7 +756,16 @@ const setupEventListeners = () => {
         function () {
           if (
             confirm(
-              "WARNING: This will erase ALL your data for this app (inventory, spot history, spot prices, API configuration).\n\nAre you sure you want to proceed?\n\nThis action cannot be undone!",
+              "WARNING: This will erase ALL your data for this app (inventory, spot history, spot prices, API configuration).\n\nWould you like to download a backup before proceeding?",
+            )
+          ) {
+            if (typeof createBackupZip === "function") {
+              createBackupZip();
+            }
+          }
+          if (
+            confirm(
+              "Are you absolutely sure you want to clear all local data? This action cannot be undone!",
             )
           ) {
             localStorage.removeItem(LS_KEY);
