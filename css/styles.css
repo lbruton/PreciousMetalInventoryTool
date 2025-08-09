@@ -2066,7 +2066,7 @@ td input:checked + .slider:before {
    ============================================================================= */
 
 .search-section {
-  margin-bottom: var(--spacing);
+  margin-bottom: 0;
 }
 
 .search-container {
@@ -2093,8 +2093,11 @@ td input:checked + .slider:before {
 .search-results-info {
   font-size: 0.875rem;
   color: var(--text-muted);
-  margin-top: var(--spacing-sm);
   text-align: right;
+}
+
+.search-results-info:not(:empty) {
+  margin-top: var(--spacing-sm);
 }
 
 /* =============================================================================

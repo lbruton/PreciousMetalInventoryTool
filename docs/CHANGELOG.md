@@ -8,6 +8,10 @@
 
 ## 📋 Version History
 
+### Version 3.2.07rc – Spot Timestamp Source Display (2025-08-09)
+- Spot price cards now show API provider or Manual entry along with exact timestamp of the last update
+- Footer dynamically displays the active StackTrackr domain and links to issue reporting
+
 ### Version 3.2.06rc – Auto Spot Price Sync (2025-08-09)
 - Automatically refreshes spot prices at startup when API keys exist and the cache is expired
 - Item entry moved to a dedicated modal with stacked filter support
