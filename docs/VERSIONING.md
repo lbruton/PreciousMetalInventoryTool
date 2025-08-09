@@ -7,17 +7,16 @@ The StackTrackr now uses a dynamic version management system that automatically 
 ## How It Works
 
 ### Single Source of Truth
-- Version is defined once in `/app/js/constants.js` as `APP_VERSION = '3.2.05rc'`
+- Version is defined once in `js/constants.js` as `APP_VERSION = '3.2.06rc'`
 - This is the ONLY place you need to update the version number
 
 ### Automatic Propagation
-- **Root Landing Page** (`/index.html`): JavaScript automatically updates the page title and heading
-- **Main Application** (`/app/index.html`): JavaScript automatically updates the page title and heading  
+- **index.html**: JavaScript automatically updates the page title and heading
 - **Browser Tab Title**: Dynamically updated with current version
 - **Application Header**: Shows current version in the main app interface
 
 ### Utility Functions
-Two helper functions are available in `/app/js/utils.js`:
+Two helper functions are available in `js/utils.js`:
 - `getVersionString(prefix)`: Returns formatted version (e.g., "v3.0.1")
 - `getAppTitle(baseTitle)`: Returns full app title with version
 
@@ -27,30 +26,24 @@ To release a new version:
 
 1. **Update ONLY the constants file:**
    ```javascript
-   // In /app/js/constants.js
-   const APP_VERSION = '3.2.05rc';  // Change this line only
+   // In js/constants.js
+   const APP_VERSION = '3.2.06rc';  // Change this line only
    ```
 
 2. **All these will automatically update:**
-   - Root page title: "StackTrackr v3.1.0"
-   - Root page heading: "StackTrackr v3.1.0"
-   - App page title: "StackTrackr v3.1.0"
-   - App header: "StackTrackr v3.1.0"
+   - Page title: "StackTrackr v3.2.06rc"
+   - Page heading: "StackTrackr v3.2.06rc"
+   - Browser tab title: "StackTrackr v3.2.06rc"
+   - App header: "StackTrackr v3.2.06rc"
 
 3. **Update changelog:** Add entry to `/docs/CHANGELOG.md` for documentation
 
 ## Technical Implementation
 
-### Root Page (app/index.html)
+### index.html
 ```javascript
-// Loads app/js/constants.js and utils.js
-// Updates title and heading via DOM manipulation
-document.title = `StackTrackr ${getVersionString()}`;
-```
-
-### Main App (app/app/index.html)
-```javascript
-// In init.js - runs on DOM load
+// Loads js/constants.js and utils.js
+// Updates title, header, and other references via DOM manipulation
 document.title = getAppTitle();
 const appHeader = document.querySelector('.app-header h1');
 appHeader.textContent = getAppTitle();
@@ -77,15 +70,15 @@ Use semantic versioning: `MAJOR.MINOR.PATCH`
 ## Example Usage in Code
 ```javascript
 // Get just the version number
-const version = APP_VERSION; // "3.2.05rc"
+const version = APP_VERSION; // "3.2.06rc"
 
 // Get formatted version string
-const versionString = getVersionString(); // "v3.2.05rc"
-const customVersion = getVersionString('version '); // "version 3.2.05rc"
+const versionString = getVersionString(); // "v3.2.06rc"
+const customVersion = getVersionString('version '); // "version 3.2.06rc"
 
 // Get full app title
-const title = getAppTitle(); // "StackTrackr v3.2.05rc"
-const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.2.05rc"
+const title = getAppTitle(); // "StackTrackr v3.2.06rc"
+const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.2.06rc"
 ```
 
 This system ensures version consistency and makes maintenance much easier!
