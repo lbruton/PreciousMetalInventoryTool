@@ -1,8 +1,8 @@
 # Project Status - StackTrackr
 
-## 🎯 Current State: **FEATURE COMPLETE v3.2.03rc** ✅ MAINTAINED & OPTIMIZED
+## 🎯 Current State: **FEATURE COMPLETE v3.2.05rc** ✅ MAINTAINED & OPTIMIZED
 
-**StackTrackr v3.2.03rc** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management, API integration, and complete backup capabilities. The 3.2.x series focuses on polish, maintenance, and optimization.
+**StackTrackr v3.2.05rc** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management, API integration, and complete backup capabilities. The 3.2.x series focuses on polish, maintenance, and optimization.
 
 ## 🏗️ Architecture Overview
 
@@ -20,6 +20,7 @@ The tool features a **modular JavaScript architecture** with separate files for 
 
 ## ✨ Latest Changes (3.1.x Series)
 
+- **v3.2.05rc - Splash Opt-Out**: Disclaimer modal can be hidden permanently
 - **v3.2.03rc - Cache Flush Confirmation**: Added warning before clearing API cache and history
 - **v3.2.02rc - Feature Complete Release Candidate**: Application rebranded to StackTrackr and prepared for final release
 - **v3.2.01 - Cloud Sync Modal Fix**: Coming soon modal now follows themed styling with internal close button
@@ -117,7 +118,7 @@ All data is stored locally in the browser using localStorage with:
 
 If continuing development in a new chat session:
 
-1. **Current Version**: 3.2.03rc (managed in `js/constants.js`)
+1. **Current Version**: 3.2.05rc (managed in `js/constants.js`)
 2. **Last Change**: Added confirmation before flushing API cache and history
 3. **Last Documentation Update**: August 9, 2025 - All docs synchronized
 4. **Architecture**: Fully modular with proper separation of concerns

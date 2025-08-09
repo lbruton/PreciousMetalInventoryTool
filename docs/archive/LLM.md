@@ -17,7 +17,7 @@
 
 ## 1. Purpose
 
-Provide AI assistants (LLMs) a concise, up-to-date overview of the **StackTrackr v3.2.03rc** to guide development, documentation, and QA tasks.
+Provide AI assistants (LLMs) a concise, up-to-date overview of the **StackTrackr v3.2.05rc** to guide development, documentation, and QA tasks.
 
 ## 2. Project Snapshot
 
@@ -30,7 +30,7 @@ Provide AI assistants (LLMs) a concise, up-to-date overview of the **StackTrackr
   - **Comprehensive backup ZIP system** with all data formats and restoration guides
   - Responsive & accessible UI (mobile-first, ARIA, keyboard support)  
   - Modular JS architecture (constants, state, events, utils, inventory)  
-- **Version**: 3.2.03rc (feature complete release candidate)
+- **Version**: 3.2.05rc (feature complete release candidate)
 - **Last Updated**: August 9, 2025
 
 ## 3. Project Structure
