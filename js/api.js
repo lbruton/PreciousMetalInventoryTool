@@ -81,7 +81,8 @@ const loadApiConfig = () => {
       }
       const result = {
         provider: config.provider || "",
-        keys: config.keys || {},
+        // Clone keys object to prevent accidental cross-provider references
+        keys: { ...(config.keys || {}) },
         cacheHours:
           typeof config.cacheHours === "number" ? config.cacheHours : 24,
         customConfig: config.customConfig || {
@@ -144,7 +145,12 @@ const saveApiConfig = (config) => {
       }
     });
     localStorage.setItem(API_KEY_STORAGE_KEY, JSON.stringify(configToSave));
-    apiConfig = config;
+
+    // Store a cloned copy in memory to avoid shared references
+    apiConfig = {
+      ...config,
+      keys: { ...(config.keys || {}) },
+    };
     updateSyncButtonStates();
   } catch (error) {
     console.error("Error saving API config:", error);
@@ -957,6 +963,8 @@ const handleProviderSync = async (provider) => {
   }
 
   const config = loadApiConfig();
+  // Ensure keys object exists and clone to avoid mutating shared references
+  config.keys = { ...(config.keys || {}) };
   config.keys[provider] = apiKey;
   if (provider === "CUSTOM") {
     const base = document.getElementById("apiBase_CUSTOM")?.value.trim() || "";

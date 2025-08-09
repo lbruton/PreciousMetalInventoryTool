@@ -66,7 +66,10 @@
   <body>
     <!-- Application Header -->
     <div class="app-header">
-      <h1>StackTrackr</h1>
+      <div class="app-title">
+        <h1>StackTrackr</h1>
+        <p class="app-subtitle">The open source precious metals tracking tool.</p>
+      </div>
       <div style="margin-left: auto; display: flex; gap: 0.5rem">
         <button
           class="btn"
@@ -1090,12 +1093,6 @@
               </p>
             </div>
           </div>
-          <div class="ack-options">
-            <label>
-              <input type="checkbox" id="ackDontShow" />
-              Do not show this again
-            </label>
-          </div>
           <div class="alert-actions">
             <button class="btn btn-primary about-accept-btn" id="ackAcceptBtn">
               ✅ I Understand - Continue to Application
@@ -1126,6 +1123,51 @@
             <span id="aboutAppName">StackTrackr</span>
             <span id="aboutVersion"></span>
           </h2>
+          <div class="about-description">
+            Track your precious metal investments with comprehensive spot price
+            tracking, premium calculations, and detailed reporting. Add items to
+            your inventory, monitor current values across Silver, Gold,
+            Platinum, and Palladium, and export your data in multiple formats
+            including CSV, JSON, Excel, PDF, and HTML.
+          </div>
+
+          <div class="about-alert">
+            <div class="alert-header">
+              <span class="alert-icon">⚠️</span>
+              <strong>Important Privacy &amp; Data Notice</strong>
+            </div>
+            <div class="alert-content">
+              <p>
+                <strong>Your Privacy is Protected:</strong> All data is stored
+                locally in your browser using localStorage and
+                <em>never transmitted to any server</em>. Your precious metals
+                inventory information remains completely private and under your
+                control.
+              </p>
+
+              <p>
+                <strong>Data Backup Responsibility:</strong> Since data is
+                stored locally, it will be lost if you clear browser history,
+                reset browser data, or use private browsing mode. Remember to
+                export your data regularly to keep a copy.
+              </p>
+
+              <p>
+                <strong>Use at Your Own Risk:</strong> This tool is provided for
+                informational and organizational purposes only. The developer
+                assumes no responsibility for any financial decisions,
+                investment choices, or data loss. Always verify spot prices and
+                calculations independently.
+              </p>
+
+              <p>
+                <strong>Spot Price Accuracy:</strong> Prices displayed are for
+                reference only and may not reflect real-time market conditions.
+                Always confirm current pricing with your dealer or official
+                market sources before making transactions.
+              </p>
+            </div>
+          </div>
           <!-- Key Features -->
           <div class="about-features">
             <div class="features-title">✨ Key Features</div>
