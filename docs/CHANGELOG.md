@@ -10,6 +10,11 @@
 
 ### Version 3.2.06rc – Auto Spot Price Sync (2025-08-09)
 - Automatically refreshes spot prices at startup when API keys exist and the cache is expired
+- Item entry moved to a dedicated modal with stacked filter support
+- Pagination controls polished with repositioned items-per-page selector and fixed dropdown width
+- Collectable checkbox replaced with status button and aligned action buttons
+- Totals cards renamed with refined labels and font sizing
+- Improved About modal title contrast in light mode
 
 ### Version 3.2.05rc – Splash Opt-Out (2025-08-09)
 - Disclaimer splash now hides permanently after the acknowledgment button is clicked, removing the previous checkbox
