@@ -1205,6 +1205,19 @@
         </div>
         <div class="modal-body">
           <div class="settings-section">
+            <h3>Appearance</h3>
+            <p class="settings-subtext">Set your default preference.</p>
+            <div class="theme-buttons">
+              <button class="btn theme-btn dark" id="darkModeBtn">Dark Mode</button>
+              <button class="btn theme-btn light" id="lightModeBtn">Light Mode</button>
+              <button class="btn theme-btn system" id="systemModeBtn">
+                Follow System
+              </button>
+              <div class="theme-display" id="themeDisplay"></div>
+            </div>
+          </div>
+
+          <div class="settings-section">
             <h3 style="margin-bottom: 1rem">API Configuration</h3>
             <p class="settings-subtext">Manage API cache, history, and providers.</p>
 
@@ -1234,19 +1247,6 @@
               <button type="button" class="btn" id="apiHistoryBtn">
                 History 📜
               </button>
-            </div>
-          </div>
-
-          <div class="settings-section">
-            <h3>Appearance</h3>
-            <p class="settings-subtext">Set your default preference.</p>
-            <div class="theme-buttons">
-              <button class="btn theme-btn dark" id="darkModeBtn">Dark Mode</button>
-              <button class="btn theme-btn light" id="lightModeBtn">Light Mode</button>
-              <button class="btn theme-btn system" id="systemModeBtn">
-                Follow System
-              </button>
-              <div class="theme-display" id="themeDisplay"></div>
             </div>
           </div>
 
@@ -1661,26 +1661,40 @@
     </div>
     <div class="modal" id="apiHistoryModal" style="display: none">
       <div class="modal-content">
-        <h3>API Price History</h3>
-        <div class="api-history-body">
-          <div class="api-history-table">
-            <input
-              type="text"
-              id="apiHistoryFilter"
-              placeholder="Filter history..."
-            />
-            <table id="apiHistoryTable"></table>
-            <div id="apiHistoryPagination" class="api-history-pagination"></div>
-          </div>
-          <div class="api-history-chart">
-            <canvas id="apiHistoryChart"></canvas>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn" id="clearHistoryBtn">
-            Clear History
+        <div class="modal-header">
+          <h2>API Price History</h2>
+          <button
+            aria-label="Close modal"
+            class="modal-close"
+            id="apiHistoryCloseBtn"
+          >
+            ×
           </button>
-          <button type="button" class="btn" id="apiHistoryCloseBtn">Close</button>
+        </div>
+        <div class="modal-body">
+          <div class="api-history-body">
+            <div class="api-history-table">
+              <div class="api-history-filter">
+                <input
+                  type="text"
+                  id="apiHistoryFilter"
+                  placeholder="Filter history..."
+                />
+                <button
+                  type="button"
+                  class="btn secondary"
+                  id="apiHistoryClearFilterBtn"
+                >
+                  Clear
+                </button>
+              </div>
+              <table id="apiHistoryTable"></table>
+              <div id="apiHistoryPagination" class="api-history-pagination"></div>
+            </div>
+            <div class="api-history-chart">
+              <canvas id="apiHistoryChart"></canvas>
+            </div>
+          </div>
         </div>
       </div>
     </div>

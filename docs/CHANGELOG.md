@@ -8,6 +8,11 @@
 
 ## 📋 Version History
 
+### Version 3.2.0 – Settings & History Polish (2025-08-08)
+- Appearance section moved above API configuration in Settings
+- Sync All displays confirmation with records updated
+- API price history modal restyled with Clear Filter button and header close
+
 ### Version 3.1.13 – Cloud Sync Placeholder and API Quotas (2025-08-08)
 - CSV import sanitizes negative prices by setting values below zero to $0
 - Added gray Cloud Sync button with coming-soon modal and icons for all import/export buttons

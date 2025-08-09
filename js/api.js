@@ -176,7 +176,10 @@ const clearApiConfig = () => {
 const clearApiCache = () => {
   localStorage.removeItem(API_CACHE_KEY);
   apiCache = null;
-  alert("API cache cleared. Next sync will pull fresh data from the API.");
+  clearApiHistory(true);
+  alert(
+    "API cache and history cleared. Next sync will pull fresh data from the API.",
+  );
 };
 
 /**
@@ -430,10 +433,19 @@ const showApiHistoryModal = () => {
   apiHistorySortAsc = true;
   apiHistoryFilterText = "";
   const filterInput = document.getElementById("apiHistoryFilter");
+  const clearFilterBtn = document.getElementById("apiHistoryClearFilterBtn");
   if (filterInput) {
     filterInput.value = "";
     filterInput.oninput = (e) => {
       apiHistoryFilterText = e.target.value;
+      apiHistoryPage = 1;
+      renderApiHistoryTable();
+    };
+  }
+  if (clearFilterBtn) {
+    clearFilterBtn.onclick = () => {
+      apiHistoryFilterText = "";
+      if (filterInput) filterInput.value = "";
       apiHistoryPage = 1;
       renderApiHistoryTable();
     };
@@ -472,12 +484,15 @@ const hideApiProvidersModal = () => {
 
 /**
  * Clears stored API price history
+ * @param {boolean} [silent=false] - When true, does not reopen the history modal
  */
-const clearApiHistory = () => {
+const clearApiHistory = (silent = false) => {
   spotHistory = [];
   saveSpotHistory();
   updateProviderHistoryTables();
-  showApiHistoryModal();
+  if (!silent) {
+    showApiHistoryModal();
+  }
 };
 
 /**
@@ -1016,7 +1031,8 @@ const handleProviderSync = async (provider) => {
  */
 const syncAllProviders = async () => {
   const config = loadApiConfig();
-  if (!config || !config.keys) return;
+  if (!config || !config.keys) return 0;
+  let updated = 0;
   for (const prov of Object.keys(API_PROVIDERS)) {
     const apiKey = config.keys[prov];
     if (!apiKey) continue;
@@ -1031,6 +1047,7 @@ const syncAllProviders = async () => {
             metalConfig.name,
             API_PROVIDERS[prov].name,
           );
+          updated++;
         }
       });
       setProviderStatus(prov, "connected");
@@ -1040,6 +1057,7 @@ const syncAllProviders = async () => {
     }
   }
   updateProviderHistoryTables();
+  return updated;
 };
 
 /**

@@ -815,6 +815,27 @@ input[type="submit"] {
   flex-direction: column;
 }
 
+#apiHistoryModal .modal-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+  padding: var(--spacing-xl);
+  position: relative;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--shadow);
+}
+
+#apiHistoryModal .modal-header h2 {
+  margin: 0;
+  color: white;
+  text-align: center;
+}
+
+#apiHistoryModal .modal-body {
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+  flex: 1;
+}
+
 .api-history-body {
   flex: 1;
   display: flex;
@@ -828,8 +849,14 @@ input[type="submit"] {
   flex-direction: column;
 }
 
-.api-history-table input {
+.api-history-filter {
+  display: flex;
+  gap: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+.api-history-filter input {
+  flex: 1;
 }
 
 .api-history-pagination {
