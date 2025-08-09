@@ -14,6 +14,9 @@
 - Inventory change log tracks last 25 edits and displays the 10 most recent in a modal
 - Change Log and metal totals details modals now share the site's standard header style
 - Quantity column repositioned after item name for improved readability
+- Change Log modal widened and buttonized; items-per-page controls restyled with disclaimer and fixed layout
+- Spot price action buttons reveal on card click and timestamps now reflect only API updates
+- Footer shows local storage usage with downloadable report link
 
 ### Version 3.2.06rc – Auto Spot Price Sync (2025-08-09)
 - Automatically refreshes spot prices at startup when API keys exist and the cache is expired
