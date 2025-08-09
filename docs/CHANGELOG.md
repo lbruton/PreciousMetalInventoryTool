@@ -12,6 +12,7 @@
 - Spot price cards now show API provider or Manual entry along with exact timestamp of the last update
 - Footer dynamically displays the active StackTrackr domain and links to issue reporting
 - Inventory change log tracks last 25 edits and displays the 10 most recent in a modal
+- Change Log and metal totals details modals now share the site's standard header style
 - Quantity column repositioned after item name for improved readability
 
 ### Version 3.2.06rc – Auto Spot Price Sync (2025-08-09)

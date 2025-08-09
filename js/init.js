@@ -172,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.detailsModalTitle = safeGetElement("detailsModalTitle");
     elements.typeBreakdown = safeGetElement("typeBreakdown");
     elements.locationBreakdown = safeGetElement("locationBreakdown");
-    elements.closeDetailsBtn = safeGetElement("closeDetailsBtn");
+    elements.detailsCloseBtn = safeGetElement("detailsCloseBtn");
     elements.detailsButtons = document.querySelectorAll(".details-btn");
 
     // Chart elements

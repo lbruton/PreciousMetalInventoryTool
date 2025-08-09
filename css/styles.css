@@ -1037,6 +1037,43 @@ input[type="submit"] {
   flex: 1;
 }
 
+/* Standardized modal layout for change log and details views */
+#changeLogModal .modal-content,
+#detailsModal .modal-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+#changeLogModal .modal-content {
+  max-width: 800px;
+}
+
+#changeLogModal .modal-header,
+#detailsModal .modal-header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+  padding: var(--spacing-xl);
+  position: relative;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--shadow);
+}
+
+#changeLogModal .modal-header h2,
+#detailsModal .modal-header h2 {
+  margin: 0;
+  color: white;
+  text-align: center;
+}
+
+#changeLogModal .modal-body,
+#detailsModal .modal-body {
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+  flex: 1;
+}
+
 /* =============================================================================
    TOTALS CARDS
    ============================================================================= */
@@ -1824,19 +1861,6 @@ td input:checked + .slider:before {
   }
 }
 
-.details-modal-content {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-xl);
-  max-width: 1200px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-lg);
-  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 @keyframes modalSlideIn {
   from {
     opacity: 0;
@@ -1846,15 +1870,6 @@ td input:checked + .slider:before {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
-}
-
-.details-modal-title {
-  font-size: 1.5rem;
-  color: var(--primary);
-  margin-bottom: var(--spacing-lg);
-  text-align: center;
-  border-bottom: 2px solid var(--primary);
-  padding-bottom: var(--spacing-sm);
 }
 
 .details-content {
@@ -1966,17 +1981,6 @@ td input:checked + .slider:before {
 
 .chart-canvas {
   max-height: 300px !important;
-}
-
-.close-details-btn {
-  background: var(--primary);
-  color: white;
-  width: 100%;
-  margin-top: var(--spacing-lg);
-}
-
-.close-details-btn:hover {
-  background: var(--primary-hover);
 }
 
 /* =============================================================================
@@ -2314,7 +2318,7 @@ input:disabled + .slider {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .details-modal-content {
+  #detailsModal .modal-content {
     max-width: 900px;
   }
 
@@ -2329,7 +2333,7 @@ input:disabled + .slider {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .details-modal-content {
+  #detailsModal .modal-content {
     max-width: 700px;
   }
 }
@@ -2405,7 +2409,7 @@ input:disabled + .slider {
     gap: var(--spacing);
   }
 
-  .details-modal-content {
+  #detailsModal .modal-content {
     max-width: 95%;
     padding: var(--spacing);
   }
@@ -2432,8 +2436,7 @@ input:disabled + .slider {
     font-size: 1.5rem;
   }
 
-  .modal-content,
-  .details-modal-content {
+  .modal-content {
     margin: var(--spacing-sm);
     padding: var(--spacing);
   }

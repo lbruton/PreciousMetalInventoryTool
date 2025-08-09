@@ -1032,41 +1032,45 @@
        Data preparation and chart rendering handled by charts.js
        ============================================================================= -->
     <div class="modal" id="detailsModal" style="display: none">
-      <div class="details-modal-content">
-        <h2 class="details-modal-title" id="detailsModalTitle"></h2>
-        <!-- Pie Charts Section -->
-        <div class="charts-section">
-          <div class="chart-container">
-            <div class="chart-title">Breakdown by Type</div>
-            <div class="chart-canvas-container">
-              <canvas class="chart-canvas" id="typeChart"></canvas>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="detailsModalTitle"></h2>
+          <button aria-label="Close modal" class="modal-close" id="detailsCloseBtn">×</button>
+        </div>
+        <div class="modal-body">
+          <!-- Pie Charts Section -->
+          <div class="charts-section">
+            <div class="chart-container">
+              <div class="chart-title">Breakdown by Type</div>
+              <div class="chart-canvas-container">
+                <canvas class="chart-canvas" id="typeChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div class="chart-title">Breakdown by Purchase Location</div>
+              <div class="chart-canvas-container">
+                <canvas class="chart-canvas" id="locationChart"></canvas>
+              </div>
             </div>
           </div>
-          <div class="chart-container">
-            <div class="chart-title">Breakdown by Purchase Location</div>
-            <div class="chart-canvas-container">
-              <canvas class="chart-canvas" id="locationChart"></canvas>
+          <!-- Data Tables Section -->
+          <div class="details-content">
+            <!-- Type breakdown column -->
+            <div class="details-section">
+              <div class="details-section-title">Type Details</div>
+              <div class="details-breakdown" id="typeBreakdown">
+                <!-- Content will be populated by JavaScript -->
+              </div>
+            </div>
+            <!-- Location breakdown column -->
+            <div class="details-section">
+              <div class="details-section-title">Location Details</div>
+              <div class="details-breakdown" id="locationBreakdown">
+                <!-- Content will be populated by JavaScript -->
+              </div>
             </div>
           </div>
         </div>
-        <!-- Data Tables Section -->
-        <div class="details-content">
-          <!-- Type breakdown column -->
-          <div class="details-section">
-            <div class="details-section-title">Type Details</div>
-            <div class="details-breakdown" id="typeBreakdown">
-              <!-- Content will be populated by JavaScript -->
-            </div>
-          </div>
-          <!-- Location breakdown column -->
-          <div class="details-section">
-            <div class="details-section-title">Location Details</div>
-            <div class="details-breakdown" id="locationBreakdown">
-              <!-- Content will be populated by JavaScript -->
-            </div>
-          </div>
-        </div>
-        <button class="close-details-btn" id="closeDetailsBtn">Close</button>
       </div>
     </div>
     <footer class="app-footer">

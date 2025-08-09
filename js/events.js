@@ -254,9 +254,9 @@ const setupEventListeners = () => {
       });
     }
 
-    if (elements.closeDetailsBtn) {
+    if (elements.detailsCloseBtn) {
       safeAttachListener(
-        elements.closeDetailsBtn,
+        elements.detailsCloseBtn,
         "click",
         () => {
           if (typeof closeDetailsModal === "function") {
