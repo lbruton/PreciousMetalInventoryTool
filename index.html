@@ -381,15 +381,18 @@
        Pagination controls limit display to selected items per page
        ============================================================================= -->
       <section class="table-section">
-        <div class="items-per-page">
-          <span>Items:</span>
-          <select class="pagination-select" id="itemsPerPage">
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option selected value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
+        <div class="table-controls">
+          <a href="#" id="changeLogLink" class="change-log-link">Change Log</a>
+          <div class="items-per-page">
+            <span>Items:</span>
+            <select class="pagination-select" id="itemsPerPage">
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option selected value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </div>
         </div>
         <table id="inventoryTable">
           <thead>
@@ -397,8 +400,8 @@
               <th class="shrink">Date</th>
               <th class="shrink">Type</th>
               <th class="shrink">Metal</th>
-              <th class="shrink">Qty</th>
               <th class="expand">Name</th>
+              <th class="shrink">Qty</th>
               <th class="shrink">Weight (oz)</th>
               <th class="shrink">Purchase Price ($)</th>
               <th class="shrink">Spot at Purchase ($)</th>
@@ -981,6 +984,35 @@
     </div>
 
     <!-- =============================================================================
+       CHANGE LOG MODAL
+
+       Displays the 10 most recent inventory cell changes tracked by the system.
+       Data is populated dynamically from localStorage and rendered as a table.
+       ============================================================================= -->
+    <div class="modal" id="changeLogModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Change Log</h2>
+          <button aria-label="Close modal" class="modal-close" id="changeLogCloseBtn">×</button>
+        </div>
+        <div class="modal-body">
+          <table id="changeLogTable">
+            <thead>
+              <tr>
+                <th class="shrink">Date</th>
+                <th class="shrink">Item</th>
+                <th class="shrink">Field</th>
+                <th class="shrink">Old Value</th>
+                <th class="shrink">New Value</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- =============================================================================
        DETAILS MODAL WITH PIE CHARTS
        
        Advanced analytics modal opened from "View Details" buttons on totals cards.
@@ -1000,41 +1032,45 @@
        Data preparation and chart rendering handled by charts.js
        ============================================================================= -->
     <div class="modal" id="detailsModal" style="display: none">
-      <div class="details-modal-content">
-        <h2 class="details-modal-title" id="detailsModalTitle"></h2>
-        <!-- Pie Charts Section -->
-        <div class="charts-section">
-          <div class="chart-container">
-            <div class="chart-title">Breakdown by Type</div>
-            <div class="chart-canvas-container">
-              <canvas class="chart-canvas" id="typeChart"></canvas>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="detailsModalTitle"></h2>
+          <button aria-label="Close modal" class="modal-close" id="detailsCloseBtn">×</button>
+        </div>
+        <div class="modal-body">
+          <!-- Pie Charts Section -->
+          <div class="charts-section">
+            <div class="chart-container">
+              <div class="chart-title">Breakdown by Type</div>
+              <div class="chart-canvas-container">
+                <canvas class="chart-canvas" id="typeChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div class="chart-title">Breakdown by Purchase Location</div>
+              <div class="chart-canvas-container">
+                <canvas class="chart-canvas" id="locationChart"></canvas>
+              </div>
             </div>
           </div>
-          <div class="chart-container">
-            <div class="chart-title">Breakdown by Purchase Location</div>
-            <div class="chart-canvas-container">
-              <canvas class="chart-canvas" id="locationChart"></canvas>
+          <!-- Data Tables Section -->
+          <div class="details-content">
+            <!-- Type breakdown column -->
+            <div class="details-section">
+              <div class="details-section-title">Type Details</div>
+              <div class="details-breakdown" id="typeBreakdown">
+                <!-- Content will be populated by JavaScript -->
+              </div>
+            </div>
+            <!-- Location breakdown column -->
+            <div class="details-section">
+              <div class="details-section-title">Location Details</div>
+              <div class="details-breakdown" id="locationBreakdown">
+                <!-- Content will be populated by JavaScript -->
+              </div>
             </div>
           </div>
         </div>
-        <!-- Data Tables Section -->
-        <div class="details-content">
-          <!-- Type breakdown column -->
-          <div class="details-section">
-            <div class="details-section-title">Type Details</div>
-            <div class="details-breakdown" id="typeBreakdown">
-              <!-- Content will be populated by JavaScript -->
-            </div>
-          </div>
-          <!-- Location breakdown column -->
-          <div class="details-section">
-            <div class="details-section-title">Location Details</div>
-            <div class="details-breakdown" id="locationBreakdown">
-              <!-- Content will be populated by JavaScript -->
-            </div>
-          </div>
-        </div>
-        <button class="close-details-btn" id="closeDetailsBtn">Close</button>
       </div>
     </div>
     <footer class="app-footer">
@@ -1792,6 +1828,7 @@
     <script defer src="./js/constants.js"></script>
     <script defer src="./js/state.js"></script>
     <script defer src="./js/utils.js"></script>
+    <script defer src="./js/changeLog.js"></script>
     <script defer src="./js/charts.js"></script>
     <script defer src="./js/theme.js"></script>
     <script defer src="./js/search.js"></script>
