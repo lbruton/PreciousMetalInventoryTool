@@ -49,24 +49,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Phase 1: Initialize Core DOM Elements
     debugLog("Phase 1: Initializing core DOM elements...");
 
-    // Core form elements
-    elements.inventoryForm = safeGetElement("inventoryForm", true);
-
+    // Core table element
     const inventoryTableEl = safeGetElement("inventoryTable", true);
     elements.inventoryTable = inventoryTableEl
       ? inventoryTableEl.querySelector("tbody")
       : null;
-
-    elements.itemMetal = safeGetElement("itemMetal", true);
-    elements.itemName = safeGetElement("itemName", true);
-    elements.itemQty = safeGetElement("itemQty", true);
-    elements.itemType = safeGetElement("itemType", true);
-    elements.itemWeight = safeGetElement("itemWeight", true);
-    elements.itemPrice = safeGetElement("itemPrice", true);
-    elements.purchaseLocation = safeGetElement("purchaseLocation", true);
-    elements.storageLocation = safeGetElement("storageLocation");
-    elements.itemNotes = safeGetElement("itemNotes");
-    elements.itemDate = safeGetElement("itemDate", true);
 
     // Header buttons - CRITICAL
     debugLog("Phase 2: Initializing header buttons...");
@@ -120,6 +107,23 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.editDate = safeGetElement("editDate");
     elements.editSpotPrice = safeGetElement("editSpotPrice");
 
+    // Add item modal elements
+    elements.addModal = safeGetElement("addModal");
+    elements.addForm = safeGetElement("addForm");
+    elements.newItemBtn = safeGetElement("newItemBtn");
+    elements.addMetal = safeGetElement("addMetal");
+    elements.addName = safeGetElement("addName");
+    elements.addQty = safeGetElement("addQty");
+    elements.addType = safeGetElement("addType");
+    elements.addWeight = safeGetElement("addWeight");
+    elements.addPrice = safeGetElement("addPrice");
+    elements.addPurchaseLocation = safeGetElement("addPurchaseLocation");
+    elements.addStorageLocation = safeGetElement("addStorageLocation");
+    elements.addNotes = safeGetElement("addNotes");
+    elements.addDate = safeGetElement("addDate");
+    elements.addSpotPrice = safeGetElement("addSpotPrice");
+    elements.cancelAddBtn = safeGetElement("cancelAdd");
+
     // Show acknowledgment modal immediately and set up modal events
     if (typeof setupAckModalEvents === "function") {
       setupAckModalEvents();
@@ -145,7 +149,6 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.firstPage = safeGetElement("firstPage");
     elements.lastPage = safeGetElement("lastPage");
     elements.pageNumbers = safeGetElement("pageNumbers");
-    elements.paginationInfo = safeGetElement("paginationInfo");
 
     // Search elements
     debugLog("Phase 6: Initializing search elements...");
@@ -309,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
     debugLog("✓ Inventory items:", inventory.length);
     debugLog("✓ Critical elements check:");
     debugLog("  - Settings button:", !!elements.settingsBtn);
-    debugLog("  - Inventory form:", !!elements.inventoryForm);
+    debugLog("  - Add form:", !!elements.addForm);
     debugLog("  - Inventory table:", !!elements.inventoryTable);
   } catch (error) {
     console.error("=== CRITICAL INITIALIZATION ERROR ===");

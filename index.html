@@ -597,6 +597,8 @@
          Form submission is handled by events.js with validation and automatic
          premium calculation based on current spot prices
          ============================================================================= -->
+      <!-- BEGIN deprecated add item block - commented out for future removal -->
+      <!--
       <section class="form-section">
         <form id="inventoryForm">
           <!-- First row of form fields -->
@@ -687,6 +689,8 @@
           </div>
         </form>
       </section>
+      -->
+      <!-- END deprecated add item block -->
       <!-- =============================================================================
          SEARCH FUNCTIONALITY
          
@@ -707,6 +711,7 @@
             type="text"
           />
           <button class="btn" id="clearSearchBtn">Clear</button>
+          <button class="btn success" id="newItemBtn">New Item</button>
         </div>
         <div class="search-results-info" id="searchResultsInfo"></div>
       </section>
@@ -749,7 +754,7 @@
         <section class="pagination-section">
           <div class="pagination-container">
             <div class="pagination-controls">
-              <div class="pagination-buttons">
+              <div class="pagination-left">
                 <button
                   class="pagination-btn"
                   id="firstPage"
@@ -764,7 +769,9 @@
                 >
                   ‹
                 </button>
-                <div class="page-numbers" id="pageNumbers"></div>
+              </div>
+              <div class="page-numbers" id="pageNumbers"></div>
+              <div class="pagination-right">
                 <button class="pagination-btn" id="nextPage" title="Next Page">
                   ›
                 </button>
@@ -772,16 +779,15 @@
                   »
                 </button>
               </div>
-              <div class="pagination-info-controls">
-                <span class="pagination-info" id="paginationInfo">1 of 1</span>
-                <select class="pagination-select" id="itemsPerPage">
-                  <option value="10">10</option>
-                  <option value="15">15</option>
-                  <option selected="" value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>
-              </div>
+            </div>
+            <div class="pagination-info-controls">
+              <select class="pagination-select" id="itemsPerPage">
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option selected="" value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
             </div>
           </div>
         </section>
@@ -808,6 +814,136 @@
          ============================================================================= -->
     </div>
     <!-- =============================================================================
+       ADD MODAL
+
+       Modal for creating new inventory items.
+       ============================================================================= -->
+    <div class="modal" id="addModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Inventory Item</h2>
+          <button
+            aria-label="Close modal"
+            class="modal-close"
+            id="addCloseBtn"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addForm">
+            <div class="grid grid-2">
+              <div>
+                <label for="addMetal">Metal</label>
+                <select id="addMetal">
+                  <option value="Silver">Silver</option>
+                  <option value="Gold">Gold</option>
+                  <option value="Platinum">Platinum</option>
+                  <option value="Palladium">Palladium</option>
+                  <option value="Alloy/Other">Alloy/Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="addType">Type</label>
+                <select id="addType">
+                  <option value="Round">Round</option>
+                  <option value="Bar">Bar</option>
+                  <option value="Coin">Coin</option>
+                  <option value="Note">Note</option>
+                  <option value="Aurum">Aurum</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="addQty">Quantity</label>
+                <input id="addQty" type="number" step="1" min="1" required />
+              </div>
+              <div>
+                <label for="addWeight">Weight (oz)</label>
+                <input
+                  id="addWeight"
+                  type="number"
+                  step="0.0001"
+                  min="0.0001"
+                  required
+                />
+              </div>
+            </div>
+            <div class="grid grid-2">
+              <div>
+                <label for="addName">Name</label>
+                <input id="addName" type="text" required />
+              </div>
+              <div>
+                <label for="addPurchaseLocation">Purchase Location</label>
+                <input id="addPurchaseLocation" type="text" required />
+              </div>
+              <div>
+                <label for="addStorageLocation">Storage Location</label>
+                <input
+                  id="addStorageLocation"
+                  type="text"
+                  placeholder="Vault A, Safe B, etc..."
+                />
+              </div>
+              <div>
+                <label for="addNotes">Notes</label>
+                <input
+                  id="addNotes"
+                  type="text"
+                  placeholder="Additional notes or comments..."
+                />
+              </div>
+            </div>
+            <div class="grid grid-2">
+              <div>
+                <label for="addPrice">Purchase Price ($)</label>
+                <div class="currency-input">
+                  <input
+                    id="addPrice"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label for="addDate">Purchase Date</label>
+                <input id="addDate" type="date" required />
+              </div>
+            </div>
+            <div class="grid grid-2">
+              <div>
+                <label for="addSpotPrice">Spot Price ($/oz)</label>
+                <div class="currency-input">
+                  <input id="addSpotPrice" type="number" step="0.01" min="0" />
+                </div>
+              </div>
+              <div>
+                <label for="addCollectable">Collectable Item</label>
+                <div class="collectable-wrapper">
+                  <label class="switch">
+                    <input id="addCollectable" type="checkbox" />
+                    <span class="slider"></span>
+                  </label>
+                  <span class="collectable-explanation"
+                    >Collectable items may have additional numismatic value beyond
+                    their metal content</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer" style="text-align: right">
+              <button class="btn" id="cancelAdd" type="button">Cancel</button>
+              <button class="btn premium" type="submit">Add Item</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- =============================================================================
        EDIT MODAL
 
        Comprehensive item editing interface that appears when:
@@ -824,9 +960,17 @@
        ============================================================================= -->
     <div class="modal" id="editModal" style="display: none">
       <div class="modal-content">
-        <h2 style="margin-bottom: 1rem; color: var(--primary)">
-          Edit Inventory Item
-        </h2>
+        <div class="modal-header">
+          <h2>Edit Inventory Item</h2>
+          <button
+            aria-label="Close modal"
+            class="modal-close"
+            id="editCloseBtn"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
         <form id="editForm">
           <!-- First row of edit form fields -->
           <div class="grid grid-2">
@@ -837,6 +981,7 @@
                 <option value="Gold">Gold</option>
                 <option value="Platinum">Platinum</option>
                 <option value="Palladium">Palladium</option>
+                <option value="Alloy/Other">Alloy/Other</option>
               </select>
             </div>
             <div>
@@ -846,6 +991,7 @@
                 <option value="Bar">Bar</option>
                 <option value="Coin">Coin</option>
                 <option value="Note">Note</option>
+                <option value="Aurum">Aurum</option>
                 <option value="Other">Other</option>
               </select>
             </div>
@@ -910,7 +1056,7 @@
               <input id="editDate" required="" type="date" />
             </div>
           </div>
-          <!-- Special field for editing historical spot prices -->
+          <!-- Spot price and collectable toggle -->
           <div class="grid grid-2">
             <div>
               <label for="editSpotPrice">Spot Price ($/oz)</label>
@@ -918,23 +1064,23 @@
                 <input
                   id="editSpotPrice"
                   min="0"
-                  required=""
                   step="0.01"
                   type="number"
                 />
               </div>
             </div>
-          </div>
-          <!-- Collectable toggle -->
-          <div style="margin-top: 0.5rem">
-            <label for="editCollectable">Collectable Item</label>
-            <label class="switch">
-              <input id="editCollectable" type="checkbox" />
-              <span class="slider"></span>
-            </label>
-            <div class="collectable-explanation">
-              Collectable items may have additional numismatic value beyond
-              their metal content
+            <div>
+              <label for="editCollectable">Collectable Item</label>
+              <div class="collectable-wrapper">
+                <label class="switch">
+                  <input id="editCollectable" type="checkbox" />
+                  <span class="slider"></span>
+                </label>
+                <span class="collectable-explanation"
+                  >Collectable items may have additional numismatic value beyond
+                  their metal content</span
+                >
+              </div>
             </div>
           </div>
           <!-- Form action buttons -->
@@ -943,6 +1089,7 @@
             <button class="btn premium" type="submit">Save Changes</button>
           </div>
         </form>
+        </div>
       </div>
     </div>
 
@@ -955,11 +1102,22 @@
        ============================================================================= -->
     <div class="modal" id="notesModal" style="display: none">
       <div class="modal-content">
-        <h2 style="margin-bottom: 1rem; color: var(--primary)">Item Notes</h2>
-        <textarea id="notesTextarea" rows="6" style="width: 100%"></textarea>
-        <div style="margin-top: 1rem; text-align: right">
-          <button class="btn" id="cancelNotes" type="button">Cancel</button>
-          <button class="btn premium" id="saveNotes" type="button">Save</button>
+        <div class="modal-header">
+          <h2>Item Notes</h2>
+          <button
+            aria-label="Close modal"
+            class="modal-close"
+            id="notesCloseBtn"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <textarea id="notesTextarea" rows="6" style="width: 100%"></textarea>
+          <div class="modal-footer" style="text-align: right">
+            <button class="btn" id="cancelNotes" type="button">Cancel</button>
+            <button class="btn premium" id="saveNotes" type="button">Save</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1701,10 +1859,18 @@
 
     <div class="modal" id="apiInfoModal" style="display: none">
       <div class="modal-content">
-        <h3 id="apiInfoTitle">Provider Information</h3>
-        <div id="apiInfoBody" class="api-info-body"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn" id="apiInfoCloseBtn">Close</button>
+        <div class="modal-header">
+          <h3 id="apiInfoTitle">Provider Information</h3>
+          <button
+            aria-label="Close modal"
+            class="modal-close"
+            id="apiInfoCloseBtn"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="apiInfoBody" class="api-info-body"></div>
         </div>
       </div>
     </div>

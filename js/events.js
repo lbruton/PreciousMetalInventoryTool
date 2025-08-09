@@ -301,27 +301,70 @@ const setupEventListeners = () => {
       console.error("Inventory table not found for sorting setup!");
     }
 
-    // MAIN FORM SUBMISSION
-    debugLog("Setting up main form...");
-    if (elements.inventoryForm) {
+    // ADD ITEM MODAL SETUP
+    debugLog("Setting up add item modal...");
+    if (elements.newItemBtn && elements.addModal && elements.addForm) {
       safeAttachListener(
-        elements.inventoryForm,
+        elements.newItemBtn,
+        "click",
+        () => {
+          elements.addForm.reset();
+          elements.addDate.value = todayStr();
+          elements.addSpotPrice.value = "";
+          const chk = document.getElementById("addCollectable");
+          if (chk) chk.checked = false;
+          elements.addModal.style.display = "flex";
+        },
+        "New item button",
+      );
+
+      const addCloseBtn = document.getElementById("addCloseBtn");
+      if (addCloseBtn) {
+        safeAttachListener(
+          addCloseBtn,
+          "click",
+          () => (elements.addModal.style.display = "none"),
+          "Add modal close button",
+        );
+      }
+
+      if (elements.cancelAddBtn) {
+        safeAttachListener(
+          elements.cancelAddBtn,
+          "click",
+          () => (elements.addModal.style.display = "none"),
+          "Cancel add button",
+        );
+      }
+
+      safeAttachListener(
+        elements.addForm,
         "submit",
         function (e) {
           e.preventDefault();
 
-          const metal = elements.itemMetal.value;
-          const name = elements.itemName.value.trim();
-          const qty = parseInt(elements.itemQty.value, 10);
-          const type = elements.itemType.value;
-          const weight = parseFloat(elements.itemWeight.value);
-          const price = parseFloat(elements.itemPrice.value);
+          const metal = elements.addMetal.value;
+          const name = elements.addName.value.trim();
+          const qty = parseInt(elements.addQty.value, 10);
+          const type = elements.addType.value;
+          const weight = parseFloat(elements.addWeight.value);
+          const price = parseFloat(elements.addPrice.value);
           const purchaseLocation =
-            elements.purchaseLocation.value.trim() || "Unknown";
+            elements.addPurchaseLocation.value.trim() || "Unknown";
           const storageLocation =
-            elements.storageLocation.value.trim() || "Unknown";
-          const notes = elements.itemNotes.value.trim() || "";
-          const date = elements.itemDate.value || todayStr();
+            elements.addStorageLocation.value.trim() || "Unknown";
+          const notes = elements.addNotes.value.trim() || "";
+          const date = elements.addDate.value || todayStr();
+          const isCollectable = document.getElementById("addCollectable").checked;
+          const spotPriceInput = elements.addSpotPrice.value.trim();
+
+          let spotPriceAtPurchase;
+          if (!isCollectable && spotPriceInput === "") {
+            const metalKey = metal.toLowerCase();
+            spotPriceAtPurchase = spotPrices[metalKey] || 0;
+          } else {
+            spotPriceAtPurchase = parseFloat(spotPriceInput) || 0;
+          }
 
           if (
             isNaN(qty) ||
@@ -335,17 +378,8 @@ const setupEventListeners = () => {
             return alert("Please enter valid values for all fields.");
           }
 
-          // Get current spot price
-          const metalKey = metal.toLowerCase();
-          const spotPriceAtPurchase = spotPrices[metalKey];
-
-          // Calculate premium per ounce (only for non-collectible items)
           let premiumPerOz = 0;
           let totalPremium = 0;
-
-          // For new items, they're not collectable by default
-          const isCollectable = false;
-
           if (!isCollectable) {
             const pricePerOz = price / weight;
             premiumPerOz = pricePerOz - spotPriceAtPurchase;
@@ -363,7 +397,7 @@ const setupEventListeners = () => {
             purchaseLocation,
             storageLocation,
             notes,
-            spotPriceAtPurchase,
+            spotPriceAtPurchase: isCollectable ? 0 : spotPriceAtPurchase,
             premiumPerOz,
             totalPremium,
             isCollectable,
@@ -371,13 +405,12 @@ const setupEventListeners = () => {
 
           saveInventory();
           renderTable();
-          this.reset();
-          elements.itemDate.value = todayStr();
+          elements.addModal.style.display = "none";
         },
-        "Main inventory form",
+        "Add item form",
       );
     } else {
-      console.error("Main inventory form not found!");
+      console.error("Add item modal not found!");
     }
 
     // EDIT FORM SUBMISSION
@@ -415,7 +448,7 @@ const setupEventListeners = () => {
           let spotPriceAtPurchase;
           if (!isCollectable && spotPriceInput === "") {
             const metalKey = metal.toLowerCase();
-            spotPriceAtPurchase = spotPrices[metalKey];
+            spotPriceAtPurchase = spotPrices[metalKey] || 0;
           } else {
             spotPriceAtPurchase = parseFloat(spotPriceInput);
           }
@@ -486,6 +519,19 @@ const setupEventListeners = () => {
       );
     }
 
+    const editCloseBtn = document.getElementById("editCloseBtn");
+    if (editCloseBtn) {
+      safeAttachListener(
+        editCloseBtn,
+        "click",
+        () => {
+          elements.editModal.style.display = "none";
+          editingIndex = null;
+        },
+        "Edit modal close button",
+      );
+    }
+
     // NOTES MODAL BUTTONS
     if (elements.saveNotesBtn) {
       safeAttachListener(
@@ -525,6 +571,21 @@ const setupEventListeners = () => {
           notesIndex = null;
         },
         "Cancel notes button",
+      );
+    }
+
+    const notesCloseBtn = document.getElementById("notesCloseBtn");
+    if (notesCloseBtn) {
+      safeAttachListener(
+        notesCloseBtn,
+        "click",
+        () => {
+          const modalElement =
+            elements.notesModal || document.getElementById("notesModal");
+          if (modalElement) modalElement.style.display = "none";
+          notesIndex = null;
+        },
+        "Notes modal close button",
       );
     }
 
@@ -928,7 +989,7 @@ const setupSearch = () => {
             elements.searchInput.value = "";
           }
           searchQuery = "";
-          columnFilter = { field: null, value: null };
+          columnFilters = [];
           currentPage = 1;
           renderTable();
         },

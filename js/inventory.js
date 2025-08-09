@@ -487,7 +487,8 @@ const METAL_COLORS = {
   Silver: 'var(--silver)',
   Gold: 'var(--gold)',
   Platinum: 'var(--platinum)',
-  Palladium: 'var(--palladium)'
+  Palladium: 'var(--palladium)',
+  'Alloy/Other': 'var(--primary)'
 };
 
 const typeColors = {};
