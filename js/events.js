@@ -1,6 +1,6 @@
 /**
  * EVENTS MODULE - FIXED VERSION
- * 
+ *
  * Handles all DOM event listeners with proper null checking and error handling.
  * Includes file protocol compatibility fixes and fallback event attachment methods.
  */
@@ -16,9 +16,11 @@
  * @param {string} description - Description for logging
  * @returns {boolean} Success status
  */
-const safeAttachListener = (element, event, handler, description = '') => {
+const safeAttachListener = (element, event, handler, description = "") => {
   if (!element) {
-    console.warn(`Cannot attach ${event} listener: element not found (${description})`);
+    console.warn(
+      `Cannot attach ${event} listener: element not found (${description})`,
+    );
     return false;
   }
 
@@ -28,14 +30,17 @@ const safeAttachListener = (element, event, handler, description = '') => {
     return true;
   } catch (error) {
     console.warn(`Standard addEventListener failed for ${description}:`, error);
-    
+
     try {
       // Method 2: Legacy event handler
-      element['on' + event] = handler;
+      element["on" + event] = handler;
       debugLog(`✓ Fallback event handler attached: ${description}`);
       return true;
     } catch (fallbackError) {
-      console.error(`All event attachment methods failed for ${description}:`, fallbackError);
+      console.error(
+        `All event attachment methods failed for ${description}:`,
+        fallbackError,
+      );
       return false;
     }
   }
@@ -45,15 +50,15 @@ const safeAttachListener = (element, event, handler, description = '') => {
  * Implements dynamic column resizing for the inventory table
  */
 const setupColumnResizing = () => {
-  const table = document.getElementById('inventoryTable');
+  const table = document.getElementById("inventoryTable");
   if (!table) {
-    console.warn('Inventory table not found for column resizing');
+    console.warn("Inventory table not found for column resizing");
     return;
   }
 
   // Clear any existing resize handles
-  const existingHandles = table.querySelectorAll('.resize-handle');
-  existingHandles.forEach(handle => handle.remove());
+  const existingHandles = table.querySelectorAll(".resize-handle");
+  existingHandles.forEach((handle) => handle.remove());
 
   let isResizing = false;
   let currentColumn = null;
@@ -61,61 +66,84 @@ const setupColumnResizing = () => {
   let startWidth = 0;
 
   // Add resize handles to table headers
-  const headers = table.querySelectorAll('th');
+  const headers = table.querySelectorAll("th");
   headers.forEach((header, index) => {
     // Skip the last column (delete button)
     if (index === headers.length - 1) return;
 
-    const resizeHandle = document.createElement('div');
-    resizeHandle.className = 'resize-handle';
+    const resizeHandle = document.createElement("div");
+    resizeHandle.className = "resize-handle";
 
-    header.style.position = 'relative';
+    header.style.position = "relative";
     header.appendChild(resizeHandle);
 
-    safeAttachListener(resizeHandle, 'mousedown', (e) => {
-      isResizing = true;
-      currentColumn = header;
-      startX = e.clientX;
-      startWidth = parseInt(document.defaultView.getComputedStyle(header).width, 10);
-      
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Prevent header click event from firing
-      header.style.pointerEvents = 'none';
-      setTimeout(() => {
-        header.style.pointerEvents = 'auto';
-      }, 100);
-    }, 'Column resize handle');
+    safeAttachListener(
+      resizeHandle,
+      "mousedown",
+      (e) => {
+        isResizing = true;
+        currentColumn = header;
+        startX = e.clientX;
+        startWidth = parseInt(
+          document.defaultView.getComputedStyle(header).width,
+          10,
+        );
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Prevent header click event from firing
+        header.style.pointerEvents = "none";
+        setTimeout(() => {
+          header.style.pointerEvents = "auto";
+        }, 100);
+      },
+      "Column resize handle",
+    );
   });
 
   // Handle mouse move for resizing
-  safeAttachListener(document, 'mousemove', (e) => {
-    if (!isResizing || !currentColumn) return;
+  safeAttachListener(
+    document,
+    "mousemove",
+    (e) => {
+      if (!isResizing || !currentColumn) return;
 
-    const width = startWidth + e.clientX - startX;
-    const minWidth = 40;
-    const maxWidth = 300;
-    
-    if (width >= minWidth && width <= maxWidth) {
-      currentColumn.style.width = width + 'px';
-    }
-  }, 'Document mousemove for resizing');
+      const width = startWidth + e.clientX - startX;
+      const minWidth = 40;
+      const maxWidth = 300;
+
+      if (width >= minWidth && width <= maxWidth) {
+        currentColumn.style.width = width + "px";
+      }
+    },
+    "Document mousemove for resizing",
+  );
 
   // Handle mouse up to stop resizing
-  safeAttachListener(document, 'mouseup', () => {
-    if (isResizing) {
-      isResizing = false;
-      currentColumn = null;
-    }
-  }, 'Document mouseup for resizing');
+  safeAttachListener(
+    document,
+    "mouseup",
+    () => {
+      if (isResizing) {
+        isResizing = false;
+        currentColumn = null;
+      }
+    },
+    "Document mouseup for resizing",
+  );
 
   // Prevent text selection during resize
-  safeAttachListener(document, 'selectstart', (e) => {
-    if (isResizing) {
-      e.preventDefault();
-    }
-  }, 'Document selectstart for resizing');
+  safeAttachListener(
+    document,
+    "selectstart",
+    (e) => {
+      if (isResizing) {
+        e.preventDefault();
+      }
+    },
+    "Document selectstart for resizing",
+  );
 };
 
 // MAIN EVENT LISTENERS SETUP
@@ -125,496 +153,660 @@ const setupColumnResizing = () => {
  * Sets up all primary event listeners for the application
  */
 const setupEventListeners = () => {
-
   console.log(`Setting up event listeners (v${APP_VERSION})...`);
 
   try {
     // CRITICAL HEADER BUTTONS
-    debugLog('Setting up header buttons...');
-    
-    // API Button
-    if (elements.apiBtn) {
-      safeAttachListener(elements.apiBtn, 'click', (e) => {
-        e.preventDefault();
-        debugLog('API button clicked');
-        if (typeof showApiModal === 'function') {
-          showApiModal();
-        } else {
-          alert('API Configuration Modal\n\nThis would open the API configuration interface where you can:\n\n• Configure API providers\n• Set API keys\n• Sync spot prices automatically\n• View API status and cache info');
-        }
-      }, 'API Button');
+    debugLog("Setting up header buttons...");
+
+    // Settings Button
+    if (elements.settingsBtn) {
+      safeAttachListener(
+        elements.settingsBtn,
+        "click",
+        (e) => {
+          e.preventDefault();
+          debugLog("Settings button clicked");
+          if (typeof showSettingsModal === "function") {
+            showSettingsModal();
+          } else {
+            alert("Settings interface");
+          }
+        },
+        "Settings Button",
+      );
     } else {
-      console.error('API button element not found!');
+      console.error("Settings button element not found!");
     }
 
     // About Button
     if (elements.aboutBtn) {
-      safeAttachListener(elements.aboutBtn, 'click', (e) => {
-        e.preventDefault();
-        if (typeof showAboutModal === 'function') {
-          showAboutModal();
-        }
-      }, 'About Button');
+      safeAttachListener(
+        elements.aboutBtn,
+        "click",
+        (e) => {
+          e.preventDefault();
+          if (typeof showAboutModal === "function") {
+            showAboutModal();
+          }
+        },
+        "About Button",
+      );
     }
 
-    // Theme Toggle Button
-    if (elements.themeToggle) {
-      safeAttachListener(elements.themeToggle, 'click', (e) => {
-        e.preventDefault();
-        debugLog('Theme toggle clicked');
-        
-        if (typeof toggleTheme === 'function') {
-          toggleTheme();
-        } else if (typeof setTheme === 'function') {
-          // Fallback to manual toggle
-          const currentTheme = localStorage.getItem(THEME_KEY) || 'light';
-          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-          setTheme(newTheme);
-        } else {
-          // Ultimate fallback
-          const currentTheme = document.documentElement.getAttribute('data-theme');
-          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-          if (newTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem(THEME_KEY, 'dark');
-            elements.themeToggle.textContent = 'Light Mode';
-          } else {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.setItem(THEME_KEY, 'light');
-            elements.themeToggle.textContent = 'Dark Mode';
+    // Theme preference radios
+    const themeRadios = document.querySelectorAll(
+      'input[name="themePreference"]',
+    );
+    themeRadios.forEach((radio) => {
+      safeAttachListener(
+        radio,
+        "change",
+        () => {
+          const value = radio.value;
+          if (typeof setTheme === "function") {
+            setTheme(value);
           }
-        }
-      }, 'Theme Toggle');
-    } else {
-      console.error('Theme toggle button element not found!');
-    }
+        },
+        "Theme preference change",
+      );
+    });
 
     // Details modal buttons
     if (elements.detailsButtons && elements.detailsButtons.length) {
-      elements.detailsButtons.forEach(btn => {
-        safeAttachListener(btn, 'click', () => {
-          const metal = btn.dataset.metal;
-          if (typeof showDetailsModal === 'function') {
-            showDetailsModal(metal);
-          }
-        }, `Details button (${btn.dataset.metal})`);
+      elements.detailsButtons.forEach((btn) => {
+        safeAttachListener(
+          btn,
+          "click",
+          () => {
+            const metal = btn.dataset.metal;
+            if (typeof showDetailsModal === "function") {
+              showDetailsModal(metal);
+            }
+          },
+          `Details button (${btn.dataset.metal})`,
+        );
       });
     }
 
     if (elements.closeDetailsBtn) {
-      safeAttachListener(elements.closeDetailsBtn, 'click', () => {
-        if (typeof closeDetailsModal === 'function') {
-          closeDetailsModal();
-        }
-      }, 'Close details modal');
+      safeAttachListener(
+        elements.closeDetailsBtn,
+        "click",
+        () => {
+          if (typeof closeDetailsModal === "function") {
+            closeDetailsModal();
+          }
+        },
+        "Close details modal",
+      );
     }
 
     // TABLE HEADER SORTING
-    debugLog('Setting up table sorting...');
-    const inventoryTable = document.getElementById('inventoryTable');
+    debugLog("Setting up table sorting...");
+    const inventoryTable = document.getElementById("inventoryTable");
     if (inventoryTable) {
-      const headers = inventoryTable.querySelectorAll('th');
+      const headers = inventoryTable.querySelectorAll("th");
       headers.forEach((header, index) => {
         // Skip Notes/Delete columns (last two)
         if (index >= headers.length - 2) {
           return;
         }
 
-        header.style.cursor = 'pointer';
+        header.style.cursor = "pointer";
 
-        safeAttachListener(header, 'click', () => {
-          // Toggle sort direction if same column, otherwise set to new column with asc
-          if (sortColumn === index) {
-            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-          } else {
-            sortColumn = index;
-            sortDirection = 'asc';
-          }
+        safeAttachListener(
+          header,
+          "click",
+          () => {
+            // Toggle sort direction if same column, otherwise set to new column with asc
+            if (sortColumn === index) {
+              sortDirection = sortDirection === "asc" ? "desc" : "asc";
+            } else {
+              sortColumn = index;
+              sortDirection = "asc";
+            }
 
-          renderTable();
-        }, `Table header ${index}`);
+            renderTable();
+          },
+          `Table header ${index}`,
+        );
       });
     } else {
-      console.error('Inventory table not found for sorting setup!');
+      console.error("Inventory table not found for sorting setup!");
     }
 
     // MAIN FORM SUBMISSION
-    debugLog('Setting up main form...');
+    debugLog("Setting up main form...");
     if (elements.inventoryForm) {
-      safeAttachListener(elements.inventoryForm, 'submit', function(e) {
-        e.preventDefault();
+      safeAttachListener(
+        elements.inventoryForm,
+        "submit",
+        function (e) {
+          e.preventDefault();
 
-        const metal = elements.itemMetal.value;
-        const name = elements.itemName.value.trim();
-        const qty = parseInt(elements.itemQty.value, 10);
-        const type = elements.itemType.value;
-        const weight = parseFloat(elements.itemWeight.value);
-        const price = parseFloat(elements.itemPrice.value);
-        const purchaseLocation = elements.purchaseLocation.value.trim() || "Unknown";
-        const storageLocation = elements.storageLocation.value.trim() || "Unknown";
-        const notes = elements.itemNotes.value.trim() || "";
-        const date = elements.itemDate.value || todayStr();
+          const metal = elements.itemMetal.value;
+          const name = elements.itemName.value.trim();
+          const qty = parseInt(elements.itemQty.value, 10);
+          const type = elements.itemType.value;
+          const weight = parseFloat(elements.itemWeight.value);
+          const price = parseFloat(elements.itemPrice.value);
+          const purchaseLocation =
+            elements.purchaseLocation.value.trim() || "Unknown";
+          const storageLocation =
+            elements.storageLocation.value.trim() || "Unknown";
+          const notes = elements.itemNotes.value.trim() || "";
+          const date = elements.itemDate.value || todayStr();
 
-        if (isNaN(qty) || qty < 1 || !Number.isInteger(qty) ||
-            isNaN(weight) || weight <= 0 ||
-            isNaN(price) || price < 0) {
-          return alert("Please enter valid values for all fields.");
-        }
+          if (
+            isNaN(qty) ||
+            qty < 1 ||
+            !Number.isInteger(qty) ||
+            isNaN(weight) ||
+            weight <= 0 ||
+            isNaN(price) ||
+            price < 0
+          ) {
+            return alert("Please enter valid values for all fields.");
+          }
 
-        // Get current spot price
-        const metalKey = metal.toLowerCase();
-        const spotPriceAtPurchase = spotPrices[metalKey];
+          // Get current spot price
+          const metalKey = metal.toLowerCase();
+          const spotPriceAtPurchase = spotPrices[metalKey];
 
-        // Calculate premium per ounce (only for non-collectible items)
-        let premiumPerOz = 0;
-        let totalPremium = 0;
+          // Calculate premium per ounce (only for non-collectible items)
+          let premiumPerOz = 0;
+          let totalPremium = 0;
 
-        // For new items, they're not collectable by default
-        const isCollectable = false;
+          // For new items, they're not collectable by default
+          const isCollectable = false;
 
-        if (!isCollectable) {
-          const pricePerOz = price / weight;
-          premiumPerOz = pricePerOz - spotPriceAtPurchase;
-          totalPremium = premiumPerOz * qty * weight;
-        }
+          if (!isCollectable) {
+            const pricePerOz = price / weight;
+            premiumPerOz = pricePerOz - spotPriceAtPurchase;
+            totalPremium = premiumPerOz * qty * weight;
+          }
 
-        inventory.push({ 
-          metal, 
-          name, 
-          qty, 
-          type, 
-          weight, 
-          price, 
-          date,
-          purchaseLocation,
-          storageLocation,
-          notes,
-          spotPriceAtPurchase,
-          premiumPerOz,
-          totalPremium,
-          isCollectable
-        });
+          inventory.push({
+            metal,
+            name,
+            qty,
+            type,
+            weight,
+            price,
+            date,
+            purchaseLocation,
+            storageLocation,
+            notes,
+            spotPriceAtPurchase,
+            premiumPerOz,
+            totalPremium,
+            isCollectable,
+          });
 
-        saveInventory();
-        renderTable();
-        this.reset();
-        elements.itemDate.value = todayStr();
-      }, 'Main inventory form');
+          saveInventory();
+          renderTable();
+          this.reset();
+          elements.itemDate.value = todayStr();
+        },
+        "Main inventory form",
+      );
     } else {
-      console.error('Main inventory form not found!');
+      console.error("Main inventory form not found!");
     }
 
     // EDIT FORM SUBMISSION
-    debugLog('Setting up edit form...');
+    debugLog("Setting up edit form...");
     if (elements.editForm) {
-      safeAttachListener(elements.editForm, 'submit', function(e) {
-        e.preventDefault();
+      safeAttachListener(
+        elements.editForm,
+        "submit",
+        function (e) {
+          e.preventDefault();
 
-        if (editingIndex === null) return;
+          if (editingIndex === null) return;
 
-        const metal = elements.editMetal.value;
-        const name = elements.editName.value.trim();
-        const qty = parseInt(elements.editQty.value, 10);
-        const type = elements.editType.value;
-        const weight = parseFloat(elements.editWeight.value);
-        const price = parseFloat(elements.editPrice.value);
-        const purchaseLocation = elements.editPurchaseLocation.value.trim() || "Unknown";
-        const storageLocation = elements.editStorageLocation.value.trim() || "Unknown";
-        const notes = elements.editNotes.value.trim() || "";
-        const date = elements.editDate.value;
+          const metal = elements.editMetal.value;
+          const name = elements.editName.value.trim();
+          const qty = parseInt(elements.editQty.value, 10);
+          const type = elements.editType.value;
+          const weight = parseFloat(elements.editWeight.value);
+          const price = parseFloat(elements.editPrice.value);
+          const purchaseLocation =
+            elements.editPurchaseLocation.value.trim() || "Unknown";
+          const storageLocation =
+            elements.editStorageLocation.value.trim() || "Unknown";
+          const notes = elements.editNotes.value.trim() || "";
+          const date = elements.editDate.value;
 
-        // Use the checkbox state the user just set
-        const isCollectable = document.getElementById("editCollectable").checked;
+          // Use the checkbox state the user just set
+          const isCollectable =
+            document.getElementById("editCollectable").checked;
 
-        // Get spot price input value
-        const spotPriceInput = elements.editSpotPrice.value.trim();
+          // Get spot price input value
+          const spotPriceInput = elements.editSpotPrice.value.trim();
 
-        // If spot price is empty and item is not collectable, use current spot price
-        let spotPriceAtPurchase;
-        if (!isCollectable && spotPriceInput === '') {
-          const metalKey = metal.toLowerCase();
-          spotPriceAtPurchase = spotPrices[metalKey];
-        } else {
-          spotPriceAtPurchase = parseFloat(spotPriceInput);
-        }
+          // If spot price is empty and item is not collectable, use current spot price
+          let spotPriceAtPurchase;
+          if (!isCollectable && spotPriceInput === "") {
+            const metalKey = metal.toLowerCase();
+            spotPriceAtPurchase = spotPrices[metalKey];
+          } else {
+            spotPriceAtPurchase = parseFloat(spotPriceInput);
+          }
 
-        if (isNaN(qty) || qty < 1 || !Number.isInteger(qty) ||
-            isNaN(weight) || weight <= 0 ||
-            isNaN(price) || price < 0 ||
-            (!isCollectable && (isNaN(spotPriceAtPurchase) || spotPriceAtPurchase <= 0))) {
-          return alert("Please enter valid values for all fields.");
-        }
+          if (
+            isNaN(qty) ||
+            qty < 1 ||
+            !Number.isInteger(qty) ||
+            isNaN(weight) ||
+            weight <= 0 ||
+            isNaN(price) ||
+            price < 0 ||
+            (!isCollectable &&
+              (isNaN(spotPriceAtPurchase) || spotPriceAtPurchase <= 0))
+          ) {
+            return alert("Please enter valid values for all fields.");
+          }
 
-        // Calculate premium per ounce (only for non-collectible items)
-        let premiumPerOz = 0;
-        let totalPremium = 0;
+          // Calculate premium per ounce (only for non-collectible items)
+          let premiumPerOz = 0;
+          let totalPremium = 0;
 
-        if (!isCollectable) {
-          const pricePerOz = price / weight;
-          premiumPerOz = pricePerOz - spotPriceAtPurchase;
-          totalPremium = premiumPerOz * qty * weight;
-        }
+          if (!isCollectable) {
+            const pricePerOz = price / weight;
+            premiumPerOz = pricePerOz - spotPriceAtPurchase;
+            totalPremium = premiumPerOz * qty * weight;
+          }
 
-        // Update the item
-        inventory[editingIndex] = {
-          metal,
-          name,
-          qty,
-          type,
-          weight,
-          price,
-          date,
-          purchaseLocation,
-          storageLocation,
-          notes,
-          spotPriceAtPurchase: isCollectable ? 0 : spotPriceAtPurchase,
-          premiumPerOz,
-          totalPremium,
-          isCollectable
-        };
+          // Update the item
+          inventory[editingIndex] = {
+            metal,
+            name,
+            qty,
+            type,
+            weight,
+            price,
+            date,
+            purchaseLocation,
+            storageLocation,
+            notes,
+            spotPriceAtPurchase: isCollectable ? 0 : spotPriceAtPurchase,
+            premiumPerOz,
+            totalPremium,
+            isCollectable,
+          };
 
-        saveInventory();
-        renderTable();
+          saveInventory();
+          renderTable();
 
-        // Close modal
-        elements.editModal.style.display = 'none';
-        editingIndex = null;
-      }, 'Edit form');
+          // Close modal
+          elements.editModal.style.display = "none";
+          editingIndex = null;
+        },
+        "Edit form",
+      );
     }
 
     // CANCEL EDIT BUTTON
     if (elements.cancelEditBtn) {
-      safeAttachListener(elements.cancelEditBtn, 'click', function() {
-        elements.editModal.style.display = 'none';
-        editingIndex = null;
-      }, 'Cancel edit button');
+      safeAttachListener(
+        elements.cancelEditBtn,
+        "click",
+        function () {
+          elements.editModal.style.display = "none";
+          editingIndex = null;
+        },
+        "Cancel edit button",
+      );
     }
 
     // NOTES MODAL BUTTONS
     if (elements.saveNotesBtn) {
-      safeAttachListener(elements.saveNotesBtn, 'click', () => {
-        if (notesIndex === null) return;
-        const textareaElement = elements.notesTextarea || document.getElementById('notesTextarea');
-        const text = textareaElement ? textareaElement.value.trim() : "";
-        
-        inventory[notesIndex].notes = text;
-        saveInventory();
-        renderTable();
-        
-        const modalElement = elements.notesModal || document.getElementById('notesModal');
-        if (modalElement) {
-          modalElement.style.display = 'none';
-        }
-        notesIndex = null;
-      }, 'Save notes button');
+      safeAttachListener(
+        elements.saveNotesBtn,
+        "click",
+        () => {
+          if (notesIndex === null) return;
+          const textareaElement =
+            elements.notesTextarea || document.getElementById("notesTextarea");
+          const text = textareaElement ? textareaElement.value.trim() : "";
+
+          inventory[notesIndex].notes = text;
+          saveInventory();
+          renderTable();
+
+          const modalElement =
+            elements.notesModal || document.getElementById("notesModal");
+          if (modalElement) {
+            modalElement.style.display = "none";
+          }
+          notesIndex = null;
+        },
+        "Save notes button",
+      );
     }
 
     if (elements.cancelNotesBtn) {
-      safeAttachListener(elements.cancelNotesBtn, 'click', () => {
-        const modalElement = elements.notesModal || document.getElementById('notesModal');
-        if (modalElement) {
-          modalElement.style.display = 'none';
-        }
-        notesIndex = null;
-      }, 'Cancel notes button');
+      safeAttachListener(
+        elements.cancelNotesBtn,
+        "click",
+        () => {
+          const modalElement =
+            elements.notesModal || document.getElementById("notesModal");
+          if (modalElement) {
+            modalElement.style.display = "none";
+          }
+          notesIndex = null;
+        },
+        "Cancel notes button",
+      );
     }
 
     // SPOT PRICE EVENT LISTENERS
-    debugLog('Setting up spot price listeners...');
-    Object.values(METALS).forEach(metalConfig => {
+    debugLog("Setting up spot price listeners...");
+    Object.values(METALS).forEach((metalConfig) => {
       const metalKey = metalConfig.key;
       const metalName = metalConfig.name;
-      
+
       // Main spot price action buttons
       const addBtn = document.getElementById(`addBtn${metalName}`);
       const resetBtn = document.getElementById(`resetBtn${metalName}`);
       const syncBtn = document.getElementById(`syncBtn${metalName}`);
-      
+
       // Manual input buttons
       const saveBtn = elements.saveSpotBtn[metalKey];
       const cancelBtn = document.getElementById(`cancelSpotBtn${metalName}`);
       const inputEl = elements.userSpotPriceInput[metalKey];
-      
+
       // Add button - shows manual input
       if (addBtn) {
-        safeAttachListener(addBtn, 'click', () => {
-          debugLog(`Add button clicked for ${metalName}`);
-          const manualInput = document.getElementById(`manualInput${metalName}`);
-          if (manualInput) {
-            manualInput.style.display = 'block';
-            const input = document.getElementById(`userSpotPrice${metalName}`);
-            if (input) input.focus();
-          }
-        }, `Add spot price for ${metalName}`);
+        safeAttachListener(
+          addBtn,
+          "click",
+          () => {
+            debugLog(`Add button clicked for ${metalName}`);
+            const manualInput = document.getElementById(
+              `manualInput${metalName}`,
+            );
+            if (manualInput) {
+              manualInput.style.display = "block";
+              const input = document.getElementById(
+                `userSpotPrice${metalName}`,
+              );
+              if (input) input.focus();
+            }
+          },
+          `Add spot price for ${metalName}`,
+        );
       }
-      
+
       // Reset button
       if (resetBtn) {
-        safeAttachListener(resetBtn, 'click', () => {
-          debugLog(`Reset button clicked for ${metalName}`);
-          if (typeof resetSpotPrice === 'function') {
-            resetSpotPrice(metalName);
-          } else {
-            // Fallback reset functionality
-            const defaultPrice = metalConfig.defaultPrice;
-            localStorage.setItem(metalConfig.localStorageKey, defaultPrice.toString());
-            spotPrices[metalKey] = defaultPrice;
-            if (elements.spotPriceDisplay[metalKey]) {
-              elements.spotPriceDisplay[metalKey].textContent = formatDollar(defaultPrice);
+        safeAttachListener(
+          resetBtn,
+          "click",
+          () => {
+            debugLog(`Reset button clicked for ${metalName}`);
+            if (typeof resetSpotPrice === "function") {
+              resetSpotPrice(metalName);
+            } else {
+              // Fallback reset functionality
+              const defaultPrice = metalConfig.defaultPrice;
+              localStorage.setItem(
+                metalConfig.localStorageKey,
+                defaultPrice.toString(),
+              );
+              spotPrices[metalKey] = defaultPrice;
+              if (elements.spotPriceDisplay[metalKey]) {
+                elements.spotPriceDisplay[metalKey].textContent =
+                  formatDollar(defaultPrice);
+              }
+              updateSummary();
             }
-            updateSummary();
-          }
-        }, `Reset spot price for ${metalName}`);
+          },
+          `Reset spot price for ${metalName}`,
+        );
       }
-      
+
       // Sync button
       if (syncBtn) {
-        safeAttachListener(syncBtn, 'click', () => {
-          debugLog(`Sync button clicked for ${metalName}`);
-          if (typeof syncSpotPricesFromApi === 'function') {
-            syncSpotPricesFromApi(true);
-          } else {
-            alert('API sync functionality requires API configuration. Please configure an API provider first.');
-          }
-        }, `Sync spot price for ${metalName}`);
+        safeAttachListener(
+          syncBtn,
+          "click",
+          () => {
+            debugLog(`Sync button clicked for ${metalName}`);
+            if (typeof syncSpotPricesFromApi === "function") {
+              syncSpotPricesFromApi(true);
+            } else {
+              alert(
+                "API sync functionality requires API configuration. Please configure an API provider first.",
+              );
+            }
+          },
+          `Sync spot price for ${metalName}`,
+        );
       }
-      
+
       // Save button (in manual input)
       if (saveBtn) {
-        safeAttachListener(saveBtn, 'click', () => {
-          if (typeof updateManualSpot === 'function') {
-            updateManualSpot(metalKey);
-          } else {
-            console.error(`updateManualSpot function not available for ${metalName}`);
-          }
-        }, `Save manual spot price for ${metalName}`);
+        safeAttachListener(
+          saveBtn,
+          "click",
+          () => {
+            if (typeof updateManualSpot === "function") {
+              updateManualSpot(metalKey);
+            } else {
+              console.error(
+                `updateManualSpot function not available for ${metalName}`,
+              );
+            }
+          },
+          `Save manual spot price for ${metalName}`,
+        );
       }
-      
+
       // Cancel button (in manual input)
       if (cancelBtn) {
-        safeAttachListener(cancelBtn, 'click', () => {
-          const manualInput = document.getElementById(`manualInput${metalName}`);
-          if (manualInput) {
-            manualInput.style.display = 'none';
-            const input = document.getElementById(`userSpotPrice${metalName}`);
-            if (input) input.value = '';
-          }
-        }, `Cancel manual spot price for ${metalName}`);
+        safeAttachListener(
+          cancelBtn,
+          "click",
+          () => {
+            const manualInput = document.getElementById(
+              `manualInput${metalName}`,
+            );
+            if (manualInput) {
+              manualInput.style.display = "none";
+              const input = document.getElementById(
+                `userSpotPrice${metalName}`,
+              );
+              if (input) input.value = "";
+            }
+          },
+          `Cancel manual spot price for ${metalName}`,
+        );
       }
-      
+
       // Enter key in input field
       if (inputEl) {
-        safeAttachListener(inputEl, 'keydown', (e) => {
-          if (e.key === 'Enter' && typeof updateManualSpot === 'function') {
-            updateManualSpot(metalKey);
-          }
-        }, `Manual spot price input for ${metalName}`);
+        safeAttachListener(
+          inputEl,
+          "keydown",
+          (e) => {
+            if (e.key === "Enter" && typeof updateManualSpot === "function") {
+              updateManualSpot(metalKey);
+            }
+          },
+          `Manual spot price input for ${metalName}`,
+        );
       }
     });
 
     // IMPORT/EXPORT EVENT LISTENERS
-    debugLog('Setting up import/export listeners...');
-    
+    debugLog("Setting up import/export listeners...");
+
     if (elements.importCsvFile) {
-      safeAttachListener(elements.importCsvFile, 'change', function(e) {
-        if (e.target.files.length > 0) {
-          importCsv(e.target.files[0]);
-        }
-        this.value = '';
-      }, 'CSV import');
+      safeAttachListener(
+        elements.importCsvFile,
+        "change",
+        function (e) {
+          if (e.target.files.length > 0) {
+            importCsv(e.target.files[0]);
+          }
+          this.value = "";
+        },
+        "CSV import",
+      );
     }
 
     if (elements.importJsonFile) {
-      safeAttachListener(elements.importJsonFile, 'change', function(e) {
-        if (e.target.files.length > 0) {
-          importJson(e.target.files[0]);
-        }
-        this.value = '';
-      }, 'JSON import');
+      safeAttachListener(
+        elements.importJsonFile,
+        "change",
+        function (e) {
+          if (e.target.files.length > 0) {
+            importJson(e.target.files[0]);
+          }
+          this.value = "";
+        },
+        "JSON import",
+      );
     }
 
     if (elements.importExcelFile) {
-      safeAttachListener(elements.importExcelFile, 'change', function(e) {
-        if (e.target.files.length > 0) {
-          importExcel(e.target.files[0]);
-        }
-        this.value = '';
-      }, 'Excel import');
+      safeAttachListener(
+        elements.importExcelFile,
+        "change",
+        function (e) {
+          if (e.target.files.length > 0) {
+            importExcel(e.target.files[0]);
+          }
+          this.value = "";
+        },
+        "Excel import",
+      );
     }
 
     // Export buttons
     if (elements.exportCsvBtn) {
-      safeAttachListener(elements.exportCsvBtn, 'click', exportCsv, 'CSV export');
+      safeAttachListener(
+        elements.exportCsvBtn,
+        "click",
+        exportCsv,
+        "CSV export",
+      );
     }
     if (elements.exportJsonBtn) {
-      safeAttachListener(elements.exportJsonBtn, 'click', exportJson, 'JSON export');
+      safeAttachListener(
+        elements.exportJsonBtn,
+        "click",
+        exportJson,
+        "JSON export",
+      );
     }
     if (elements.exportExcelBtn) {
-      safeAttachListener(elements.exportExcelBtn, 'click', exportExcel, 'Excel export');
+      safeAttachListener(
+        elements.exportExcelBtn,
+        "click",
+        exportExcel,
+        "Excel export",
+      );
     }
     if (elements.exportPdfBtn) {
-      safeAttachListener(elements.exportPdfBtn, 'click', exportPdf, 'PDF export');
+      safeAttachListener(
+        elements.exportPdfBtn,
+        "click",
+        exportPdf,
+        "PDF export",
+      );
     }
     if (elements.exportHtmlBtn) {
-      safeAttachListener(elements.exportHtmlBtn, 'click', exportHtml, 'HTML export');
+      safeAttachListener(
+        elements.exportHtmlBtn,
+        "click",
+        exportHtml,
+        "HTML export",
+      );
     }
 
     // Backup All Button
     if (elements.backupAllBtn) {
-      safeAttachListener(elements.backupAllBtn, 'click', async () => {
-        if (typeof createBackupZip === 'function') {
-          await createBackupZip();
-        } else {
-          // Fallback: simple backup
-          alert('Creating backup using export functions...');
-          exportCsv();
-          exportJson();
-        }
-      }, 'Backup all button');
+      safeAttachListener(
+        elements.backupAllBtn,
+        "click",
+        async () => {
+          if (typeof createBackupZip === "function") {
+            await createBackupZip();
+          } else {
+            // Fallback: simple backup
+            alert("Creating backup using export functions...");
+            exportCsv();
+            exportJson();
+          }
+        },
+        "Backup all button",
+      );
     }
 
     // BOATING ACCIDENT BUTTON
     if (elements.boatingAccidentBtn) {
-      safeAttachListener(elements.boatingAccidentBtn, 'click', function() {
-        if (confirm("WARNING: This will erase ALL your data for this app (inventory, spot history, spot prices, API configuration).\n\nAre you sure you want to proceed?\n\nThis action cannot be undone!")) {
-          localStorage.removeItem(LS_KEY);
-          localStorage.removeItem(SPOT_HISTORY_KEY);
-          localStorage.removeItem(API_KEY_STORAGE_KEY);
-          localStorage.removeItem(API_CACHE_KEY);
-          Object.values(METALS).forEach(metalConfig => {
-            localStorage.removeItem(metalConfig.localStorageKey);
-          });
-          sessionStorage.clear();
+      safeAttachListener(
+        elements.boatingAccidentBtn,
+        "click",
+        function () {
+          if (
+            confirm(
+              "WARNING: This will erase ALL your data for this app (inventory, spot history, spot prices, API configuration).\n\nWould you like to download a backup before proceeding?",
+            )
+          ) {
+            if (typeof createBackupZip === "function") {
+              createBackupZip();
+            }
+          }
+          if (
+            confirm(
+              "Are you absolutely sure you want to clear all local data? This action cannot be undone!",
+            )
+          ) {
+            localStorage.removeItem(LS_KEY);
+            localStorage.removeItem(SPOT_HISTORY_KEY);
+            localStorage.removeItem(API_KEY_STORAGE_KEY);
+            localStorage.removeItem(API_CACHE_KEY);
+            Object.values(METALS).forEach((metalConfig) => {
+              localStorage.removeItem(metalConfig.localStorageKey);
+            });
+            sessionStorage.clear();
 
-          loadInventory();
-          renderTable();
-          loadSpotHistory();
-          fetchSpotPrice();
-          
-          // Clear API state
-          apiConfig = null;
-          apiCache = null;
-          updateSyncButtonStates();
-          
-          alert("All data has been erased.");
-        }
-      }, 'Boating accident button');
+            loadInventory();
+            renderTable();
+            loadSpotHistory();
+            fetchSpotPrice();
+
+            // Clear API state
+            apiConfig = { provider: "", keys: {} };
+            apiCache = null;
+            updateSyncButtonStates();
+
+            alert("All data has been erased.");
+          }
+        },
+        "Boating accident button",
+      );
     }
-    
+
     // API MODAL EVENT LISTENERS
-    debugLog('Setting up API modal listeners...');
+    debugLog("Setting up API modal listeners...");
     setupApiEvents();
-    
+
     // ABOUT MODAL EVENT LISTENERS
-    debugLog('Setting up about modal listeners...');
-    if (typeof setupAboutModalEvents === 'function') {
+    debugLog("Setting up about modal listeners...");
+    if (typeof setupAboutModalEvents === "function") {
       setupAboutModalEvents();
     }
 
-    debugLog('✓ All event listeners setup complete');
-    
+    debugLog("✓ All event listeners setup complete");
   } catch (error) {
-    console.error('❌ Error setting up event listeners:', error);
+    console.error("❌ Error setting up event listeners:", error);
     throw error; // Re-throw to trigger fallback in init.js
   }
 };
@@ -623,53 +815,78 @@ const setupEventListeners = () => {
  * Sets up pagination event listeners
  */
 const setupPagination = () => {
-  debugLog('Setting up pagination listeners...');
-  
+  debugLog("Setting up pagination listeners...");
+
   try {
     if (elements.itemsPerPage) {
-      safeAttachListener(elements.itemsPerPage, 'change', function() {
-        itemsPerPage = parseInt(this.value);
-        currentPage = 1;
-        renderTable();
-      }, 'Items per page select');
+      safeAttachListener(
+        elements.itemsPerPage,
+        "change",
+        function () {
+          itemsPerPage = parseInt(this.value);
+          currentPage = 1;
+          renderTable();
+        },
+        "Items per page select",
+      );
     }
 
     if (elements.prevPage) {
-      safeAttachListener(elements.prevPage, 'click', function() {
-        if (currentPage > 1) {
-          currentPage--;
-          renderTable();
-        }
-      }, 'Previous page button');
+      safeAttachListener(
+        elements.prevPage,
+        "click",
+        function () {
+          if (currentPage > 1) {
+            currentPage--;
+            renderTable();
+          }
+        },
+        "Previous page button",
+      );
     }
 
     if (elements.nextPage) {
-      safeAttachListener(elements.nextPage, 'click', function() {
-        const totalPages = calculateTotalPages(filterInventory());
-        if (currentPage < totalPages) {
-          currentPage++;
-          renderTable();
-        }
-      }, 'Next page button');
+      safeAttachListener(
+        elements.nextPage,
+        "click",
+        function () {
+          const totalPages = calculateTotalPages(filterInventory());
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderTable();
+          }
+        },
+        "Next page button",
+      );
     }
 
     if (elements.firstPage) {
-      safeAttachListener(elements.firstPage, 'click', function() {
-        currentPage = 1;
-        renderTable();
-      }, 'First page button');
+      safeAttachListener(
+        elements.firstPage,
+        "click",
+        function () {
+          currentPage = 1;
+          renderTable();
+        },
+        "First page button",
+      );
     }
 
     if (elements.lastPage) {
-      safeAttachListener(elements.lastPage, 'click', function() {
-        currentPage = calculateTotalPages(filterInventory());
-        renderTable();
-      }, 'Last page button');
+      safeAttachListener(
+        elements.lastPage,
+        "click",
+        function () {
+          currentPage = calculateTotalPages(filterInventory());
+          renderTable();
+        },
+        "Last page button",
+      );
     }
-    
-    debugLog('✓ Pagination listeners setup complete');
+
+    debugLog("✓ Pagination listeners setup complete");
   } catch (error) {
-    console.error('❌ Error setting up pagination listeners:', error);
+    console.error("❌ Error setting up pagination listeners:", error);
   }
 };
 
@@ -677,32 +894,42 @@ const setupPagination = () => {
  * Sets up search event listeners
  */
 const setupSearch = () => {
-  debugLog('Setting up search listeners...');
-  
+  debugLog("Setting up search listeners...");
+
   try {
     if (elements.searchInput) {
-      safeAttachListener(elements.searchInput, 'input', function() {
-        searchQuery = this.value;
-        currentPage = 1; // Reset to first page when search changes
-        renderTable();
-      }, 'Search input');
+      safeAttachListener(
+        elements.searchInput,
+        "input",
+        function () {
+          searchQuery = this.value;
+          currentPage = 1; // Reset to first page when search changes
+          renderTable();
+        },
+        "Search input",
+      );
     }
 
     if (elements.clearSearchBtn) {
-      safeAttachListener(elements.clearSearchBtn, 'click', function() {
-        if (elements.searchInput) {
-          elements.searchInput.value = '';
-        }
-        searchQuery = '';
-        columnFilter = { field: null, value: null };
-        currentPage = 1;
-        renderTable();
-      }, 'Clear search button');
+      safeAttachListener(
+        elements.clearSearchBtn,
+        "click",
+        function () {
+          if (elements.searchInput) {
+            elements.searchInput.value = "";
+          }
+          searchQuery = "";
+          columnFilter = { field: null, value: null };
+          currentPage = 1;
+          renderTable();
+        },
+        "Clear search button",
+      );
     }
-    
-    debugLog('✓ Search listeners setup complete');
+
+    debugLog("✓ Search listeners setup complete");
   } catch (error) {
-    console.error('❌ Error setting up search listeners:', error);
+    console.error("❌ Error setting up search listeners:", error);
   }
 };
 
@@ -710,26 +937,26 @@ const setupSearch = () => {
  * Sets up theme toggle event listeners
  */
 const setupThemeToggle = () => {
-  debugLog('Setting up theme toggle...');
-  
+  debugLog("Setting up theme toggle...");
+
   try {
     // Initialize theme with system preference detection
-    if (typeof initTheme === 'function') {
+    if (typeof initTheme === "function") {
       initTheme();
     } else {
       // Fallback initialization
-      const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+      const savedTheme = localStorage.getItem(THEME_KEY) || "light";
       setTheme(savedTheme);
     }
-    
+
     // Set up system theme change listener
-    if (typeof setupSystemThemeListener === 'function') {
+    if (typeof setupSystemThemeListener === "function") {
       setupSystemThemeListener();
     }
-    
-    debugLog('✓ Theme toggle setup complete');
+
+    debugLog("✓ Theme toggle setup complete");
   } catch (error) {
-    console.error('❌ Error setting up theme toggle:', error);
+    console.error("❌ Error setting up theme toggle:", error);
   }
 };
 
@@ -737,23 +964,30 @@ const setupThemeToggle = () => {
  * Sets up event listeners for details buttons (called after totals are rendered)
  */
 const setupDetailsButtons = () => {
-  debugLog('Setting up details buttons...');
-  
+  debugLog("Setting up details buttons...");
+
   // Re-query details buttons since they're created dynamically
-  const detailsButtons = document.querySelectorAll('.details-btn');
-  
-  detailsButtons.forEach(btn => {
-    safeAttachListener(btn, 'click', () => {
-      const metal = btn.dataset.metal;
-      debugLog(`Details button clicked for ${metal}`);
-      if (typeof showDetailsModal === 'function') {
-        showDetailsModal(metal);
-      } else {
-        alert(`Details modal for ${metal} would show analytics charts and breakdowns`);
-      }
-    }, `Details button (${btn.dataset.metal})`);
+  const detailsButtons = document.querySelectorAll(".details-btn");
+
+  detailsButtons.forEach((btn) => {
+    safeAttachListener(
+      btn,
+      "click",
+      () => {
+        const metal = btn.dataset.metal;
+        debugLog(`Details button clicked for ${metal}`);
+        if (typeof showDetailsModal === "function") {
+          showDetailsModal(metal);
+        } else {
+          alert(
+            `Details modal for ${metal} would show analytics charts and breakdowns`,
+          );
+        }
+      },
+      `Details button (${btn.dataset.metal})`,
+    );
   });
-  
+
   debugLog(`✓ Setup ${detailsButtons.length} details button listeners`);
 };
 
@@ -761,114 +995,200 @@ const setupDetailsButtons = () => {
  * Sets up API-related event listeners
  */
 const setupApiEvents = () => {
-  debugLog('Setting up API events...');
-  
+  debugLog("Setting up API events...");
+
   try {
-    // API Modal Events
-    const apiModal = document.getElementById('apiModal');
-    const apiCancelBtn = document.getElementById('apiCancelBtn');
-    const apiClearBtn = document.getElementById('apiClearBtn');
-    const apiConfigForm = document.getElementById('apiConfigForm');
-    const apiProviderSelect = document.getElementById('apiProvider');
+    const settingsModal = document.getElementById("settingsModal");
+    const settingsCloseBtn = document.getElementById("settingsCloseBtn");
+    const infoModal = document.getElementById("apiInfoModal");
+    const infoCloseBtn = document.getElementById("apiInfoCloseBtn");
 
-    // Modal background click to close
-    if (apiModal) {
-      safeAttachListener(apiModal, 'click', (e) => {
-        if (e.target === apiModal && typeof hideApiModal === 'function') {
-          hideApiModal();
-        }
-      }, 'API modal background');
-    }
-
-    // Cancel button
-    if (apiCancelBtn) {
-      safeAttachListener(apiCancelBtn, 'click', () => {
-        if (typeof hideApiModal === 'function') {
-          hideApiModal();
-        }
-      }, 'API cancel button');
-    }
-
-    // Clear configuration button
-    if (apiClearBtn) {
-      safeAttachListener(apiClearBtn, 'click', () => {
-        if (confirm('This will remove your API configuration and cached data. Continue?')) {
-          if (typeof clearApiConfig === 'function') {
-            clearApiConfig();
+    if (settingsModal) {
+      safeAttachListener(
+        settingsModal,
+        "click",
+        (e) => {
+          if (
+            e.target === settingsModal &&
+            typeof hideSettingsModal === "function"
+          ) {
+            hideSettingsModal();
           }
-          if (typeof hideApiModal === 'function') {
-            hideApiModal();
-          }
-          alert('API configuration cleared.');
-        }
-      }, 'API clear button');
-    }
-    
-    // Sync now button
-    const apiSyncNowBtn = document.getElementById('apiSyncNowBtn');
-    if (apiSyncNowBtn) {
-      safeAttachListener(apiSyncNowBtn, 'click', async () => {
-        if (typeof syncSpotPricesFromApi === 'function') {
-          const success = await syncSpotPricesFromApi(true, true);
-          if (success && typeof updateApiStatus === 'function') {
-            updateApiStatus();
-          }
-        }
-      }, 'API sync now button');
-    }
-    
-    // Clear cache button
-    const apiClearCacheBtn = document.getElementById('apiClearCacheBtn');
-    if (apiClearCacheBtn) {
-      safeAttachListener(apiClearCacheBtn, 'click', () => {
-        if (typeof clearApiCache === 'function') {
-          clearApiCache();
-        }
-      }, 'API clear cache button');
+        },
+        "Settings modal background",
+      );
     }
 
-    // Form submission
-    if (apiConfigForm) {
-      safeAttachListener(apiConfigForm, 'submit', (e) => {
-        if (typeof handleApiConfigSubmit === 'function') {
-          handleApiConfigSubmit(e);
-        } else {
+    if (settingsCloseBtn) {
+      safeAttachListener(
+        settingsCloseBtn,
+        "click",
+        () => {
+          if (typeof hideSettingsModal === "function") {
+            hideSettingsModal();
+          }
+        },
+        "Settings close button",
+      );
+    }
+
+    if (infoModal) {
+      safeAttachListener(
+        infoModal,
+        "click",
+        (e) => {
+          if (
+            e.target === infoModal &&
+            typeof hideProviderInfo === "function"
+          ) {
+            hideProviderInfo();
+          }
+        },
+        "Provider info modal background",
+      );
+    }
+
+    if (infoCloseBtn) {
+      safeAttachListener(
+        infoCloseBtn,
+        "click",
+        () => {
+          if (typeof hideProviderInfo === "function") {
+            hideProviderInfo();
+          }
+        },
+        "Provider info close",
+      );
+    }
+
+    document.querySelectorAll(".api-info-link").forEach((link) => {
+      const provider = link.getAttribute("data-provider");
+      safeAttachListener(
+        link,
+        "click",
+        (e) => {
           e.preventDefault();
-          alert('API configuration handler not available');
-        }
-      }, 'API config form');
+          if (typeof showProviderInfo === "function") {
+            showProviderInfo(provider);
+          }
+        },
+        "API info link",
+      );
+    });
+
+    document.querySelectorAll(".api-sync-btn").forEach((btn) => {
+      const provider = btn.getAttribute("data-provider");
+      safeAttachListener(
+        btn,
+        "click",
+        () => {
+          if (typeof handleProviderSync === "function") {
+            handleProviderSync(provider);
+          }
+        },
+        "API sync button",
+      );
+    });
+
+    document.querySelectorAll(".api-clear-btn").forEach((btn) => {
+      const provider = btn.getAttribute("data-provider");
+      safeAttachListener(
+        btn,
+        "click",
+        () => {
+          if (typeof clearApiKey === "function") {
+            clearApiKey(provider);
+          }
+        },
+        "API clear key button",
+      );
+    });
+
+    const cacheDuration = document.getElementById("apiCacheDuration");
+    if (cacheDuration) {
+      safeAttachListener(
+        cacheDuration,
+        "change",
+        () => {
+          if (typeof setCacheDuration === "function") {
+            setCacheDuration(parseInt(cacheDuration.value, 10));
+          }
+        },
+        "API cache duration select",
+      );
     }
 
-    // Provider selection change
-    if (apiProviderSelect) {
-      safeAttachListener(apiProviderSelect, 'change', (e) => {
-        if (typeof updateProviderInfo === 'function') {
-          updateProviderInfo(e.target.value);
-        }
-      }, 'API provider select');
+    document
+      .querySelectorAll('input[name="defaultProvider"]')
+      .forEach((radio) => {
+        const provider = radio.value;
+        safeAttachListener(
+          radio,
+          "change",
+          () => {
+            if (radio.checked && typeof setDefaultProvider === "function") {
+              setDefaultProvider(provider);
+            }
+          },
+          "Default provider radio",
+        );
+      });
+
+    const clearCacheBtn = document.getElementById("clearApiCacheBtn");
+    if (clearCacheBtn) {
+      safeAttachListener(
+        clearCacheBtn,
+        "click",
+        () => {
+          if (typeof clearApiCache === "function") {
+            clearApiCache();
+          }
+        },
+        "Clear API cache button",
+      );
     }
 
     // ESC key to close modals
-    safeAttachListener(document, 'keydown', (e) => {
-      if (e.key === 'Escape') {
-        const apiModal = document.getElementById('apiModal');
-        const editModal = document.getElementById('editModal');
-        const detailsModal = document.getElementById('detailsModal');
-        
-        if (apiModal && apiModal.style.display === 'flex' && typeof hideApiModal === 'function') {
-          hideApiModal();
-        } else if (editModal && editModal.style.display === 'flex') {
-          editModal.style.display = 'none';
-          editingIndex = null;
-        } else if (detailsModal && detailsModal.style.display === 'flex' && typeof closeDetailsModal === 'function') {
-          closeDetailsModal();
-        }
-      }
-    }, 'ESC key modal close');
+    safeAttachListener(
+      document,
+      "keydown",
+      (e) => {
+        if (e.key === "Escape") {
+          const settingsModal = document.getElementById("settingsModal");
+          const infoModal = document.getElementById("apiInfoModal");
+          const editModal = document.getElementById("editModal");
+          const detailsModal = document.getElementById("detailsModal");
 
-    debugLog('✓ API events setup complete');
+          if (
+            settingsModal &&
+            settingsModal.style.display === "flex" &&
+            typeof hideSettingsModal === "function"
+          ) {
+            hideSettingsModal();
+          } else if (
+            infoModal &&
+            infoModal.style.display === "flex" &&
+            typeof hideProviderInfo === "function"
+          ) {
+            hideProviderInfo();
+          } else if (editModal && editModal.style.display === "flex") {
+            editModal.style.display = "none";
+            editingIndex = null;
+          } else if (
+            detailsModal &&
+            detailsModal.style.display === "flex" &&
+            typeof closeDetailsModal === "function"
+          ) {
+            closeDetailsModal();
+          }
+        }
+      },
+      "ESC key modal close",
+    );
+
+    debugLog("✓ API events setup complete");
   } catch (error) {
-    console.error('❌ Error setting up API events:', error);
+    console.error("❌ Error setting up API events:", error);
   }
 };
 
