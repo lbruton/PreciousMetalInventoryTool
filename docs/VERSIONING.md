@@ -2,12 +2,12 @@
 
 ## Overview 
 
-The Precious Metals Inventory Tool now uses a dynamic version management system that automatically updates version numbers throughout the application from a single source of truth.
+The StackTrackr now uses a dynamic version management system that automatically updates version numbers throughout the application from a single source of truth.
 
 ## How It Works
 
 ### Single Source of Truth
-- Version is defined once in `/app/js/constants.js` as `APP_VERSION = '3.0.5'`
+- Version is defined once in `/app/js/constants.js` as `APP_VERSION = '3.2.02rc'`
 - This is the ONLY place you need to update the version number
 
 ### Automatic Propagation
@@ -28,14 +28,14 @@ To release a new version:
 1. **Update ONLY the constants file:**
    ```javascript
    // In /app/js/constants.js
-   const APP_VERSION = '3.0.5';  // Change this line only
+   const APP_VERSION = '3.2.02rc';  // Change this line only
    ```
 
 2. **All these will automatically update:**
-   - Root page title: "Lonnie's Precious Metals Tool v3.1.0"
-   - Root page heading: "Lonnie's Precious Metals Tool v3.1.0"
-   - App page title: "Precious Metals Inventory Tool v3.1.0"
-   - App header: "Precious Metals Inventory Tool v3.1.0"
+   - Root page title: "StackTrackr v3.1.0"
+   - Root page heading: "StackTrackr v3.1.0"
+   - App page title: "StackTrackr v3.1.0"
+   - App header: "StackTrackr v3.1.0"
 
 3. **Update changelog:** Add entry to `/docs/CHANGELOG.md` for documentation
 
@@ -45,7 +45,7 @@ To release a new version:
 ```javascript
 // Loads app/js/constants.js and utils.js
 // Updates title and heading via DOM manipulation
-document.title = `Lonnie's Precious Metals Tool ${getVersionString()}`;
+document.title = `StackTrackr ${getVersionString()}`;
 ```
 
 ### Main App (app/app/index.html)
@@ -77,15 +77,15 @@ Use semantic versioning: `MAJOR.MINOR.PATCH`
 ## Example Usage in Code
 ```javascript
 // Get just the version number
-const version = APP_VERSION; // "3.0.5"
+const version = APP_VERSION; // "3.2.02rc"
 
 // Get formatted version string
-const versionString = getVersionString(); // "v3.0.5"
-const customVersion = getVersionString('version '); // "version 3.0.5"
+const versionString = getVersionString(); // "v3.2.02rc"
+const customVersion = getVersionString('version '); // "version 3.2.02rc"
 
 // Get full app title
-const title = getAppTitle(); // "Precious Metals Inventory Tool v3.0.5"
-const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.0.5"
+const title = getAppTitle(); // "StackTrackr v3.2.02rc"
+const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.2.02rc"
 ```
 
 This system ensures version consistency and makes maintenance much easier!

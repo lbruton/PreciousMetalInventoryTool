@@ -1,4 +1,4 @@
-# Precious Metals Inventory Tool — Changelog
+# StackTrackr — Changelog
 
 ## 🚀 Roadmap (Future Versions)
 
@@ -7,6 +7,10 @@
 ---
 
 ## 📋 Version History
+
+### Version 3.2.02rc – Feature Complete Release Candidate (2025-08-09)
+- Rebranded application to StackTrackr
+- Marked as feature complete release candidate for the 3.2.x series
 
 ### Version 3.2.01 – Cloud Sync Modal Fix (2025-08-08)
 - Cloud Sync placeholder modal now uses standard themed header with internal close button

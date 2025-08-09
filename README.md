@@ -1,8 +1,9 @@
-# Precious Metals Inventory Tool v3.2.01
+# StackTrackr v3.2.02rc
 
-The Precious Metals Inventory Tool is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics and enhanced tracking capabilities.
+StackTrackr is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics and enhanced tracking capabilities.
 
 ## Recent Updates
+- **v3.2.02rc - Feature Complete Release Candidate**: Rebranded to StackTrackr and prepared for final release
 - **v3.2.01 - Cloud Sync Modal Fix**: Coming soon modal now matches themed styling with internal close button
 - **v3.2.0 - Settings & History Polish**: Appearance section moved up, sync confirmation dialog, and redesigned API history modal with clear filter
 - **v3.1.13 - Cloud Sync & API Quotas**: CSV import fix, Cloud Sync placeholder, and API usage tracking with monthly reset
@@ -13,8 +14,9 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 - **v3.1.8 - Backup System**: Full ZIP backup functionality with restoration guides
 - **v3.1.6 - Theme Toggle**: Fixed theme management with system preference detection
 
-## 🆕 What's New in v3.2.01
-- Cloud Sync modal now uses standard theming with internal close button
+## 🆕 What's New in v3.2.02rc
+- Application renamed to **StackTrackr**
+- Marked as **feature complete** for the 3.2.x series
 
 ## 🆕 What's New in v3.2.0
 - Appearance settings now appear before API configuration for quicker access
@@ -210,9 +212,9 @@ This project is designed to be maintainable and extensible. When making changes:
 This project is open source and available for personal use.
 
 ---
-**Current Version**: 3.2.01
-**Last Updated**: August 8, 2025
-**Status**: Feature complete with enhanced documentation workflow
+**Current Version**: 3.2.02rc
+**Last Updated**: August 9, 2025
+**Status**: Feature complete release candidate
 
 
 

@@ -1,8 +1,8 @@
-# Project Status - Precious Metals Inventory Tool
+# Project Status - StackTrackr
 
-## 🎯 Current State: **FEATURE COMPLETE v3.2.01** ✅ MAINTAINED & OPTIMIZED
+## 🎯 Current State: **FEATURE COMPLETE v3.2.02rc** ✅ MAINTAINED & OPTIMIZED
 
-**Precious Metals Inventory Tool v3.2.01** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management, API integration, and complete backup capabilities. The 3.2.x series focuses on polish, maintenance, and optimization.
+**StackTrackr v3.2.02rc** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management, API integration, and complete backup capabilities. The 3.2.x series focuses on polish, maintenance, and optimization.
 
 ## 🏗️ Architecture Overview
 
@@ -20,6 +20,7 @@ The tool features a **modular JavaScript architecture** with separate files for 
 
 ## ✨ Latest Changes (3.1.x Series)
 
+- **v3.2.02rc - Feature Complete Release Candidate**: Application rebranded to StackTrackr and prepared for final release
 - **v3.2.01 - Cloud Sync Modal Fix**: Coming soon modal now follows themed styling with internal close button
 - **v3.2.0 - Settings & History Polish**: Appearance section moved up, sync confirmation dialog, and API history modal redesign
 - **v3.1.13 - Cloud Sync & API Quotas**: Cloud Sync placeholder modal, API usage tracking with quotas and monthly reset, Sync All provider button, reorganized file tools, and interface polish
@@ -102,7 +103,7 @@ All data is stored locally in the browser using localStorage with:
 - ✅ Modern, responsive user interface
 - ✅ Complete documentation and error handling
 
-## 📚 Documentation Status (Updated: August 8, 2025)
+## 📚 Documentation Status (Updated: August 9, 2025)
 
 **All documentation files are current and synchronized:**
 - ✅ **STATUS.md** - Updated with 3.1.x series changes and current state
@@ -115,9 +116,9 @@ All data is stored locally in the browser using localStorage with:
 
 If continuing development in a new chat session:
 
-1. **Current Version**: 3.2.01 (managed in `js/constants.js`)
+1. **Current Version**: 3.2.02rc (managed in `js/constants.js`)
 2. **Last Change**: Cloud Sync modal adopts standard theme with internal close button
-3. **Last Documentation Update**: August 8, 2025 - All docs synchronized
+3. **Last Documentation Update**: August 9, 2025 - All docs synchronized
 4. **Architecture**: Fully modular with proper separation of concerns
 5. **Documentation**: Comprehensive JSDoc comments throughout codebase
 6. **Data Structure**: Includes all fields (metal, name, qty, type, weight, price, date, purchaseLocation, storageLocation, **notes**, spotPriceAtPurchase, premiumPerOz, totalPremium, isCollectable)
@@ -130,7 +131,7 @@ If continuing development in a new chat session:
 ## 📁 Project Structure
 
 ```
-PreciousMetalInventoryTool/
+StackTrackr/
 ├── js/                     # Modular JavaScript (cleaned structure)
 │   ├── constants.js        # Version 3.1.12 + metal configs
 │   ├── state.js           # App state + DOM caching
@@ -154,6 +155,6 @@ PreciousMetalInventoryTool/
 
 ---
 
-**Last Updated**: August 8, 2025  
-**Status**: ✅ COMPLETE - Maintained and optimized for production use  
+**Last Updated**: August 9, 2025
+**Status**: ✅ COMPLETE - Release candidate ready for production use
 **Documentation**: ✅ ALL FILES SYNCHRONIZED AND CURRENT

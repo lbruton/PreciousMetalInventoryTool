@@ -21,10 +21,10 @@ const getVersionString = (prefix = "v") => `${prefix}${APP_VERSION}`;
 /**
  * Returns full application title with version
  *
- * @param {string} [baseTitle='Precious Metals Inventory Tool'] - Base application title
+ * @param {string} [baseTitle='StackTrackr'] - Base application title
  * @returns {string} Full title with version
  */
-const getAppTitle = (baseTitle = "Precious Metals Inventory Tool") =>
+const getAppTitle = (baseTitle = "StackTrackr") =>
   BRANDING_TITLE && BRANDING_TITLE.trim()
     ? BRANDING_TITLE
     : `${baseTitle} ${getVersionString()}`;

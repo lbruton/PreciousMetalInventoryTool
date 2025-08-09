@@ -1,6 +1,6 @@
-# Precious Metals Inventory Tool - Project Structure
+# StackTrackr - Project Structure
 
-## Current Structure (Version 3.2.01)
+## Current Structure (Version 3.2.02rc)
 
 ```text
 ├── css/
