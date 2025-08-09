@@ -99,7 +99,7 @@ const getLastUpdateTime = (metalName) => {
     sourceText = "Stored";
   }
 
-  return `${timeText} (${sourceText})`;
+  return `${sourceText} - ${timeText}`;
 };
 
 // =============================================================================
