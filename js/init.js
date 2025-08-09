@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.settingsModal = safeGetElement("settingsModal");
     elements.apiInfoModal = safeGetElement("apiInfoModal");
     elements.apiHistoryModal = safeGetElement("apiHistoryModal");
+    elements.apiProvidersModal = safeGetElement("apiProvidersModal");
     elements.aboutModal = safeGetElement("aboutModal");
     elements.ackModal = safeGetElement("ackModal");
     elements.ackAcceptBtn = safeGetElement("ackAcceptBtn");

@@ -9,6 +9,14 @@ const providerStatuses = {
   CUSTOM: "disconnected",
 };
 
+// API history table state
+let apiHistoryEntries = [];
+let apiHistoryPage = 1;
+const API_HISTORY_PAGE_SIZE = 10;
+let apiHistorySortColumn = "";
+let apiHistorySortAsc = true;
+let apiHistoryFilterText = "";
+
 /**
  * Loads API configuration from localStorage
  * @returns {Object|null} API configuration or null if not set
@@ -205,31 +213,95 @@ const updateDefaultProviderButtons = () => {
 };
 
 /**
- * Shows API history modal with table and chart
+ * Renders API history table with filtering, sorting and pagination
  */
-const showApiHistoryModal = () => {
-  const modal = document.getElementById("apiHistoryModal");
-  if (!modal) return;
-  loadSpotHistory();
-  const entries = spotHistory.filter((e) => e.source === "api");
+const renderApiHistoryTable = () => {
   const table = document.getElementById("apiHistoryTable");
-  if (table) {
-    let rows =
-      "<tr><th>Time</th><th>Metal</th><th>Price</th><th>API</th></tr>";
-    entries.forEach((e) => {
-      rows += `<tr><td>${e.timestamp}</td><td>${e.metal}</td><td>${formatDollar(
-        e.spot,
-      )}</td><td>${e.provider || ""}</td></tr>`;
-    });
-    table.innerHTML = rows;
+  if (!table) return;
+  let data = [...apiHistoryEntries];
+  if (apiHistoryFilterText) {
+    const f = apiHistoryFilterText.toLowerCase();
+    data = data.filter((e) =>
+      Object.values(e).some((v) => String(v).toLowerCase().includes(f)),
+    );
   }
+  if (apiHistorySortColumn) {
+    data.sort((a, b) => {
+      const valA = a[apiHistorySortColumn];
+      const valB = b[apiHistorySortColumn];
+      if (valA < valB) return apiHistorySortAsc ? -1 : 1;
+      if (valA > valB) return apiHistorySortAsc ? 1 : -1;
+      return 0;
+    });
+  }
+  const totalPages = Math.max(
+    1,
+    Math.ceil(data.length / API_HISTORY_PAGE_SIZE),
+  );
+  apiHistoryPage = Math.min(apiHistoryPage, totalPages);
+  const start = (apiHistoryPage - 1) * API_HISTORY_PAGE_SIZE;
+  const pageData = data.slice(start, start + API_HISTORY_PAGE_SIZE);
+
+  let html =
+    "<tr><th data-column=\"timestamp\">Time</th><th data-column=\"metal\">Metal</th><th data-column=\"spot\">Price</th><th data-column=\"provider\">API</th></tr>";
+  pageData.forEach((e) => {
+    html += `<tr><td>${e.timestamp}</td><td>${e.metal}</td><td>${formatDollar(
+      e.spot,
+    )}</td><td>${e.provider || ""}</td></tr>`;
+  });
+  table.innerHTML = html;
+
+  table.querySelectorAll("th").forEach((th) => {
+    th.addEventListener("click", () => {
+      const col = th.dataset.column;
+      if (apiHistorySortColumn === col) {
+        apiHistorySortAsc = !apiHistorySortAsc;
+      } else {
+        apiHistorySortColumn = col;
+        apiHistorySortAsc = true;
+      }
+      renderApiHistoryTable();
+    });
+  });
+
+  const pag = document.getElementById("apiHistoryPagination");
+  if (pag) {
+    pag.innerHTML = "";
+    const prev = document.createElement("button");
+    prev.textContent = "Prev";
+    prev.disabled = apiHistoryPage === 1;
+    prev.onclick = () => {
+      apiHistoryPage--;
+      renderApiHistoryTable();
+    };
+    pag.appendChild(prev);
+
+    const info = document.createElement("span");
+    info.textContent = `${apiHistoryPage} / ${totalPages}`;
+    pag.appendChild(info);
+
+    const next = document.createElement("button");
+    next.textContent = "Next";
+    next.disabled = apiHistoryPage === totalPages;
+    next.onclick = () => {
+      apiHistoryPage++;
+      renderApiHistoryTable();
+    };
+    pag.appendChild(next);
+  }
+};
+
+/**
+ * Renders API history chart
+ */
+const renderApiHistoryChart = () => {
   const ctx = document.getElementById("apiHistoryChart");
   if (ctx) {
     const metals = ["Silver", "Gold", "Platinum", "Palladium"];
     const datasets = [];
     let maxLen = 0;
     metals.forEach((metal) => {
-      const data = entries
+      const data = apiHistoryEntries
         .filter((e) => e.metal === metal)
         .slice(-30)
         .map((e) => e.spot);
@@ -254,6 +326,31 @@ const showApiHistoryModal = () => {
       options: { responsive: true, maintainAspectRatio: false },
     });
   }
+};
+
+/**
+ * Shows API history modal with table and chart
+ */
+const showApiHistoryModal = () => {
+  const modal = document.getElementById("apiHistoryModal");
+  if (!modal) return;
+  loadSpotHistory();
+  apiHistoryEntries = spotHistory.filter((e) => e.source === "api");
+  apiHistoryPage = 1;
+  apiHistorySortColumn = "";
+  apiHistorySortAsc = true;
+  apiHistoryFilterText = "";
+  const filterInput = document.getElementById("apiHistoryFilter");
+  if (filterInput) {
+    filterInput.value = "";
+    filterInput.oninput = (e) => {
+      apiHistoryFilterText = e.target.value;
+      apiHistoryPage = 1;
+      renderApiHistoryTable();
+    };
+  }
+  renderApiHistoryTable();
+  renderApiHistoryChart();
   modal.style.display = "flex";
 };
 
@@ -262,6 +359,22 @@ const showApiHistoryModal = () => {
  */
 const hideApiHistoryModal = () => {
   const modal = document.getElementById("apiHistoryModal");
+  if (modal) modal.style.display = "none";
+};
+
+/**
+ * Shows API providers modal
+ */
+const showApiProvidersModal = () => {
+  const modal = document.getElementById("apiProvidersModal");
+  if (modal) modal.style.display = "flex";
+};
+
+/**
+ * Hides API providers modal
+ */
+const hideApiProvidersModal = () => {
+  const modal = document.getElementById("apiProvidersModal");
   if (modal) modal.style.display = "none";
 };
 

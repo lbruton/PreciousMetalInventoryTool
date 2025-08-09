@@ -132,6 +132,7 @@ const elements = {
   settingsModal: null,
   apiInfoModal: null,
   apiHistoryModal: null,
+  apiProvidersModal: null,
 
   // Spot price action buttons
   spotSyncBtn: null,
