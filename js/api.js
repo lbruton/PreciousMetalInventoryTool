@@ -550,7 +550,6 @@ const showProviderInfo = (providerKey) => {
   const provider = API_PROVIDERS[providerKey];
   const title = document.getElementById("apiInfoTitle");
   const body = document.getElementById("apiInfoBody");
-  const link = document.getElementById("apiInfoLink");
 
   if (title) title.textContent = "Provider Information";
   if (body) {
@@ -566,11 +565,10 @@ const showProviderInfo = (providerKey) => {
           <li>Keep your API key secure and never share it publicly</li>
         </ul>
       </div>
+      <a class="btn info-docs-btn" href="${provider.documentation}" target="_blank" rel="noopener">
+        📄 ${provider.name} Documentation & Key Management
+      </a>
     `;
-  }
-  if (link) {
-    link.href = provider.documentation;
-    link.textContent = `📄 ${provider.name} Documentation & Key Management`;
   }
 
   modal.style.display = "flex";

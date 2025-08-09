@@ -517,6 +517,16 @@ input[type="submit"] {
   max-width: 500px;
 }
 
+#apiInfoModal h3 {
+  margin-bottom: 1rem;
+}
+
+#apiInfoModal .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
 .api-info-body {
   margin-bottom: 1rem;
   font-size: 0.875rem;
@@ -539,9 +549,8 @@ input[type="submit"] {
   margin-top: 0.25rem;
 }
 
-#apiInfoLink {
-  display: inline-block;
-  margin-top: 0.5rem;
+.api-info-body .info-docs-btn {
+  margin-top: 0.75rem;
 }
 
 /* =============================================================================
