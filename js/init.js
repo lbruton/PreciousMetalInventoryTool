@@ -69,12 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Header buttons - CRITICAL
     debugLog('Phase 2: Initializing header buttons...');
-    elements.apiBtn = safeGetElement('apiBtn', true);
+    elements.settingsBtn = safeGetElement('settingsBtn', true);
     elements.aboutBtn = safeGetElement('aboutBtn');
     elements.themeToggle = safeGetElement('themeToggle', true);
-    
+
     // Check if critical buttons exist
-    debugLog('API Button found:', !!document.getElementById('apiBtn'));
+    debugLog('Settings Button found:', !!document.getElementById('settingsBtn'));
     debugLog('Theme Toggle found:', !!document.getElementById('themeToggle'));
 
     // Import/Export elements
@@ -94,7 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Modal elements
     debugLog('Phase 4: Initializing modal elements...');
-    elements.apiModal = safeGetElement('apiModal');
+    elements.settingsModal = safeGetElement('settingsModal');
+    elements.apiInfoModal = safeGetElement('apiInfoModal');
     elements.aboutModal = safeGetElement('aboutModal');
     elements.ackModal = safeGetElement('ackModal');
     elements.ackAcceptBtn = safeGetElement('ackAcceptBtn');
@@ -290,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
     debugLog('✓ API configured:', !!apiConfig);
     debugLog('✓ Inventory items:', inventory.length);
     debugLog('✓ Critical elements check:');
-    debugLog('  - API button:', !!elements.apiBtn);
+    debugLog('  - Settings button:', !!elements.settingsBtn);
     debugLog('  - Theme toggle:', !!elements.themeToggle);
     debugLog('  - Inventory form:', !!elements.inventoryForm);
     debugLog('  - Inventory table:', !!elements.inventoryTable);
@@ -332,14 +333,14 @@ function setupBasicEventListeners() {
     };
   }
   
-  // API button
-  const apiBtn = document.getElementById('apiBtn');
-  if (apiBtn) {
-    apiBtn.onclick = function() {
-      if (typeof showApiModal === 'function') {
-        showApiModal();
+  // Settings button
+  const settingsBtn = document.getElementById('settingsBtn');
+  if (settingsBtn) {
+    settingsBtn.onclick = function() {
+      if (typeof showSettingsModal === 'function') {
+        showSettingsModal();
       } else {
-        alert('API configuration interface');
+        alert('Settings interface');
       }
     };
   }

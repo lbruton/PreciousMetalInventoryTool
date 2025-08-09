@@ -132,19 +132,19 @@ const setupEventListeners = () => {
     // CRITICAL HEADER BUTTONS
     debugLog('Setting up header buttons...');
     
-    // API Button
-    if (elements.apiBtn) {
-      safeAttachListener(elements.apiBtn, 'click', (e) => {
+    // Settings Button
+    if (elements.settingsBtn) {
+      safeAttachListener(elements.settingsBtn, 'click', (e) => {
         e.preventDefault();
-        debugLog('API button clicked');
-        if (typeof showApiModal === 'function') {
-          showApiModal();
+        debugLog('Settings button clicked');
+        if (typeof showSettingsModal === 'function') {
+          showSettingsModal();
         } else {
-          alert('API Configuration Modal\n\nThis would open the API configuration interface where you can:\n\n• Configure API providers\n• Set API keys\n• Sync spot prices automatically\n• View API status and cache info');
+          alert('Settings interface');
         }
-      }, 'API Button');
+      }, 'Settings Button');
     } else {
-      console.error('API button element not found!');
+      console.error('Settings button element not found!');
     }
 
     // About Button
@@ -592,7 +592,7 @@ const setupEventListeners = () => {
           fetchSpotPrice();
           
           // Clear API state
-          apiConfig = null;
+          apiConfig = { provider: '', keys: {} };
           apiCache = null;
           updateSyncButtonStates();
           
@@ -762,101 +762,75 @@ const setupDetailsButtons = () => {
  */
 const setupApiEvents = () => {
   debugLog('Setting up API events...');
-  
+
   try {
-    // API Modal Events
-    const apiModal = document.getElementById('apiModal');
-    const apiCancelBtn = document.getElementById('apiCancelBtn');
-    const apiClearBtn = document.getElementById('apiClearBtn');
-    const apiConfigForm = document.getElementById('apiConfigForm');
-    const apiProviderSelect = document.getElementById('apiProvider');
+    const settingsModal = document.getElementById('settingsModal');
+    const settingsCloseBtn = document.getElementById('settingsCloseBtn');
+    const infoModal = document.getElementById('apiInfoModal');
+    const infoCloseBtn = document.getElementById('apiInfoCloseBtn');
 
-    // Modal background click to close
-    if (apiModal) {
-      safeAttachListener(apiModal, 'click', (e) => {
-        if (e.target === apiModal && typeof hideApiModal === 'function') {
-          hideApiModal();
+    if (settingsModal) {
+      safeAttachListener(settingsModal, 'click', (e) => {
+        if (e.target === settingsModal && typeof hideSettingsModal === 'function') {
+          hideSettingsModal();
         }
-      }, 'API modal background');
+      }, 'Settings modal background');
     }
 
-    // Cancel button
-    if (apiCancelBtn) {
-      safeAttachListener(apiCancelBtn, 'click', () => {
-        if (typeof hideApiModal === 'function') {
-          hideApiModal();
+    if (settingsCloseBtn) {
+      safeAttachListener(settingsCloseBtn, 'click', () => {
+        if (typeof hideSettingsModal === 'function') {
+          hideSettingsModal();
         }
-      }, 'API cancel button');
+      }, 'Settings close button');
     }
 
-    // Clear configuration button
-    if (apiClearBtn) {
-      safeAttachListener(apiClearBtn, 'click', () => {
-        if (confirm('This will remove your API configuration and cached data. Continue?')) {
-          if (typeof clearApiConfig === 'function') {
-            clearApiConfig();
-          }
-          if (typeof hideApiModal === 'function') {
-            hideApiModal();
-          }
-          alert('API configuration cleared.');
+    if (infoModal) {
+      safeAttachListener(infoModal, 'click', (e) => {
+        if (e.target === infoModal && typeof hideProviderInfo === 'function') {
+          hideProviderInfo();
         }
-      }, 'API clear button');
-    }
-    
-    // Sync now button
-    const apiSyncNowBtn = document.getElementById('apiSyncNowBtn');
-    if (apiSyncNowBtn) {
-      safeAttachListener(apiSyncNowBtn, 'click', async () => {
-        if (typeof syncSpotPricesFromApi === 'function') {
-          const success = await syncSpotPricesFromApi(true, true);
-          if (success && typeof updateApiStatus === 'function') {
-            updateApiStatus();
-          }
-        }
-      }, 'API sync now button');
-    }
-    
-    // Clear cache button
-    const apiClearCacheBtn = document.getElementById('apiClearCacheBtn');
-    if (apiClearCacheBtn) {
-      safeAttachListener(apiClearCacheBtn, 'click', () => {
-        if (typeof clearApiCache === 'function') {
-          clearApiCache();
-        }
-      }, 'API clear cache button');
+      }, 'Provider info modal background');
     }
 
-    // Form submission
-    if (apiConfigForm) {
-      safeAttachListener(apiConfigForm, 'submit', (e) => {
-        if (typeof handleApiConfigSubmit === 'function') {
-          handleApiConfigSubmit(e);
-        } else {
-          e.preventDefault();
-          alert('API configuration handler not available');
+    if (infoCloseBtn) {
+      safeAttachListener(infoCloseBtn, 'click', () => {
+        if (typeof hideProviderInfo === 'function') {
+          hideProviderInfo();
         }
-      }, 'API config form');
+      }, 'Provider info close');
     }
 
-    // Provider selection change
-    if (apiProviderSelect) {
-      safeAttachListener(apiProviderSelect, 'change', (e) => {
-        if (typeof updateProviderInfo === 'function') {
-          updateProviderInfo(e.target.value);
+    document.querySelectorAll('.api-info-btn').forEach((btn) => {
+      const provider = btn.getAttribute('data-provider');
+      safeAttachListener(btn, 'click', () => {
+        if (typeof showProviderInfo === 'function') {
+          showProviderInfo(provider);
         }
-      }, 'API provider select');
-    }
+      }, 'API info button');
+    });
+
+    document.querySelectorAll('.api-sync-btn').forEach((btn) => {
+      const provider = btn.getAttribute('data-provider');
+      safeAttachListener(btn, 'click', () => {
+        if (typeof handleProviderSync === 'function') {
+          handleProviderSync(provider);
+        }
+      }, 'API sync button');
+    });
 
     // ESC key to close modals
     safeAttachListener(document, 'keydown', (e) => {
       if (e.key === 'Escape') {
-        const apiModal = document.getElementById('apiModal');
+        const settingsModal = document.getElementById('settingsModal');
+        const infoModal = document.getElementById('apiInfoModal');
         const editModal = document.getElementById('editModal');
         const detailsModal = document.getElementById('detailsModal');
-        
-        if (apiModal && apiModal.style.display === 'flex' && typeof hideApiModal === 'function') {
-          hideApiModal();
+
+        if (settingsModal && settingsModal.style.display === 'flex' && typeof hideSettingsModal === 'function') {
+          hideSettingsModal();
+        } else if (infoModal && infoModal.style.display === 'flex' && typeof hideProviderInfo === 'function') {
+          hideProviderInfo();
         } else if (editModal && editModal.style.display === 'flex') {
           editModal.style.display = 'none';
           editingIndex = null;

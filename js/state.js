@@ -131,14 +131,10 @@ const elements = {
   ackModal: null,
   ackAcceptBtn: null,
 
-  // API elements
-  apiBtn: null,
-  apiModal: null,
-  apiModalContent: null,
-  apiProviderSelect: null,
-  apiKeyInput: null,
-  apiSaveBtn: null,
-  apiCancelBtn: null,
+  // Settings & API elements
+  settingsBtn: null,
+  settingsModal: null,
+  apiInfoModal: null,
   apiStatusDisplay: null,
 
   // Spot price action buttons
