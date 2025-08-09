@@ -1151,13 +1151,16 @@ const importJson = (file) => {
         processed++;
 
         // Ensure required fields with defaults
+        let price = parseFloat(item.price);
+        if (price < 0) price = 0;
+
         const processedItem = {
           metal: item.metal || 'Silver',
           name: item.name,
           qty: parseInt(item.qty, 10),
           type: item.type || 'Other',
           weight: parseFloat(item.weight),
-          price: parseFloat(item.price),
+          price,
           date: parseDate(item.date || todayStr()),
           purchaseLocation: item.purchaseLocation || "Unknown",
           storageLocation: item.storageLocation || "Unknown",
@@ -1292,7 +1295,10 @@ const importExcel = (file) => {
         const type = row['Type'] || row['type'] || 'Other';
         const weight = parseFloat(row['Weight(oz)'] || row['weight']);
         const priceStr = row['Purchase Price'] || row['price'];
-        const price = parseFloat(typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g,"") : priceStr);
+        let price = parseFloat(
+          typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g, "") : priceStr
+        );
+        if (price < 0) price = 0;
         const purchaseLocation = row['Purchase Location'] || "Unknown";
         const storageLocation = row['Storage Location'] || "Unknown";
         const notes = row['Notes'] || "";
