@@ -20,7 +20,7 @@ The tool features a **modular JavaScript architecture** with separate files for 
 
 ## ✨ Latest Changes (3.1.x Series)
 
-- **v3.2.05rc - Splash Opt-Out**: Disclaimer modal can be hidden permanently
+- **v3.2.05rc - Splash Opt-Out & Branding**: Disclaimer modal can be hidden permanently, header adapts to hosting domain with updated subtitle, and each API provider stores its own key
 - **v3.2.03rc - Cache Flush Confirmation**: Added warning before clearing API cache and history
 - **v3.2.02rc - Feature Complete Release Candidate**: Application rebranded to StackTrackr and prepared for final release
 - **v3.2.01 - Cloud Sync Modal Fix**: Coming soon modal now follows themed styling with internal close button
