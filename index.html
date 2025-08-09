@@ -1227,24 +1227,12 @@
             <div class="api-provider" data-provider="METALS_DEV">
               <div class="provider-header">
                 <span class="provider-name">Metals.dev</span>
-                <label
-                  ><input
-                    type="radio"
-                    name="defaultProvider"
-                    value="METALS_DEV"
-                    checked
-                  />
-                  Default</label
-                >
+                <span class="provider-url">https://api.metals.dev/v1</span>
               </div>
+              <a href="#" class="api-info-link" data-provider="METALS_DEV">
+                Provider Information
+              </a>
               <div class="provider-actions">
-                <button
-                  type="button"
-                  class="btn api-info-btn"
-                  data-provider="METALS_DEV"
-                >
-                  More Info
-                </button>
                 <button
                   type="button"
                   class="btn api-sync-btn"
@@ -1259,6 +1247,15 @@
                 >
                   Clear Key
                 </button>
+                <label
+                  ><input
+                    type="radio"
+                    name="defaultProvider"
+                    value="METALS_DEV"
+                    checked
+                  />
+                  Default</label
+                >
               </div>
               <div class="api-key-row">
                 <label for="apiKey_METALS_DEV">Key:</label>
@@ -1280,23 +1277,12 @@
             <div class="api-provider" data-provider="METALS_API">
               <div class="provider-header">
                 <span class="provider-name">Metals-API.com</span>
-                <label
-                  ><input
-                    type="radio"
-                    name="defaultProvider"
-                    value="METALS_API"
-                  />
-                  Default</label
-                >
+                <span class="provider-url">https://metals-api.com/api</span>
               </div>
+              <a href="#" class="api-info-link" data-provider="METALS_API">
+                Provider Information
+              </a>
               <div class="provider-actions">
-                <button
-                  type="button"
-                  class="btn api-info-btn"
-                  data-provider="METALS_API"
-                >
-                  More Info
-                </button>
                 <button
                   type="button"
                   class="btn api-sync-btn"
@@ -1311,6 +1297,14 @@
                 >
                   Clear Key
                 </button>
+                <label
+                  ><input
+                    type="radio"
+                    name="defaultProvider"
+                    value="METALS_API"
+                  />
+                  Default</label
+                >
               </div>
               <div class="api-key-row">
                 <label for="apiKey_METALS_API">Key:</label>
@@ -1332,23 +1326,14 @@
             <div class="api-provider" data-provider="METAL_PRICE_API">
               <div class="provider-header">
                 <span class="provider-name">MetalPriceAPI.com</span>
-                <label
-                  ><input
-                    type="radio"
-                    name="defaultProvider"
-                    value="METAL_PRICE_API"
-                  />
-                  Default</label
+                <span class="provider-url"
+                  >https://api.metalpriceapi.com/v1</span
                 >
               </div>
+              <a href="#" class="api-info-link" data-provider="METAL_PRICE_API">
+                Provider Information
+              </a>
               <div class="provider-actions">
-                <button
-                  type="button"
-                  class="btn api-info-btn"
-                  data-provider="METAL_PRICE_API"
-                >
-                  More Info
-                </button>
                 <button
                   type="button"
                   class="btn api-sync-btn"
@@ -1363,6 +1348,14 @@
                 >
                   Clear Key
                 </button>
+                <label
+                  ><input
+                    type="radio"
+                    name="defaultProvider"
+                    value="METAL_PRICE_API"
+                  />
+                  Default</label
+                >
               </div>
               <div class="api-key-row">
                 <label for="apiKey_METAL_PRICE_API">Key:</label>
@@ -1380,6 +1373,17 @@
                 <span class="status-text">Disconnected</span>
               </div>
             </div>
+          </div>
+
+          <div class="cache-duration-row">
+            <label for="apiCacheDuration">Cache Duration:</label>
+            <select id="apiCacheDuration">
+              <option value="0">No Cache</option>
+              <option value="1">1 hour</option>
+              <option value="6">6 hours</option>
+              <option value="12">12 hours</option>
+              <option value="24">24 hours</option>
+            </select>
           </div>
 
           <div class="settings-actions">

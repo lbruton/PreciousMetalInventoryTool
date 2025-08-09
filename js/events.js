@@ -1072,17 +1072,18 @@ const setupApiEvents = () => {
       );
     }
 
-    document.querySelectorAll(".api-info-btn").forEach((btn) => {
-      const provider = btn.getAttribute("data-provider");
+    document.querySelectorAll(".api-info-link").forEach((link) => {
+      const provider = link.getAttribute("data-provider");
       safeAttachListener(
-        btn,
+        link,
         "click",
-        () => {
+        (e) => {
+          e.preventDefault();
           if (typeof showProviderInfo === "function") {
             showProviderInfo(provider);
           }
         },
-        "API info button",
+        "API info link",
       );
     });
 
@@ -1113,6 +1114,20 @@ const setupApiEvents = () => {
         "API clear key button",
       );
     });
+
+    const cacheDuration = document.getElementById("apiCacheDuration");
+    if (cacheDuration) {
+      safeAttachListener(
+        cacheDuration,
+        "change",
+        () => {
+          if (typeof setCacheDuration === "function") {
+            setCacheDuration(parseInt(cacheDuration.value, 10));
+          }
+        },
+        "API cache duration select",
+      );
+    }
 
     document
       .querySelectorAll('input[name="defaultProvider"]')

@@ -30,12 +30,14 @@ const loadApiConfig = () => {
       return {
         provider: config.provider || "",
         keys: config.keys || {},
+        cacheHours:
+          typeof config.cacheHours === "number" ? config.cacheHours : 24,
       };
     }
   } catch (error) {
     console.error("Error loading API config:", error);
   }
-  return { provider: "", keys: {} };
+  return { provider: "", keys: {}, cacheHours: 24 };
 };
 
 /**
@@ -47,6 +49,8 @@ const saveApiConfig = (config) => {
     const configToSave = {
       provider: config.provider || "",
       keys: {},
+      cacheHours:
+        typeof config.cacheHours === "number" ? config.cacheHours : 24,
     };
     Object.keys(config.keys || {}).forEach((p) => {
       if (config.keys[p]) {
@@ -67,7 +71,7 @@ const saveApiConfig = (config) => {
 const clearApiConfig = () => {
   localStorage.removeItem(API_KEY_STORAGE_KEY);
   localStorage.removeItem(API_CACHE_KEY);
-  apiConfig = { provider: "", keys: {} };
+  apiConfig = { provider: "", keys: {}, cacheHours: 24 };
   apiCache = null;
   Object.keys(providerStatuses).forEach((p) =>
     setProviderStatus(p, "disconnected"),
@@ -82,6 +86,15 @@ const clearApiCache = () => {
   localStorage.removeItem(API_CACHE_KEY);
   apiCache = null;
   alert("API cache cleared. Next sync will pull fresh data from the API.");
+};
+
+/**
+ * Gets cache duration in milliseconds
+ * @returns {number} Cache duration
+ */
+const getCacheDurationMs = () => {
+  const hours = apiConfig?.cacheHours ?? 24;
+  return hours * 60 * 60 * 1000;
 };
 
 /**
@@ -120,6 +133,7 @@ const setDefaultProvider = (provider) => {
   const config = loadApiConfig();
   config.provider = provider;
   saveApiConfig(config);
+  updateSyncButtonStates();
 };
 
 /**
@@ -133,6 +147,19 @@ const clearApiKey = (provider) => {
   const input = document.getElementById(`apiKey_${provider}`);
   if (input) input.value = "";
   setProviderStatus(provider, "disconnected");
+};
+
+/**
+ * Updates cache duration setting
+ * @param {number} hours
+ */
+const setCacheDuration = (hours) => {
+  const config = loadApiConfig();
+  config.cacheHours = hours;
+  saveApiConfig(config);
+  if (hours === 0) {
+    clearApiCache();
+  }
 };
 
 /**
@@ -157,7 +184,17 @@ const refreshFromCache = () => {
       elements.spotPriceDisplay[metal].textContent = formatDollar(price);
 
       // Record in history as 'cached' to distinguish from fresh API calls
-      recordSpot(price, "cached", metalConfig.name);
+      recordSpot(
+        price,
+        "cached",
+        metalConfig.name,
+        API_PROVIDERS[cache.provider]?.name,
+      );
+
+      const ts = document.getElementById(`spotTimestamp${metalConfig.name}`);
+      if (ts) {
+        ts.textContent = getLastUpdateTime(metalConfig.name) || "No data";
+      }
 
       updatedCount++;
     }
@@ -183,8 +220,8 @@ const loadApiCache = () => {
       const cache = JSON.parse(stored);
       const now = new Date().getTime();
 
-      // Check if cache is still valid (within 24 hours)
-      if (cache.timestamp && now - cache.timestamp < API_CACHE_DURATION) {
+      const duration = getCacheDurationMs();
+      if (cache.timestamp && now - cache.timestamp < duration) {
         return cache;
       } else {
         // Cache expired, remove it
@@ -201,11 +238,18 @@ const loadApiCache = () => {
  * Saves API data to cache
  * @param {Object} data - Data to cache
  */
-const saveApiCache = (data) => {
+const saveApiCache = (data, provider) => {
   try {
+    const duration = getCacheDurationMs();
+    if (duration === 0) {
+      localStorage.removeItem(API_CACHE_KEY);
+      apiCache = null;
+      return;
+    }
     const cacheObject = {
       timestamp: new Date().getTime(),
       data: data,
+      provider,
     };
     localStorage.setItem(API_CACHE_KEY, JSON.stringify(cacheObject));
     apiCache = cacheObject;
@@ -306,9 +350,9 @@ const syncSpotPricesFromApi = async (
     if (cache && cache.data && cache.timestamp) {
       const now = new Date().getTime();
       const cacheAge = now - cache.timestamp;
+      const duration = getCacheDurationMs();
 
-      // If cache is less than 24 hours old, use cached data instead of API call
-      if (cacheAge < API_CACHE_DURATION) {
+      if (cacheAge < duration) {
         if (showProgress) {
           const hoursAgo = Math.floor(cacheAge / (1000 * 60 * 60));
           const minutesAgo = Math.floor(cacheAge / (1000 * 60));
@@ -351,7 +395,17 @@ const syncSpotPricesFromApi = async (
         elements.spotPriceDisplay[metal].textContent = formatDollar(price);
 
         // Record in history
-        recordSpot(price, "api", metalConfig.name);
+        recordSpot(
+          price,
+          "api",
+          metalConfig.name,
+          API_PROVIDERS[apiConfig.provider].name,
+        );
+
+        const ts = document.getElementById(`spotTimestamp${metalConfig.name}`);
+        if (ts) {
+          ts.textContent = getLastUpdateTime(metalConfig.name) || "No data";
+        }
 
         updatedCount++;
       }
@@ -359,7 +413,7 @@ const syncSpotPricesFromApi = async (
 
     if (updatedCount > 0) {
       // Save to cache
-      saveApiCache(spotPricesData);
+      saveApiCache(spotPricesData, apiConfig.provider);
 
       // Update summary calculations
       updateSummary();
@@ -481,13 +535,22 @@ const handleProviderSync = async (provider) => {
         localStorage.setItem(metalConfig.spotKey, price.toString());
         spotPrices[metal] = price;
         elements.spotPriceDisplay[metal].textContent = formatDollar(price);
-        recordSpot(price, "api", metalConfig.name);
+        recordSpot(
+          price,
+          "api",
+          metalConfig.name,
+          API_PROVIDERS[provider].name,
+        );
+        const ts = document.getElementById(`spotTimestamp${metalConfig.name}`);
+        if (ts) {
+          ts.textContent = getLastUpdateTime(metalConfig.name) || "No data";
+        }
         updatedCount++;
       }
     });
 
     if (updatedCount > 0) {
-      saveApiCache(data);
+      saveApiCache(data, provider);
       updateSummary();
       setProviderStatus(provider, "connected");
       alert(
@@ -535,7 +598,11 @@ const updateSyncButtonStates = (syncing = false) => {
 const showSettingsModal = () => {
   const modal = document.getElementById("settingsModal");
   if (!modal) return;
-  let currentConfig = loadApiConfig() || { provider: "", keys: {} };
+  let currentConfig = loadApiConfig() || {
+    provider: "",
+    keys: {},
+    cacheHours: 24,
+  };
   if (!currentConfig.provider) {
     currentConfig.provider = Object.keys(API_PROVIDERS)[0];
     saveApiConfig(currentConfig);
@@ -550,6 +617,11 @@ const showSettingsModal = () => {
     if (radio) radio.checked = currentConfig.provider === prov;
     setProviderStatus(prov, providerStatuses[prov] || "disconnected");
   });
+
+  const durationSelect = document.getElementById("apiCacheDuration");
+  if (durationSelect) {
+    durationSelect.value = String(currentConfig.cacheHours ?? 24);
+  }
 
   modal.style.display = "flex";
 };
@@ -619,6 +691,7 @@ window.handleProviderSync = handleProviderSync;
 window.clearApiKey = clearApiKey;
 window.clearApiCache = clearApiCache;
 window.setDefaultProvider = setDefaultProvider;
+window.setCacheDuration = setCacheDuration;
 
 /**
  * Shows manual price input for a specific metal
@@ -664,11 +737,13 @@ const resetSpotPrice = (metal) => {
 
   let resetPrice = metalConfig.defaultPrice;
   let source = "default";
+  let providerName = null;
 
   // If we have cached API data, use that instead
   if (apiCache && apiCache.data && apiCache.data[metalConfig.key]) {
     resetPrice = apiCache.data[metalConfig.key];
     source = "api";
+    providerName = API_PROVIDERS[apiCache.provider]?.name || null;
   }
 
   // Update price
@@ -680,7 +755,7 @@ const resetSpotPrice = (metal) => {
     formatDollar(resetPrice);
 
   // Record in history
-  recordSpot(resetPrice, source, metalConfig.name);
+  recordSpot(resetPrice, source, metalConfig.name, providerName);
 
   // Update summary
   updateSummary();

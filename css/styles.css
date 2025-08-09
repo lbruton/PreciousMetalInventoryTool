@@ -475,16 +475,39 @@ input[type="submit"] {
 
 .provider-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 0.25rem;
   font-weight: 600;
+  gap: 0.25rem;
+}
+
+.provider-url {
+  font-weight: normal;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.api-info-link {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--primary);
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .provider-actions {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+.cache-duration-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .api-key-row {
