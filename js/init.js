@@ -290,6 +290,11 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchSpotPrice();
     updateSyncButtonStates();
 
+    // Automatically sync prices if cache is stale and API keys are available
+    if (typeof autoSyncSpotPrices === "function") {
+      autoSyncSpotPrices();
+    }
+
     // Phase 14: Event Listeners Setup (Delayed)
     debugLog("Phase 14: Setting up event listeners...");
 
