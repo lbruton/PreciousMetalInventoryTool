@@ -49,12 +49,7 @@ const hideAckModal = () => {
  * Accepts the acknowledgment and hides the modal
  */
 const acceptAck = () => {
-  const dontShow = document.getElementById("ackDontShow");
-  if (dontShow && dontShow.checked) {
-    localStorage.setItem(ACK_DISMISSED_KEY, "1");
-  } else {
-    localStorage.removeItem(ACK_DISMISSED_KEY);
-  }
+  localStorage.setItem(ACK_DISMISSED_KEY, "1");
   hideAckModal();
 };
 
