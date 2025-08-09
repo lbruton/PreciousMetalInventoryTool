@@ -9,6 +9,25 @@ const providerStatuses = {
   CUSTOM: "disconnected",
 };
 
+const renderApiStatusSummary = () => {
+  const container = document.getElementById("apiStatusSummary");
+  if (!container) return;
+  const html = Object.keys(API_PROVIDERS)
+    .map((prov) => {
+      const status = providerStatuses[prov] || "disconnected";
+      const name = API_PROVIDERS[prov].name;
+      const statusText =
+        status === "connected"
+          ? "Connected"
+          : status === "error"
+            ? "Error"
+            : "Disconnected";
+      return `<span class="status-item ${status}">${name}: ${statusText}</span>`;
+    })
+    .join("");
+  container.innerHTML = html;
+};
+
 // API history table state
 let apiHistoryEntries = [];
 let apiHistoryPage = 1;
@@ -176,6 +195,7 @@ const getCacheDurationMs = () => {
  */
 const setProviderStatus = (provider, status) => {
   providerStatuses[provider] = status;
+  renderApiStatusSummary();
   const block = document.querySelector(
     `.api-provider[data-provider="${provider}"] .provider-status`,
   );
@@ -1080,6 +1100,7 @@ const showSettingsModal = () => {
     if (input) input.value = currentConfig.keys?.[prov] || "";
     setProviderStatus(prov, providerStatuses[prov] || "disconnected");
   });
+  renderApiStatusSummary();
 
   const baseInput = document.getElementById("apiBase_CUSTOM");
   if (baseInput) baseInput.value = currentConfig.customConfig?.baseUrl || "";
