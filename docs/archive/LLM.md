@@ -2,21 +2,22 @@
 
 > **CRITICAL**: Keep all documentation in sync with code updates.  
 >  
-> **LLM INSTRUCTION**: After any code change, verify and update these files:  
-> ```  
-> docs/README.md      — User guidance, features, installation, contribution  
-> docs/LLM.md         — This AI assistant guide (you are here)  
-> docs/CHANGELOG.md   — Version history with dates and notes  
-> docs/STATUS.md      — Current status and feature coverage  
-> docs/STRUCTURE.md   — Project folder and file organization  
-> docs/VERSIONING.md  — Version management strategy  
+> **LLM INSTRUCTION**: After any code change, verify and update these files:
+> ```
+> docs/README.md               — User guidance, features, installation, contribution
+> docs/archive/LLM.md          — This AI assistant guide (you are here)
+> docs/CHANGELOG.md            — Version history with dates and notes
+> docs/STATUS.md               — Current status and feature coverage
+> docs/STRUCTURE.md            — Project folder and file organization
+> docs/VERSIONING.md           — Version management strategy
+> index.html & js/about.js     — About modal version info and release notes
 > ```
 
 ---
 
 ## 1. Purpose
 
-Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Metals Inventory Tool v3.1.10** to guide development, documentation, and QA tasks.
+Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Metals Inventory Tool v3.1.12** to guide development, documentation, and QA tasks.
 
 ## 2. Project Snapshot
 
@@ -29,7 +30,7 @@ Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Me
   - **Comprehensive backup ZIP system** with all data formats and restoration guides
   - Responsive & accessible UI (mobile-first, ARIA, keyboard support)  
   - Modular JS architecture (constants, state, events, utils, inventory)  
-- **Version**: 3.1.10 (file cleanup and maintenance)
+- **Version**: 3.1.12 (About modal and disclaimer)
 - **Last Updated**: August 8, 2025  
 
 ## 3. Project Structure
@@ -54,11 +55,13 @@ PreciousMetalInventoryTool/
 │       └── init.js           # Application initialization
 ├── docs/
 │   ├── CHANGELOG.md
+│   ├── IMPLEMENTATION_SUMMARY.md
+│   ├── MULTI_AGENT_WORKFLOW.md
+│   ├── ROADMAP.md
+│   ├── STATUS.md
 │   ├── STRUCTURE.md
 │   ├── VERSIONING.md
-│   ├── STATUS.md
-│   ├── LLM.md               # (this file)
-│   └── README.md
+│   └── archive/LLM.md       # (this file)
 └── sample.csv
 
 ## 4. Architecture & Design
@@ -88,6 +91,13 @@ PreciousMetalInventoryTool/
    - Ensure all fields (notes, storage, overrides) are serialized/deserialized  
 
 ## 6. v3.1.x Family Highlights
+
+- **v3.1.12 - About Modal & Disclaimer**:
+  - Introduced mandatory disclaimer splash and About button
+  - Refreshed styling with version info and GitHub source link
+
+- **v3.1.11 - UI Enhancements & Documentation**:
+  - Improved table usability and consolidated workflow documentation
 
 - **v3.1.10 - Project Maintenance**:
   - Removed orphaned backup and debug files for cleaner project structure
