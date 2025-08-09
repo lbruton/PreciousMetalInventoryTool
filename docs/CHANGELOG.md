@@ -8,10 +8,21 @@
 
 ## 📋 Version History
 
+### Version 3.2.06rc – Auto Spot Price Sync (2025-08-09)
+- Automatically refreshes spot prices at startup when API keys exist and the cache is expired
+- Item entry moved to a dedicated modal with stacked filter support
+- Pagination controls polished with repositioned items-per-page selector and fixed dropdown width
+- Collectable checkbox replaced with status button and aligned action buttons
+- Totals cards renamed with refined labels and font sizing
+- Improved About modal title contrast in light mode
+- Notes button displays a green "Yes" when items have saved notes
+
 ### Version 3.2.05rc – Splash Opt-Out (2025-08-09)
 - Disclaimer splash now hides permanently after the acknowledgment button is clicked, removing the previous checkbox
-- Header branding can now automatically adapt to the hosting domain with
-  configurable casing, optional TLD removal, and global override support
+- Simplified acknowledgment layout with improved placement and styling
+- Header branding can now automatically adapt to the hosting domain with configurable casing, optional TLD removal, and global override support
+- App subtitle updated to "The open source precious metals tracking tool."
+- Fixed API key handling so each provider stores its own key independently
 
 ### Version 3.2.04rc – Import Negative Price Handling (2025-08-09)
 - Negative prices in CSV, JSON, and Excel imports now default to $0 instead of causing validation errors

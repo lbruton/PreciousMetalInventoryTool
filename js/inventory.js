@@ -542,11 +542,9 @@ const renderTable = () => {
       <td class="shrink" style="color: ${item.isCollectable ? 'var(--text-muted)' : (item.totalPremium > 0 ? 'var(--warning)' : 'inherit')}">${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
       <td class="shrink">${filterLink('purchaseLocation', item.purchaseLocation, getPurchaseLocationColor(item.purchaseLocation))}</td>
       <td class="shrink">${filterLink('storageLocation', item.storageLocation || 'Unknown', getStorageLocationColor(item.storageLocation || 'Unknown'))}</td>
-      <td class="checkbox-cell shrink">
-      <input type="checkbox" ${item.isCollectable ? 'checked' : ''} onchange="toggleCollectable(${originalIdx}, this)" class="collectable-checkbox" aria-label="Mark ${sanitizeHtml(item.name)} as collectable" title="Mark as collectable">
-      </td>
-      <td class="shrink"><button class="btn" onclick="showNotes(${originalIdx})" aria-label="View notes" title="View notes">Notes</button></td>
-      <td class="shrink"><button class="btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item" title="Delete item">Delete</button></td>
+      <td class="shrink"><button type="button" class="btn action-btn collectable-btn ${item.isCollectable ? 'success' : ''}" onclick="toggleCollectable(${originalIdx})" aria-label="Toggle collectable status for ${sanitizeHtml(item.name)}" title="Toggle collectable status">${item.isCollectable ? 'Yes' : 'No'}</button></td>
+      <td class="shrink"><button type="button" class="btn action-btn notes-btn ${item.notes && item.notes.trim() ? 'success' : ''}" onclick="showNotes(${originalIdx})" aria-label="View notes" title="View notes">${item.notes && item.notes.trim() ? 'Yes' : 'No'}</button></td>
+      <td class="shrink"><button class="btn action-btn danger" onclick="deleteItem(${originalIdx})" aria-label="Delete item" title="Delete item">Delete</button></td>
       </tr>
       `);
     }
@@ -630,9 +628,9 @@ const updateSummary = () => {
         const itemWeight = Number(item.qty) * parseFloat(item.weight);
         totalWeight += itemWeight;
 
-        // Current Value calculation
+        // Melt Value calculation
         if (item.isCollectable) {
-          // For collectible items: Current Value = Current spot price × weight
+          // For collectible items: Melt Value = Current spot price × weight
           const currentSpot = spotPrices[item.metal.toLowerCase()];
           currentSpotValue += currentSpot * itemWeight;
 
@@ -640,7 +638,7 @@ const updateSummary = () => {
           collectableWeight += itemWeight;
           collectableValue += Number(item.qty) * parseFloat(item.price);
         } else {
-          // For regular items: Current Value = Weight × Current Spot Price
+          // For regular items: Melt Value = Weight × Current Spot Price
           const currentSpot = spotPrices[item.metal.toLowerCase()];
           currentSpotValue += currentSpot * itemWeight;
 
@@ -663,7 +661,7 @@ const updateSummary = () => {
 
         // Loss/Profit calculation
         if (!item.isCollectable) {
-          // For regular items: Loss/Profit = Current Value - Purchase Price
+          // For regular items: Loss/Profit = Melt Value - Purchase Price
           const currentSpot = spotPrices[item.metal.toLowerCase()];
           const currentValue = currentSpot * itemWeight;
           const purchaseValue = item.price * item.qty;
@@ -852,12 +850,11 @@ const editItem = (idx) => {
  * Toggles collectable status for inventory item
  * 
  * @param {number} idx - Index of item to update
- * @param {HTMLInputElement} checkbox - Checkbox element triggering the change
- */
-const toggleCollectable = (idx, checkbox) => {
+*/
+const toggleCollectable = (idx) => {
   const item = inventory[idx];
   const wasCollectable = item.isCollectable;
-  const isCollectable = checkbox.checked;
+  const isCollectable = !wasCollectable;
 
   // If toggling from collectable to non-collectable
   if (wasCollectable && !isCollectable) {
@@ -1497,28 +1494,28 @@ const exportPdf = () => {
   doc.text(`Total Items: ${elements.totals.silver.items.textContent}`, 25, finalY + 22);
   doc.text(`Total Weight: ${elements.totals.silver.weight.textContent} oz`, 25, finalY + 28);
   doc.text(`Purchase Price: ${elements.totals.silver.purchased.textContent}`, 25, finalY + 34);
-  doc.text(`Current Value: ${elements.totals.silver.value.textContent}`, 25, finalY + 40);
+  doc.text(`Melt Value: ${elements.totals.silver.value.textContent}`, 25, finalY + 40);
 
   // Gold Totals
   doc.text("Gold:", 100, finalY + 16);
   doc.text(`Total Items: ${elements.totals.gold.items.textContent}`, 111, finalY + 22);
   doc.text(`Total Weight: ${elements.totals.gold.weight.textContent} oz`, 111, finalY + 28);
   doc.text(`Purchase Price: ${elements.totals.gold.purchased.textContent}`, 111, finalY + 34);
-  doc.text(`Current Value: ${elements.totals.gold.value.textContent}`, 111, finalY + 40);
+  doc.text(`Melt Value: ${elements.totals.gold.value.textContent}`, 111, finalY + 40);
 
   // Platinum Totals
   doc.text("Platinum:", 14, finalY + 46);
   doc.text(`Total Items: ${elements.totals.platinum.items.textContent}`, 25, finalY + 52);
   doc.text(`Total Weight: ${elements.totals.platinum.weight.textContent} oz`, 25, finalY + 58);
   doc.text(`Purchase Price: ${elements.totals.platinum.purchased.textContent}`, 25, finalY + 64);
-  doc.text(`Current Value: ${elements.totals.platinum.value.textContent}`, 25, finalY + 70);
+  doc.text(`Melt Value: ${elements.totals.platinum.value.textContent}`, 25, finalY + 70);
 
   // Palladium Totals
   doc.text("Palladium:", 100, finalY + 46);
   doc.text(`Total Items: ${elements.totals.palladium.items.textContent}`, 111, finalY + 52);
   doc.text(`Total Weight: ${elements.totals.palladium.weight.textContent} oz`, 111, finalY + 58);
   doc.text(`Purchase Price: ${elements.totals.palladium.purchased.textContent}`, 111, finalY + 64);
-  doc.text(`Current Value: ${elements.totals.palladium.value.textContent}`, 111, finalY + 70);
+  doc.text(`Melt Value: ${elements.totals.palladium.value.textContent}`, 111, finalY + 70);
 
   // All Totals (only if elements exist)
   if (elements.totals.all.items.textContent !== undefined) {
@@ -1527,7 +1524,7 @@ const exportPdf = () => {
     doc.text(`Total Items: ${elements.totals.all.items.textContent}`, 25, finalY + 82);
     doc.text(`Total Weight: ${elements.totals.all.weight.textContent} oz`, 25, finalY + 88);
     doc.text(`Purchase Price: ${elements.totals.all.purchased.textContent}`, 25, finalY + 94);
-    doc.text(`Current Value: ${elements.totals.all.value.textContent}`, 25, finalY + 100);
+    doc.text(`Melt Value: ${elements.totals.all.value.textContent}`, 25, finalY + 100);
   }
 
   // Save PDF
