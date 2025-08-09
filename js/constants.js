@@ -98,6 +98,48 @@ const APP_VERSION = "3.2.05rc";
 /** @constant {string} BRANDING_TITLE - Optional custom application title */
 const BRANDING_TITLE = "StackTrackr";
 
+/**
+ * Domain-based branding configuration
+ *
+ * @property {Object.<string,string>} domainMap - Map of domain keywords to
+ * custom display names. Keys are compared in lowercase and may omit the
+ * domain extension when `removeExtension` is true.
+ * @property {boolean} removeExtension - When true, strips the domain
+ * extension (e.g. ".com") before lookup
+ * @property {boolean} alwaysOverride - When true, domain mapping overrides
+ * `BRANDING_TITLE` across the entire application
+ */
+const BRANDING_DOMAIN_OPTIONS = {
+  domainMap: {
+    stackertracker: "Stacker Tracker",
+    stacktrackr: "Stack Trackr",
+    stackrtrackr: "Stackr Trackr",
+  },
+  removeExtension: true,
+  alwaysOverride: false,
+};
+
+/**
+ * Title detected from the current domain or null if no mapping found
+ *
+ * Falls back to `BRANDING_TITLE` when running under file:// or no domain is
+ * detected.
+ * @constant {string|null}
+ */
+const BRANDING_DOMAIN_OVERRIDE =
+  typeof window !== "undefined" && window.location && window.location.hostname
+    ? (() => {
+        let host = window.location.hostname.toLowerCase();
+        if (BRANDING_DOMAIN_OPTIONS.removeExtension) {
+          const parts = host.split(".");
+          if (parts.length > 1) {
+            host = parts[0];
+          }
+        }
+        return BRANDING_DOMAIN_OPTIONS.domainMap[host] || null;
+      })()
+    : null;
+
 /** @constant {string} LS_KEY - LocalStorage key for inventory data */
 const LS_KEY = "metalInventory";
 
@@ -206,4 +248,6 @@ if (typeof window !== "undefined") {
   window.API_PROVIDERS = API_PROVIDERS;
   window.METALS = METALS;
   window.DEBUG = DEBUG;
+  window.BRANDING_DOMAIN_OPTIONS = BRANDING_DOMAIN_OPTIONS;
+  window.BRANDING_DOMAIN_OVERRIDE = BRANDING_DOMAIN_OVERRIDE;
 }

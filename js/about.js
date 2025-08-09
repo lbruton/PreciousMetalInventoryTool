@@ -65,6 +65,7 @@ const populateAboutModal = () => {
   // Update version displays
   const aboutVersion = document.getElementById("aboutVersion");
   const aboutCurrentVersion = document.getElementById("aboutCurrentVersion");
+  const aboutAppName = document.getElementById("aboutAppName");
 
   if (aboutVersion && typeof APP_VERSION !== "undefined") {
     aboutVersion.textContent = `v${APP_VERSION}`;
@@ -72,6 +73,10 @@ const populateAboutModal = () => {
 
   if (aboutCurrentVersion && typeof APP_VERSION !== "undefined") {
     aboutCurrentVersion.textContent = `v${APP_VERSION}`;
+  }
+
+  if (aboutAppName) {
+    aboutAppName.textContent = getBrandingName();
   }
 
   // Load changelog data
@@ -83,8 +88,12 @@ const populateAboutModal = () => {
  */
 const populateAckModal = () => {
   const ackVersion = document.getElementById("ackVersion");
+  const ackAppName = document.getElementById("ackAppName");
   if (ackVersion && typeof APP_VERSION !== "undefined") {
     ackVersion.textContent = `v${APP_VERSION}`;
+  }
+  if (ackAppName) {
+    ackAppName.textContent = getBrandingName();
   }
 };
 

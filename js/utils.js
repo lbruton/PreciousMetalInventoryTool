@@ -19,15 +19,24 @@ const debugLog = (...args) => {
 const getVersionString = (prefix = "v") => `${prefix}${APP_VERSION}`;
 
 /**
- * Returns full application title with version
+ * Gets the active branding name considering domain overrides
+ *
+ * @returns {string} Active branding name
+ */
+const getBrandingName = () =>
+  (BRANDING_DOMAIN_OPTIONS.alwaysOverride && BRANDING_DOMAIN_OVERRIDE) ||
+  BRANDING_TITLE;
+
+/**
+ * Returns full application title with version when no branding is configured
  *
  * @param {string} [baseTitle='StackTrackr'] - Base application title
- * @returns {string} Full title with version
+ * @returns {string} Full title with version or branding name
  */
-const getAppTitle = (baseTitle = "StackTrackr") =>
-  BRANDING_TITLE && BRANDING_TITLE.trim()
-    ? BRANDING_TITLE
-    : `${baseTitle} ${getVersionString()}`;
+const getAppTitle = (baseTitle = "StackTrackr") => {
+  const brand = getBrandingName();
+  return brand && brand.trim() ? brand : `${baseTitle} ${getVersionString()}`;
+};
 
 /**
  * Performance monitoring utility
