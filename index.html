@@ -803,43 +803,6 @@
          All import/export functions include data validation and error handling
          Implementation in inventory.js with format-specific parsing
          ============================================================================= -->
-      <section class="import-export-section">
-        <h2>Import Options</h2>
-        <div class="import-section import-export-grid">
-          <label class="btn" id="importCsvBtn">
-            Import CSV
-            <input accept=".csv" hidden="" id="importCsvFile" type="file" />
-          </label>
-          <label class="btn" id="importJsonBtn">
-            Import JSON
-            <input accept=".json" hidden="" id="importJsonFile" type="file" />
-          </label>
-          <label class="btn" id="importExcelBtn">
-            Import Excel
-            <input
-              accept=".xlsx,.xls"
-              hidden=""
-              id="importExcelFile"
-              type="file"
-            />
-          </label>
-        </div>
-        <progress
-          class="import-progress"
-          id="importProgress"
-          value="0"
-          max="0"
-        ></progress>
-        <div class="import-progress-text" id="importProgressText"></div>
-        <h2>Export Options</h2>
-        <div class="export-section import-export-grid">
-          <button class="btn" id="exportCsvBtn">Export CSV</button>
-          <button class="btn" id="exportJsonBtn">Export JSON</button>
-          <button class="btn" id="exportExcelBtn">Export Excel</button>
-          <button class="btn" id="exportPdfBtn">Export PDF</button>
-          <button class="btn" id="exportHtmlBtn">Export HTML</button>
-        </div>
-      </section>
     </div>
     <!-- =============================================================================
        EDIT MODAL
@@ -1233,6 +1196,7 @@
         <div class="modal-body">
           <div class="settings-section">
             <h3 style="margin-bottom: 1rem">API Configuration</h3>
+            <p class="settings-subtext">Manage API cache, history, and providers.</p>
 
             <div class="cache-duration-row">
               <label for="apiCacheDuration">Cache Duration:</label>
@@ -1246,42 +1210,75 @@
             </div>
 
             <div class="settings-actions">
-              <button type="button" class="btn" id="addProvidersBtn">
-                Add Providers
+              <button type="button" class="btn" id="providersBtn">
+                Providers 🖥️
               </button>
-              <button type="button" class="btn danger" id="clearApiCacheBtn">
-                Clear API Cache
-              </button>
-              <button type="button" class="btn" id="apiHistoryBtn">History</button>
+              <div class="settings-actions-right">
+                <button type="button" class="btn danger" id="flushCacheBtn">
+                  Flush Cache 🚽
+                </button>
+                <button type="button" class="btn" id="apiHistoryBtn">
+                  History 📜
+                </button>
+              </div>
             </div>
           </div>
 
           <div class="settings-section">
             <h3>Appearance</h3>
-            <div class="theme-options">
-              <label class="theme-option"
-                ><input type="radio" name="themePreference" value="light" />
-                <span class="theme-icon">☀️</span><span>Light</span></label
-              >
-              <label class="theme-option"
-                ><input type="radio" name="themePreference" value="dark" />
-                <span class="theme-icon">🌙</span><span>Dark</span></label
-              >
-              <label class="theme-option"
-                ><input type="radio" name="themePreference" value="system" />
-                <span class="theme-icon">💻</span><span>System</span></label
-              >
+            <p class="settings-subtext">Set your default preference.</p>
+            <div class="theme-buttons">
+              <button class="btn theme-btn dark" id="darkModeBtn">Dark Mode</button>
+              <button class="btn theme-btn light" id="lightModeBtn">Light Mode</button>
+              <button class="btn theme-btn system" id="systemModeBtn">
+                Follow System
+              </button>
+              <div class="theme-display" id="themeDisplay"></div>
             </div>
           </div>
 
           <div class="settings-section">
             <h3>Files</h3>
-            <p>File settings coming soon.</p>
+            <p class="settings-subtext">Import or export your data files.</p>
+            <div class="import-section import-export-grid">
+              <label class="btn" id="importCsvBtn">
+                Import CSV
+                <input accept=".csv" hidden id="importCsvFile" type="file" />
+              </label>
+              <label class="btn" id="importJsonBtn">
+                Import JSON
+                <input accept=".json" hidden id="importJsonFile" type="file" />
+              </label>
+              <label class="btn" id="importExcelBtn">
+                Import Excel
+                <input
+                  accept=".xlsx,.xls"
+                  hidden
+                  id="importExcelFile"
+                  type="file"
+                />
+              </label>
+            </div>
+            <progress
+              class="import-progress"
+              id="importProgress"
+              value="0"
+              max="0"
+            ></progress>
+            <div class="import-progress-text" id="importProgressText"></div>
+            <div class="export-section import-export-grid">
+              <button class="btn" id="exportCsvBtn">Export CSV</button>
+              <button class="btn" id="exportJsonBtn">Export JSON</button>
+              <button class="btn" id="exportExcelBtn">Export Excel</button>
+              <button class="btn" id="exportPdfBtn">Export PDF</button>
+              <button class="btn" id="exportHtmlBtn">Export HTML</button>
+            </div>
           </div>
 
           <div class="settings-section boating-accident-section">
+            <p class="settings-subtext">Backup or restore all data.</p>
             <button id="boatingAccidentBtn">
-              🏴‍☠️ So you had a boating accident?
+              🏴‍☠️ So you had a boating accident? 🏴‍☠️
             </button>
           </div>
         </div>
