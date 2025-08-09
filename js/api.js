@@ -147,13 +147,147 @@ const setProviderStatus = (provider, status) => {
 };
 
 /**
+ * Updates provider history tables with latest API values
+ */
+const updateProviderHistoryTables = () => {
+  loadSpotHistory();
+  const history = spotHistory.filter((e) => e.source === "api");
+  Object.keys(API_PROVIDERS).forEach((prov) => {
+    const container = document.querySelector(
+      `.api-provider[data-provider="${prov}"] .provider-history`,
+    );
+    if (!container) return;
+    const providerName = API_PROVIDERS[prov].name;
+    const metals = ["Silver", "Gold", "Platinum", "Palladium"];
+    let html = "<table>";
+    metals.forEach((metal) => {
+      const entries = history.filter(
+        (e) => e.provider === providerName && e.metal === metal,
+      );
+      const last = entries.length
+        ? formatDollar(entries[entries.length - 1].spot)
+        : "-";
+      html += `<tr><td>${metal}</td><td>${last}</td></tr>`;
+    });
+    html += "</table>";
+    container.innerHTML = html;
+  });
+};
+
+/**
+ * Updates default provider button states
+ */
+const updateDefaultProviderButtons = () => {
+  const config = loadApiConfig();
+  const keys = config.keys || {};
+  const active = Object.keys(API_PROVIDERS).filter((p) => keys[p]);
+  if (active.length === 1) {
+    config.provider = active[0];
+    saveApiConfig(config);
+  }
+  Object.keys(API_PROVIDERS).forEach((prov) => {
+    const btn = document.querySelector(
+      `.provider-default-btn[data-provider="${prov}"]`,
+    );
+    if (!btn) return;
+    btn.classList.remove("default", "backup", "inactive");
+    if (config.provider === prov && keys[prov]) {
+      btn.textContent = "Default";
+      btn.classList.add("default");
+    } else if (keys[prov]) {
+      btn.textContent = "Backup";
+      btn.classList.add("backup");
+    } else {
+      btn.textContent = "Not in use";
+      btn.classList.add("inactive");
+    }
+  });
+};
+
+/**
+ * Shows API history modal with table and chart
+ */
+const showApiHistoryModal = () => {
+  const modal = document.getElementById("apiHistoryModal");
+  if (!modal) return;
+  loadSpotHistory();
+  const entries = spotHistory.filter((e) => e.source === "api");
+  const table = document.getElementById("apiHistoryTable");
+  if (table) {
+    let rows =
+      "<tr><th>Time</th><th>Metal</th><th>Price</th><th>API</th></tr>";
+    entries.forEach((e) => {
+      rows += `<tr><td>${e.timestamp}</td><td>${e.metal}</td><td>${formatDollar(
+        e.spot,
+      )}</td><td>${e.provider || ""}</td></tr>`;
+    });
+    table.innerHTML = rows;
+  }
+  const ctx = document.getElementById("apiHistoryChart");
+  if (ctx) {
+    const metals = ["Silver", "Gold", "Platinum", "Palladium"];
+    const datasets = [];
+    let maxLen = 0;
+    metals.forEach((metal) => {
+      const data = entries
+        .filter((e) => e.metal === metal)
+        .slice(-30)
+        .map((e) => e.spot);
+      if (data.length > maxLen) maxLen = data.length;
+      const color = getComputedStyle(document.documentElement).getPropertyValue(
+        `--${metal.toLowerCase()}`,
+      );
+      datasets.push({
+        label: metal,
+        data,
+        borderColor: color,
+        tension: 0.2,
+      });
+    });
+    const labels = Array.from({ length: maxLen }, (_, i) => i + 1);
+    if (chartInstances.apiHistoryChart) {
+      chartInstances.apiHistoryChart.destroy();
+    }
+    chartInstances.apiHistoryChart = new Chart(ctx, {
+      type: "line",
+      data: { labels, datasets },
+      options: { responsive: true, maintainAspectRatio: false },
+    });
+  }
+  modal.style.display = "flex";
+};
+
+/**
+ * Hides API history modal
+ */
+const hideApiHistoryModal = () => {
+  const modal = document.getElementById("apiHistoryModal");
+  if (modal) modal.style.display = "none";
+};
+
+/**
+ * Clears stored API price history
+ */
+const clearApiHistory = () => {
+  spotHistory = [];
+  saveSpotHistory();
+  updateProviderHistoryTables();
+  showApiHistoryModal();
+};
+
+/**
  * Updates default provider selection in config
  * @param {string} provider
  */
 const setDefaultProvider = (provider) => {
   const config = loadApiConfig();
+  if (!config.keys[provider]) {
+    alert("Please enter your API key first");
+    return;
+  }
   config.provider = provider;
   saveApiConfig(config);
+  updateDefaultProviderButtons();
   updateSyncButtonStates();
 };
 
@@ -164,6 +298,13 @@ const setDefaultProvider = (provider) => {
 const clearApiKey = (provider) => {
   const config = loadApiConfig();
   delete config.keys[provider];
+  if (config.provider === provider) {
+    config.provider = "";
+  }
+  const active = Object.keys(API_PROVIDERS).filter((p) => config.keys[p]);
+  if (active.length === 1) {
+    config.provider = active[0];
+  }
   saveApiConfig(config);
   const input = document.getElementById(`apiKey_${provider}`);
   if (input) input.value = "";
@@ -178,6 +319,8 @@ const clearApiKey = (provider) => {
     saveApiConfig(config);
   }
   setProviderStatus(provider, "disconnected");
+  updateDefaultProviderButtons();
+  updateProviderHistoryTables();
 };
 
 /**
@@ -572,9 +715,6 @@ const testApiConnection = async (provider, apiKey) => {
  */
 const handleProviderSync = async (provider) => {
   const keyInput = document.getElementById(`apiKey_${provider}`);
-  const radio = document.querySelector(
-    `input[name="defaultProvider"][value="${provider}"]`,
-  );
   if (!keyInput) return;
 
   const apiKey = keyInput.value.trim();
@@ -597,11 +737,9 @@ const handleProviderSync = async (provider) => {
     }
     config.customConfig = { baseUrl: base, endpoint, format };
   }
-  if (radio && radio.checked) {
-    config.provider = provider;
-  }
   config.timestamp = new Date().getTime();
   saveApiConfig(config);
+  updateDefaultProviderButtons();
   updateSyncButtonStates();
   setProviderStatus(provider, "disconnected");
 
@@ -640,6 +778,7 @@ const handleProviderSync = async (provider) => {
       saveApiCache(data, provider);
       updateSummary();
       setProviderStatus(provider, "connected");
+      updateProviderHistoryTables();
       alert(
         `Successfully synced ${updatedCount} metal prices from ${API_PROVIDERS[provider].name}`,
       );
@@ -705,11 +844,7 @@ const showSettingsModal = () => {
 
   Object.keys(API_PROVIDERS).forEach((prov) => {
     const input = document.getElementById(`apiKey_${prov}`);
-    const radio = document.querySelector(
-      `input[name="defaultProvider"][value="${prov}"]`,
-    );
     if (input) input.value = currentConfig.keys?.[prov] || "";
-    if (radio) radio.checked = currentConfig.provider === prov;
     setProviderStatus(prov, providerStatuses[prov] || "disconnected");
   });
 
@@ -726,7 +861,8 @@ const showSettingsModal = () => {
   if (durationSelect) {
     durationSelect.value = String(currentConfig.cacheHours ?? 24);
   }
-
+  updateDefaultProviderButtons();
+  updateProviderHistoryTables();
   modal.style.display = "flex";
 };
 
@@ -796,6 +932,9 @@ window.clearApiKey = clearApiKey;
 window.clearApiCache = clearApiCache;
 window.setDefaultProvider = setDefaultProvider;
 window.setCacheDuration = setCacheDuration;
+window.showApiHistoryModal = showApiHistoryModal;
+window.hideApiHistoryModal = hideApiHistoryModal;
+window.clearApiHistory = clearApiHistory;
 
 /**
  * Shows manual price input for a specific metal

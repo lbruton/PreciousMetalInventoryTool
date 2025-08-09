@@ -53,7 +53,12 @@ const fetchSpotPrice = () => {
           spotPrices[metalConfig.key],
         );
       }
-      recordSpot(spotPrices[metalConfig.key], "stored", metalConfig.name);
+      const hasHistory = spotHistory.some(
+        (e) => e.metal === metalConfig.name,
+      );
+      if (!hasHistory) {
+        recordSpot(spotPrices[metalConfig.key], "stored", metalConfig.name);
+      }
     } else {
       // Use default price if no stored price
       const defaultPrice = metalConfig.defaultPrice;
