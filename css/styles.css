@@ -460,6 +460,22 @@ button, .btn, input[type="button"], input[type="submit"] {
   border-radius: var(--radius);
 }
 
+.api-key-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.api-provider input[type="password"] {
+  width: 100%;
+}
+
+.api-key-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
 .provider-header {
   display: flex;
   justify-content: space-between;
@@ -472,6 +488,20 @@ button, .btn, input[type="button"], input[type="submit"] {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
+}
+
+/* Info modal sizing */
+#apiInfoModal .modal-content {
+  max-width: 500px;
+}
+
+.api-info-body {
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  background: var(--bg-tertiary);
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 
 /* =============================================================================

@@ -1245,7 +1245,9 @@
                 <span class="provider-name">Metals.dev</span>
                 <label><input type="radio" name="defaultProvider" value="METALS_DEV" /> Default</label>
               </div>
-              <input type="password" id="apiKey_METALS_DEV" placeholder="API Key" />
+              <label for="apiKey_METALS_DEV" class="api-key-label">API Key</label>
+              <input type="password" id="apiKey_METALS_DEV" placeholder="Enter your API key" />
+              <div class="api-key-note">Your API key is stored locally and never shared.</div>
               <div class="provider-actions">
                 <button type="button" class="btn api-info-btn" data-provider="METALS_DEV">More Info</button>
                 <button type="button" class="btn api-sync-btn" data-provider="METALS_DEV">Test & Sync</button>
@@ -1257,7 +1259,9 @@
                 <span class="provider-name">Metals-API.com</span>
                 <label><input type="radio" name="defaultProvider" value="METALS_API" /> Default</label>
               </div>
-              <input type="password" id="apiKey_METALS_API" placeholder="API Key" />
+              <label for="apiKey_METALS_API" class="api-key-label">API Key</label>
+              <input type="password" id="apiKey_METALS_API" placeholder="Enter your API key" />
+              <div class="api-key-note">Your API key is stored locally and never shared.</div>
               <div class="provider-actions">
                 <button type="button" class="btn api-info-btn" data-provider="METALS_API">More Info</button>
                 <button type="button" class="btn api-sync-btn" data-provider="METALS_API">Test & Sync</button>
@@ -1269,7 +1273,9 @@
                 <span class="provider-name">MetalPriceAPI.com</span>
                 <label><input type="radio" name="defaultProvider" value="METAL_PRICE_API" /> Default</label>
               </div>
-              <input type="password" id="apiKey_METAL_PRICE_API" placeholder="API Key" />
+              <label for="apiKey_METAL_PRICE_API" class="api-key-label">API Key</label>
+              <input type="password" id="apiKey_METAL_PRICE_API" placeholder="Enter your API key" />
+              <div class="api-key-note">Your API key is stored locally and never shared.</div>
               <div class="provider-actions">
                 <button type="button" class="btn api-info-btn" data-provider="METAL_PRICE_API">More Info</button>
                 <button type="button" class="btn api-sync-btn" data-provider="METAL_PRICE_API">Test & Sync</button>
@@ -1285,9 +1291,9 @@
     </div>
 
     <div class="modal" id="apiInfoModal" style="display: none">
-      <div class="modal-content">
+        <div class="modal-content">
         <h3 id="apiInfoTitle" style="margin-bottom: 1rem"></h3>
-        <div id="apiInfoBody" style="margin-bottom: 1rem; font-size: 0.875rem"></div>
+        <div id="apiInfoBody" class="api-info-body"></div>
         <a
           id="apiInfoLink"
           href="#"
