@@ -16,6 +16,8 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
 - Added Cloud Sync placeholder modal and per-provider API quota tracking with usage warnings and automatic monthly reset
 - Boating Accident button color reflects data presence and import/export behavior
 - Custom branding title support and new footer with GPL-3.0 license link
+- Provider modal adds usage instructions and centered tables for Last Price and metal enable options
+- Settings controls and file buttons now use even spacing with upload/download icons and clarified boating accident prompt
 
 ## 🆕 What's New in v3.1.12
 - **About Modal**: Mandatory disclaimer splash with version info and refreshed styling
@@ -198,7 +200,7 @@ This project is designed to be maintainable and extensible. When making changes:
 This project is open source and available for personal use.
 
 ---
-**Current Version**: 3.1.12
+**Current Version**: 3.1.13
 **Last Updated**: August 8, 2025
 **Status**: Feature complete with enhanced documentation workflow
 

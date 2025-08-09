@@ -20,6 +20,8 @@
 - Provider modal actions re-ordered with default button on left and remaining controls right-aligned
 - Provider history table centered with "Last Price" and "Enable" labels
 - Cleaned up obsolete debug files and legacy HTML export code
+- Provider modal now includes usage instructions and evenly spaced table for prices and metal enables
+- Settings actions and file import/export buttons evenly padded with upload/download icons and refined text
 
 ### Version 3.1.12 – About Modal and Disclaimer (2025-08-08)
 - **User Notice**: Added mandatory about/disclaimer modal informing users that data is stored locally and advising regular backups

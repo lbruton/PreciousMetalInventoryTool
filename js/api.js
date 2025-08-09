@@ -212,8 +212,8 @@ const updateProviderHistoryTables = () => {
     const providerName = API_PROVIDERS[prov].name;
     const metals = ["Silver", "Gold", "Platinum", "Palladium"];
     const selections = config.metals?.[prov] || {};
-    let priceRow = '<div class="provider-price-row"><span class="provider-label">Last Price:</span>';
-    let checkboxRow = '<div class="provider-checkbox-row"><span class="provider-label">Enable:</span>';
+    let table = '<table class="provider-table"><tr class="provider-price-row"><th class="provider-label">Last Price:</th>';
+    let checkboxRow = '<tr class="provider-checkbox-row"><th class="provider-label">Enable:</th>';
     metals.forEach((metal) => {
       const entries = history.filter(
         (e) => e.provider === providerName && e.metal === metal,
@@ -223,11 +223,11 @@ const updateProviderHistoryTables = () => {
         : "-";
       const key = metal.toLowerCase();
       const checked = selections[key] !== false ? "checked" : "";
-      priceRow += `<span>${last}</span>`;
-      checkboxRow += `<label><input type="checkbox" class="provider-metal" data-provider="${prov}" data-metal="${key}" ${checked}/> ${metal}</label>`;
+      table += `<td>${last}</td>`;
+      checkboxRow += `<td><label><input type="checkbox" class="provider-metal" data-provider="${prov}" data-metal="${key}" ${checked}/> ${metal}</label></td>`;
     });
-    priceRow += "</div>";
-    checkboxRow += "</div>";
+    table += '</tr>';
+    checkboxRow += '</tr></table>';
     const usage = config.usage?.[prov] || {
       quota: DEFAULT_API_QUOTA,
       used: 0,
@@ -236,7 +236,7 @@ const updateProviderHistoryTables = () => {
     const remainingPercent = 100 - usedPercent;
     const warning = usage.used / usage.quota >= 0.9;
     const usageHtml = `<div class="api-usage"><div class="usage-bar"><div class="used" style="width:${usedPercent}%"></div><div class="remaining" style="width:${remainingPercent}%"></div></div><div class="usage-text">${usage.used}/${usage.quota} calls${warning ? " 🚩" : ""}</div></div>`;
-    container.innerHTML = priceRow + checkboxRow + usageHtml;
+    container.innerHTML = table + checkboxRow + usageHtml;
     container.querySelectorAll(".provider-metal").forEach((cb) => {
       cb.addEventListener("change", (e) => {
         const provId = e.target.dataset.provider;

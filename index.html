@@ -1223,17 +1223,15 @@
               <button type="button" class="btn" id="providersBtn">
                 Providers 🖥️
               </button>
-              <div class="settings-actions-right">
-                <button type="button" class="btn success" id="syncAllBtn">
-                  Sync All ♻️
-                </button>
-                <button type="button" class="btn danger" id="flushCacheBtn">
-                  Flush Cache 🚽
-                </button>
-                <button type="button" class="btn" id="apiHistoryBtn">
-                  History 📜
-                </button>
-              </div>
+              <button type="button" class="btn success" id="syncAllBtn">
+                Sync All ♻️
+              </button>
+              <button type="button" class="btn danger" id="flushCacheBtn">
+                Flush Cache 🚽
+              </button>
+              <button type="button" class="btn" id="apiHistoryBtn">
+                History 📜
+              </button>
             </div>
           </div>
 
@@ -1257,15 +1255,15 @@
               <div class="import-block">
                 <div class="import-export-grid">
                   <label class="btn" id="importCsvBtn">
-                    Import CSV <span class="import-icon">⬇️</span>
+                    Import CSV <span class="import-icon">📤</span>
                     <input accept=".csv" hidden id="importCsvFile" type="file" />
                   </label>
                   <label class="btn" id="importJsonBtn">
-                    Import JSON <span class="import-icon">⬇️</span>
+                    Import JSON <span class="import-icon">📤</span>
                     <input accept=".json" hidden id="importJsonFile" type="file" />
                   </label>
                   <label class="btn" id="importExcelBtn">
-                    Import Excel <span class="import-icon">⬇️</span>
+                    Import Excel <span class="import-icon">📤</span>
                     <input
                       accept=".xlsx,.xls"
                       hidden
@@ -1286,16 +1284,16 @@
               <div class="export-block">
                 <div class="import-export-grid">
                   <button class="btn" id="exportCsvBtn">
-                    Export CSV <span class="export-icon">⬆️</span>
+                    Export CSV <span class="export-icon">📥</span>
                   </button>
                   <button class="btn" id="exportJsonBtn">
-                    Export JSON <span class="export-icon">⬆️</span>
+                    Export JSON <span class="export-icon">📥</span>
                   </button>
                   <button class="btn" id="exportExcelBtn">
-                    Export Excel <span class="export-icon">⬆️</span>
+                    Export Excel <span class="export-icon">📥</span>
                   </button>
                   <button class="btn" id="exportPdfBtn">
-                    Export PDF <span class="export-icon">⬆️</span>
+                    Export PDF <span class="export-icon">📥</span>
                   </button>
                 </div>
               </div>
@@ -1306,7 +1304,7 @@
             <p class="settings-subtext">Clear all data from the app.</p>
             <div class="backup-buttons">
               <button class="btn danger" id="boatingAccidentBtn">
-                🏴‍☠️ Had a boating accident? 🏴‍☠️
+                🏴‍☠️ Have you had a boating accident? 🏴‍☠️
               </button>
             </div>
           </div>
@@ -1327,6 +1325,10 @@
           </button>
         </div>
         <div class="modal-body">
+          <p class="settings-subtext">
+            Enter 1–4 API keys below, choose a default provider, and enable the
+            metals you want each service to update.
+          </p>
           <div class="api-providers">
               <div class="api-provider" data-provider="METALS_DEV">
                 <div class="provider-header">
