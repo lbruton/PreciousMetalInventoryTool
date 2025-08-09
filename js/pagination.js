@@ -35,7 +35,7 @@ const renderPagination = (filteredData = filterInventory()) => {
   for (let i = startPage; i <= endPage; i++) {
     const btn = document.createElement('button');
     btn.textContent = i;
-    btn.className = currentPage === i ? 'active' : '';
+    btn.className = currentPage === i ? 'pagination-btn active' : 'pagination-btn';
     btn.onclick = () => goToPage(i);
     pageNumbersContainer.appendChild(btn);
   }
