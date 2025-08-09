@@ -1061,7 +1061,7 @@ input[type="submit"] {
 }
 
 .total-title {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-weight: 700;
   margin-bottom: var(--spacing);
   color: var(--primary);
@@ -1093,12 +1093,13 @@ input[type="submit"] {
 .total-label {
   font-weight: 500;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .total-value {
   font-weight: 600;
   color: var(--text-primary);
+  font-size: 0.9375rem;
 }
 
 .details-btn {
@@ -1152,7 +1153,7 @@ input[type="submit"] {
 }
 
 .total-title {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-weight: 700;
   margin-bottom: var(--spacing);
   color: var(--text-primary) !important;
