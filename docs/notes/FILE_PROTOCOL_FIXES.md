@@ -1,6 +1,6 @@
 # File:// Protocol Compatibility Fixes
 
-This document explains the enhancements made to ensure the Precious Metals Inventory Tool works reliably when loaded directly from the file system (file:// protocol) without requiring a local server.
+This document explains the enhancements made to ensure the StackTrackr works reliably when loaded directly from the file system (file:// protocol) without requiring a local server.
 
 ## Problem
 

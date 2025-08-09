@@ -93,10 +93,10 @@ const API_PROVIDERS = {
 // =============================================================================
 
 /** @constant {string} APP_VERSION - Application version */
-const APP_VERSION = "3.2.01";
+const APP_VERSION = "3.2.02rc";
 
 /** @constant {string} BRANDING_TITLE - Optional custom application title */
-const BRANDING_TITLE = "";
+const BRANDING_TITLE = "StackTrackr";
 
 /** @constant {string} LS_KEY - LocalStorage key for inventory data */
 const LS_KEY = "metalInventory";

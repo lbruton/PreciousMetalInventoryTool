@@ -1,4 +1,4 @@
-# Precious Metals Inventory Tool - Development Roadmap
+# StackTrackr - Development Roadmap
 
 ## 🎯 Milestone: Version 3.5.0
 **Target: Complete UI reorganization, enhanced data management, and multi-currency support**
@@ -250,4 +250,4 @@
 
 ---
 
-*This roadmap represents a comprehensive enhancement to the Precious Metals Inventory Tool, transforming it from a solid inventory management system into a professional-grade application with advanced data management, security, and international support capabilities.*
+*This roadmap represents a comprehensive enhancement to the StackTrackr, transforming it from a solid inventory management system into a professional-grade application with advanced data management, security, and international support capabilities.*

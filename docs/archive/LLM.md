@@ -1,4 +1,4 @@
-# LLM Development Guide — Precious Metals Inventory Tool
+# LLM Development Guide — StackTrackr
 
 > **CRITICAL**: Keep all documentation in sync with code updates.  
 >  
@@ -17,7 +17,7 @@
 
 ## 1. Purpose
 
-Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Metals Inventory Tool v3.2.01** to guide development, documentation, and QA tasks.
+Provide AI assistants (LLMs) a concise, up-to-date overview of the **StackTrackr v3.2.02rc** to guide development, documentation, and QA tasks.
 
 ## 2. Project Snapshot
 
@@ -30,12 +30,12 @@ Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Me
   - **Comprehensive backup ZIP system** with all data formats and restoration guides
   - Responsive & accessible UI (mobile-first, ARIA, keyboard support)  
   - Modular JS architecture (constants, state, events, utils, inventory)  
-- **Version**: 3.2.01 (Cloud Sync modal theming fix)
-- **Last Updated**: August 8, 2025  
+- **Version**: 3.2.02rc (feature complete release candidate)
+- **Last Updated**: August 9, 2025
 
 ## 3. Project Structure
 
-PreciousMetalInventoryTool/
+StackTrackr/
 ├── app/
 │   ├── index.html
 │   ├── css/styles.css

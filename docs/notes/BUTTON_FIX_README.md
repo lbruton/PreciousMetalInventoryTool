@@ -1,4 +1,4 @@
-# Precious Metals Inventory Tool - Button Functionality Fix
+# StackTrackr - Button Functionality Fix
 
 ## Summary
 Fixed the non-functioning "Add" and "Reset" buttons for spot price management. All spot price buttons now work correctly across all four supported metals (Silver, Gold, Platinum, Palladium).
