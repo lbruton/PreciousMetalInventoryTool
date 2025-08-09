@@ -606,6 +606,13 @@ input[type="submit"] {
 
 .provider-checkbox-row label {
   font-size: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.provider-checkbox-row .provider-metal-name {
+  margin-top: 0.25rem;
 }
 
 .api-usage {
