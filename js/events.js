@@ -194,23 +194,48 @@ const setupEventListeners = () => {
       );
     }
 
-    // Theme preference radios
-    const themeRadios = document.querySelectorAll(
-      'input[name="themePreference"]',
-    );
-    themeRadios.forEach((radio) => {
+    // Theme buttons
+    const themeDisplay = document.getElementById("themeDisplay");
+    const updateThemeDisplay = (label) => {
+      if (themeDisplay) themeDisplay.textContent = label;
+    };
+
+    const darkBtn = document.getElementById("darkModeBtn");
+    if (darkBtn) {
       safeAttachListener(
-        radio,
-        "change",
+        darkBtn,
+        "click",
         () => {
-          const value = radio.value;
-          if (typeof setTheme === "function") {
-            setTheme(value);
-          }
+          if (typeof setTheme === "function") setTheme("dark");
+          updateThemeDisplay("Dark Mode");
         },
-        "Theme preference change",
+        "Dark mode button",
       );
-    });
+    }
+    const lightBtn = document.getElementById("lightModeBtn");
+    if (lightBtn) {
+      safeAttachListener(
+        lightBtn,
+        "click",
+        () => {
+          if (typeof setTheme === "function") setTheme("light");
+          updateThemeDisplay("Light Mode");
+        },
+        "Light mode button",
+      );
+    }
+    const systemBtn = document.getElementById("systemModeBtn");
+    if (systemBtn) {
+      safeAttachListener(
+        systemBtn,
+        "click",
+        () => {
+          if (typeof setTheme === "function") setTheme("system");
+          updateThemeDisplay("System");
+        },
+        "System mode button",
+      );
+    }
 
     // Details modal buttons
     if (elements.detailsButtons && elements.detailsButtons.length) {
@@ -729,6 +754,28 @@ const setupEventListeners = () => {
       );
     }
 
+    if (elements.cloudSyncBtn) {
+      safeAttachListener(
+        elements.cloudSyncBtn,
+        "click",
+        () => {
+          if (elements.cloudSyncModal)
+            elements.cloudSyncModal.style.display = "flex";
+        },
+        "Cloud Sync button",
+      );
+    }
+
+    const cloudSyncCloseBtn = document.getElementById("cloudSyncCloseBtn");
+    if (cloudSyncCloseBtn && elements.cloudSyncModal) {
+      safeAttachListener(
+        cloudSyncCloseBtn,
+        "click",
+        () => (elements.cloudSyncModal.style.display = "none"),
+        "Cloud Sync close",
+      );
+    }
+
     // Backup All Button
     if (elements.backupAllBtn) {
       safeAttachListener(
@@ -738,7 +785,6 @@ const setupEventListeners = () => {
           if (typeof createBackupZip === "function") {
             await createBackupZip();
           } else {
-            // Fallback: simple backup
             alert("Creating backup using export functions...");
             exportCsv();
             exportJson();
@@ -749,45 +795,79 @@ const setupEventListeners = () => {
     }
 
     // BOATING ACCIDENT BUTTON
+    const updateBoatingAccidentButton = () => {
+      const btn = elements.boatingAccidentBtn;
+      if (!btn) return;
+      const hasData = !!localStorage.getItem(LS_KEY);
+      if (hasData) {
+        btn.classList.add("danger");
+        btn.classList.remove("success");
+        btn.textContent = "🏴‍☠️ So you had a boating accident? 🏴‍☠️";
+      } else {
+        btn.classList.remove("danger");
+        btn.classList.add("success");
+        btn.textContent = "💎 All that glitters is not gold 💎";
+      }
+    };
     if (elements.boatingAccidentBtn) {
+      updateBoatingAccidentButton();
       safeAttachListener(
         elements.boatingAccidentBtn,
         "click",
-        function () {
+        async function () {
+          const hasData = !!localStorage.getItem(LS_KEY);
+          if (!hasData) {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = ".zip";
+            input.addEventListener("change", (e) => {
+              if (
+                e.target.files.length > 0 &&
+                typeof restoreBackupZip === "function"
+              ) {
+                restoreBackupZip(e.target.files[0]).then(() => {
+                  updateBoatingAccidentButton();
+                });
+              }
+            });
+            input.click();
+            return;
+          }
+
           if (
             confirm(
-              "WARNING: This will erase ALL your data for this app (inventory, spot history, spot prices, API configuration).\n\nWould you like to download a backup before proceeding?",
+              "This will export all data and then erase it. Continue?",
             )
           ) {
             if (typeof createBackupZip === "function") {
-              createBackupZip();
+              await createBackupZip();
             }
-          }
-          if (
-            confirm(
-              "Are you absolutely sure you want to clear all local data? This action cannot be undone!",
-            )
-          ) {
-            localStorage.removeItem(LS_KEY);
-            localStorage.removeItem(SPOT_HISTORY_KEY);
-            localStorage.removeItem(API_KEY_STORAGE_KEY);
-            localStorage.removeItem(API_CACHE_KEY);
-            Object.values(METALS).forEach((metalConfig) => {
-              localStorage.removeItem(metalConfig.localStorageKey);
-            });
-            sessionStorage.clear();
+            if (
+              confirm(
+                "All local data will be removed after export. Proceed?",
+              )
+            ) {
+              localStorage.removeItem(LS_KEY);
+              localStorage.removeItem(SPOT_HISTORY_KEY);
+              localStorage.removeItem(API_KEY_STORAGE_KEY);
+              localStorage.removeItem(API_CACHE_KEY);
+              Object.values(METALS).forEach((metalConfig) => {
+                localStorage.removeItem(metalConfig.localStorageKey);
+              });
+              sessionStorage.clear();
 
-            loadInventory();
-            renderTable();
-            loadSpotHistory();
-            fetchSpotPrice();
+              loadInventory();
+              renderTable();
+              loadSpotHistory();
+              fetchSpotPrice();
 
-            // Clear API state
-            apiConfig = { provider: "", keys: {} };
-            apiCache = null;
-            updateSyncButtonStates();
+              apiConfig = { provider: "", keys: {} };
+              apiCache = null;
+              updateSyncButtonStates();
 
-            alert("All data has been erased.");
+              alert("All data has been erased.");
+              updateBoatingAccidentButton();
+            }
           }
         },
         "Boating accident button",
@@ -998,6 +1078,7 @@ const setupApiEvents = () => {
   debugLog("Setting up API events...");
 
   try {
+    let quotaProvider = null;
     const settingsModal = document.getElementById("settingsModal");
     const settingsCloseBtn = document.getElementById("settingsCloseBtn");
     const infoModal = document.getElementById("apiInfoModal");
@@ -1090,6 +1171,29 @@ const setupApiEvents = () => {
       );
     });
 
+    document.querySelectorAll(".api-quota-btn").forEach((btn) => {
+      const provider = btn.getAttribute("data-provider");
+      safeAttachListener(
+        btn,
+        "click",
+        () => {
+          quotaProvider = provider;
+          const modal = elements.apiQuotaModal;
+          const input = document.getElementById("apiQuotaInput");
+          if (modal && input) {
+            const cfg = loadApiConfig();
+            const usage = cfg.usage?.[provider] || {
+              quota: DEFAULT_API_QUOTA,
+              used: 0,
+            };
+            input.value = usage.quota;
+            modal.style.display = "flex";
+          }
+        },
+        "API quota button",
+      );
+    });
+
     document.querySelectorAll(".api-clear-btn").forEach((btn) => {
       const provider = btn.getAttribute("data-provider");
       safeAttachListener(
@@ -1132,17 +1236,62 @@ const setupApiEvents = () => {
       );
     });
 
-    const clearCacheBtn = document.getElementById("clearApiCacheBtn");
-    if (clearCacheBtn) {
+    const quotaClose = document.getElementById("apiQuotaCloseBtn");
+    if (quotaClose && elements.apiQuotaModal) {
       safeAttachListener(
-        clearCacheBtn,
+        quotaClose,
+        "click",
+        () => (elements.apiQuotaModal.style.display = "none"),
+        "API quota close",
+      );
+    }
+    const quotaSave = document.getElementById("apiQuotaSaveBtn");
+    if (quotaSave && elements.apiQuotaModal) {
+      safeAttachListener(
+        quotaSave,
+        "click",
+        () => {
+          const input = document.getElementById("apiQuotaInput");
+          const val = parseInt(input.value, 10);
+          if (!isNaN(val) && quotaProvider) {
+            const cfg = loadApiConfig();
+            if (!cfg.usage[quotaProvider])
+              cfg.usage[quotaProvider] = { quota: val, used: 0 };
+            cfg.usage[quotaProvider].quota = val;
+            saveApiConfig(cfg);
+            elements.apiQuotaModal.style.display = "none";
+            updateProviderHistoryTables();
+          }
+        },
+        "API quota save",
+      );
+    }
+
+    const flushCacheBtn = document.getElementById("flushCacheBtn");
+    if (flushCacheBtn) {
+      safeAttachListener(
+        flushCacheBtn,
         "click",
         () => {
           if (typeof clearApiCache === "function") {
             clearApiCache();
           }
         },
-        "Clear API cache button",
+        "Flush cache button",
+      );
+    }
+
+    const providersBtn = document.getElementById("providersBtn");
+    if (providersBtn) {
+      safeAttachListener(
+        providersBtn,
+        "click",
+        () => {
+          if (typeof showApiProvidersModal === "function") {
+            showApiProvidersModal();
+          }
+        },
+        "Providers button",
       );
     }
 
@@ -1163,6 +1312,8 @@ const setupApiEvents = () => {
     const historyModal = document.getElementById("apiHistoryModal");
     const historyCloseBtn = document.getElementById("apiHistoryCloseBtn");
     const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+    const providersModal = document.getElementById("apiProvidersModal");
+    const providersCloseBtn = document.getElementById("apiProvidersCloseBtn");
     if (historyModal) {
       safeAttachListener(
         historyModal,
@@ -1199,6 +1350,30 @@ const setupApiEvents = () => {
         "Clear API history button",
       );
     }
+    if (providersModal) {
+      safeAttachListener(
+        providersModal,
+        "click",
+        (e) => {
+          if (e.target === providersModal && typeof hideApiProvidersModal === "function") {
+            hideApiProvidersModal();
+          }
+        },
+        "API providers modal background",
+      );
+    }
+    if (providersCloseBtn) {
+      safeAttachListener(
+        providersCloseBtn,
+        "click",
+        () => {
+          if (typeof hideApiProvidersModal === "function") {
+            hideApiProvidersModal();
+          }
+        },
+        "API providers close button",
+      );
+    }
 
     // ESC key to close modals
     safeAttachListener(
@@ -1209,6 +1384,7 @@ const setupApiEvents = () => {
           const settingsModal = document.getElementById("settingsModal");
           const infoModal = document.getElementById("apiInfoModal");
           const historyModal = document.getElementById("apiHistoryModal");
+          const providersModal = document.getElementById("apiProvidersModal");
           const editModal = document.getElementById("editModal");
           const detailsModal = document.getElementById("detailsModal");
 
@@ -1230,6 +1406,12 @@ const setupApiEvents = () => {
             typeof hideApiHistoryModal === "function"
           ) {
             hideApiHistoryModal();
+          } else if (
+            providersModal &&
+            providersModal.style.display === "flex" &&
+            typeof hideApiProvidersModal === "function"
+          ) {
+            hideApiProvidersModal();
           } else if (editModal && editModal.style.display === "flex") {
             editModal.style.display = "none";
             editingIndex = null;

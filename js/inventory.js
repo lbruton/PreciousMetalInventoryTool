@@ -189,6 +189,64 @@ const createBackupZip = async () => {
 };
 
 /**
+ * Restores application data from a backup ZIP file
+ *
+ * @param {File} file - ZIP file created by createBackupZip
+ */
+const restoreBackupZip = async (file) => {
+  try {
+    const zip = await JSZip.loadAsync(file);
+
+    const inventoryStr = await zip.file("inventory_data.json")?.async("string");
+    if (inventoryStr) {
+      const invObj = JSON.parse(inventoryStr);
+      localStorage.setItem(LS_KEY, JSON.stringify(invObj.inventory || []));
+    }
+
+    const settingsStr = await zip.file("settings.json")?.async("string");
+    if (settingsStr) {
+      const settingsObj = JSON.parse(settingsStr);
+      if (settingsObj.spotPrices) {
+        Object.entries(settingsObj.spotPrices).forEach(([metal, price]) => {
+          const metalConfig = METALS[metal.toUpperCase()];
+          if (metalConfig) {
+            localStorage.setItem(
+              metalConfig.localStorageKey,
+              JSON.stringify(price),
+            );
+          }
+        });
+      }
+      if (settingsObj.theme) {
+        localStorage.setItem(THEME_KEY, settingsObj.theme);
+      }
+    }
+
+    const historyStr = await zip
+      .file("spot_price_history.json")
+      ?.async("string");
+    if (historyStr) {
+      const histObj = JSON.parse(historyStr);
+      localStorage.setItem(
+        SPOT_HISTORY_KEY,
+        JSON.stringify(histObj.history || []),
+      );
+    }
+
+    loadInventory();
+    renderTable();
+    loadSpotHistory();
+    fetchSpotPrice();
+    alert("Data imported successfully.");
+  } catch (err) {
+    console.error("Restore failed", err);
+    alert("Restore failed: " + err.message);
+  }
+};
+
+window.restoreBackupZip = restoreBackupZip;
+
+/**
  * Generates HTML content for backup export
  * 
  * @param {Array} sortedInventory - Sorted inventory data
@@ -905,7 +963,12 @@ const importCsv = (file) => {
         const type = row['Type'] || row['type'] || 'Other';
         const weight = parseFloat(row['Weight(oz)'] || row['weight']);
         const priceStr = row['Purchase Price'] || row['price'];
-        const price = parseFloat(typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g,"") : priceStr);
+        let price = parseFloat(
+          typeof priceStr === "string"
+            ? priceStr.replace(/[^0-9.-]+/g, "")
+            : priceStr,
+        );
+        if (price < 0) price = 0;
         const purchaseLocation = row['Purchase Location'] || "Unknown";
         const storageLocation = row['Storage Location'] || "Unknown";
         const notes = row['Notes'] || "";

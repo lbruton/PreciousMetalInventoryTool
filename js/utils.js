@@ -25,7 +25,9 @@ const getVersionString = (prefix = "v") => `${prefix}${APP_VERSION}`;
  * @returns {string} Full title with version
  */
 const getAppTitle = (baseTitle = "Precious Metals Inventory Tool") =>
-  `${baseTitle} ${getVersionString()}`;
+  BRANDING_TITLE && BRANDING_TITLE.trim()
+    ? BRANDING_TITLE
+    : `${baseTitle} ${getVersionString()}`;
 
 /**
  * Performance monitoring utility
@@ -99,7 +101,7 @@ const getLastUpdateTime = (metalName) => {
     sourceText = "Stored";
   }
 
-  return `${timeText} (${sourceText})`;
+  return `${sourceText} - ${timeText}`;
 };
 
 // =============================================================================
