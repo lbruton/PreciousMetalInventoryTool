@@ -31,7 +31,8 @@
   --border-hover: #cbd5e1;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
   /* Metal-specific Colors - tuned for light mode */
   --silver: #6b7280;
@@ -81,21 +82,30 @@
   --border-hover: #475569;
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
 }
 
 /* =============================================================================
    BASE STYLES & RESET
    ============================================================================= */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 html {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -142,16 +152,16 @@ label {
    ============================================================================= */
 
 .app-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
   width: 100%;
   padding: var(--spacing);
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-  }
+  box-shadow: var(--shadow-sm);
+}
 
 .container {
   display: grid;
@@ -189,13 +199,16 @@ form {
   gap: var(--spacing);
 }
 
-input, select, button {
+input,
+select,
+button {
   font-family: inherit;
   font-size: 1rem;
   transition: var(--transition);
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 0.75rem;
   border: 2px solid var(--border);
@@ -204,7 +217,8 @@ input, select {
   color: var(--text-primary);
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
@@ -252,7 +266,10 @@ input:focus, select:focus {
 }
 
 /* Force cursor pointer for all buttons */
-button, .btn, input[type="button"], input[type="submit"] {
+button,
+.btn,
+input[type="button"],
+input[type="submit"] {
   cursor: pointer !important;
 }
 
@@ -289,13 +306,18 @@ button, .btn, input[type="button"], input[type="submit"] {
 }
 
 .btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
@@ -504,6 +526,24 @@ button, .btn, input[type="button"], input[type="submit"] {
   border-radius: var(--radius);
 }
 
+.api-info-body .info-provider-name {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.api-info-body ul {
+  margin: 0.5rem 0 0 1.25rem;
+}
+
+.api-info-body li + li {
+  margin-top: 0.25rem;
+}
+
+#apiInfoLink {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
 /* =============================================================================
    TOTALS CARDS
    ============================================================================= */
@@ -599,21 +639,24 @@ button, .btn, input[type="button"], input[type="submit"] {
 }
 
 .details-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 
 .details-btn:hover::before {
   left: 100%;
 }
-
-
 
 .total-title {
   font-size: 1.125rem;
@@ -623,19 +666,33 @@ button, .btn, input[type="button"], input[type="submit"] {
   text-align: center;
   padding-bottom: var(--spacing-sm);
   border-bottom: 4px solid var(--border); /* fallback, will be overridden below */
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
 }
 
 /* Metal-specific underline accent */
-.silver .total-title { border-bottom: 4px solid var(--silver); }
-.gold .total-title { border-bottom: 4px solid var(--gold); }
-.platinum .total-title { border-bottom: 4px solid var(--platinum); }
-.palladium .total-title { border-bottom: 4px solid var(--palladium); }
+.silver .total-title {
+  border-bottom: 4px solid var(--silver);
+}
+.gold .total-title {
+  border-bottom: 4px solid var(--gold);
+}
+.platinum .total-title {
+  border-bottom: 4px solid var(--platinum);
+}
+.palladium .total-title {
+  border-bottom: 4px solid var(--palladium);
+}
 /* Metal-specific colors */
-.silver .total-title {  }
-.gold .total-title {  }
-.platinum .total-title {  }
-.palladium .total-title {  }
+.silver .total-title {
+}
+.gold .total-title {
+}
+.platinum .total-title {
+}
+.palladium .total-title {
+}
 
 /* =============================================================================
    TABLES - Main inventory table with interactive features
@@ -658,7 +715,7 @@ table {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-table-layout: auto; /* Allow columns to size based on content */
+  table-layout: auto; /* Allow columns to size based on content */
 }
 
 th {
@@ -752,7 +809,7 @@ tr:hover {
 }
 
 .clickable-name::after {
-  content: '✎';
+  content: "✎";
   position: absolute;
   right: 2px;
   top: 50%;
@@ -782,7 +839,9 @@ tr:hover {
   transform: scale(1.2);
   accent-color: var(--primary);
   border-radius: 3px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .collectable-checkbox:hover {
@@ -887,19 +946,17 @@ td input:checked + .slider:before {
 }
 
 .modal-content {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
-    max-width: 1200px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: var(--shadow-lg);
-    animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  max-width: 1200px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 /* =============================================================================
    ABOUT MODAL STYLING - Enhanced splash page design
@@ -930,7 +987,11 @@ td input:checked + .slider:before {
   margin: 0;
   color: white;
   text-align: center;
-  background: linear-gradient(135deg, rgba(255,255,255,1), rgba(255,255,255,0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0.8)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -943,7 +1004,7 @@ td input:checked + .slider:before {
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   padding: var(--spacing-sm);
   border-radius: var(--radius);
@@ -957,7 +1018,7 @@ td input:checked + .slider:before {
 
 .modal-close:hover {
   color: white;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .about-modal-body {
@@ -1139,7 +1200,7 @@ td input:checked + .slider:before {
 }
 
 .changelog-list li::before {
-  content: '•';
+  content: "•";
   color: var(--primary);
   font-weight: bold;
   font-size: 1.2em;
@@ -1173,7 +1234,7 @@ td input:checked + .slider:before {
 }
 
 .roadmap-list li::before {
-  content: '→';
+  content: "→";
   color: var(--primary);
   font-weight: bold;
   margin-right: var(--spacing-sm);
@@ -1274,12 +1335,12 @@ td input:checked + .slider:before {
   .about-title {
     font-size: 1.25rem;
   }
-  
+
   .about-description {
     font-size: 1rem;
     padding: var(--spacing);
   }
-  
+
   .about-modal-header {
     padding: var(--spacing);
   }
@@ -1896,7 +1957,7 @@ input:disabled + .slider {
     font-size: 0.7rem;
     padding: 0.25rem 0.125rem;
   }
-  
+
   td {
     font-size: 0.7rem;
     padding: 0.2rem;
@@ -1908,12 +1969,12 @@ input:disabled + .slider {
     font-size: 0.65rem;
     padding: 0.2rem 0.1rem;
   }
-  
+
   td {
     font-size: 0.65rem;
     padding: 0.15rem;
   }
-  
+
   td .btn {
     padding: 0.2rem 0.3rem;
     font-size: 0.65rem;

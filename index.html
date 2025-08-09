@@ -816,7 +816,12 @@
             />
           </label>
         </div>
-        <progress class="import-progress" id="importProgress" value="0" max="0"></progress>
+        <progress
+          class="import-progress"
+          id="importProgress"
+          value="0"
+          max="0"
+        ></progress>
         <div class="import-progress-text" id="importProgressText"></div>
         <h2>Export Options</h2>
         <div class="export-section import-export-grid">
@@ -1243,65 +1248,155 @@
             <div class="api-provider" data-provider="METALS_DEV">
               <div class="provider-header">
                 <span class="provider-name">Metals.dev</span>
-                <label><input type="radio" name="defaultProvider" value="METALS_DEV" /> Default</label>
+                <label
+                  ><input
+                    type="radio"
+                    name="defaultProvider"
+                    value="METALS_DEV"
+                  />
+                  Default</label
+                >
               </div>
-              <label for="apiKey_METALS_DEV" class="api-key-label">API Key</label>
-              <input type="password" id="apiKey_METALS_DEV" placeholder="Enter your API key" />
-              <div class="api-key-note">Your API key is stored locally and never shared.</div>
+              <label for="apiKey_METALS_DEV" class="api-key-label"
+                >API Key</label
+              >
+              <input
+                type="password"
+                id="apiKey_METALS_DEV"
+                placeholder="Enter your API key"
+              />
+              <div class="api-key-note">
+                Your API key is stored locally and never shared.
+              </div>
               <div class="provider-actions">
-                <button type="button" class="btn api-info-btn" data-provider="METALS_DEV">More Info</button>
-                <button type="button" class="btn api-sync-btn" data-provider="METALS_DEV">Test & Sync</button>
+                <button
+                  type="button"
+                  class="btn api-info-btn"
+                  data-provider="METALS_DEV"
+                >
+                  More Info
+                </button>
+                <button
+                  type="button"
+                  class="btn api-sync-btn"
+                  data-provider="METALS_DEV"
+                >
+                  Test & Sync
+                </button>
               </div>
             </div>
 
             <div class="api-provider" data-provider="METALS_API">
               <div class="provider-header">
                 <span class="provider-name">Metals-API.com</span>
-                <label><input type="radio" name="defaultProvider" value="METALS_API" /> Default</label>
+                <label
+                  ><input
+                    type="radio"
+                    name="defaultProvider"
+                    value="METALS_API"
+                  />
+                  Default</label
+                >
               </div>
-              <label for="apiKey_METALS_API" class="api-key-label">API Key</label>
-              <input type="password" id="apiKey_METALS_API" placeholder="Enter your API key" />
-              <div class="api-key-note">Your API key is stored locally and never shared.</div>
+              <label for="apiKey_METALS_API" class="api-key-label"
+                >API Key</label
+              >
+              <input
+                type="password"
+                id="apiKey_METALS_API"
+                placeholder="Enter your API key"
+              />
+              <div class="api-key-note">
+                Your API key is stored locally and never shared.
+              </div>
               <div class="provider-actions">
-                <button type="button" class="btn api-info-btn" data-provider="METALS_API">More Info</button>
-                <button type="button" class="btn api-sync-btn" data-provider="METALS_API">Test & Sync</button>
+                <button
+                  type="button"
+                  class="btn api-info-btn"
+                  data-provider="METALS_API"
+                >
+                  More Info
+                </button>
+                <button
+                  type="button"
+                  class="btn api-sync-btn"
+                  data-provider="METALS_API"
+                >
+                  Test & Sync
+                </button>
               </div>
             </div>
 
             <div class="api-provider" data-provider="METAL_PRICE_API">
               <div class="provider-header">
                 <span class="provider-name">MetalPriceAPI.com</span>
-                <label><input type="radio" name="defaultProvider" value="METAL_PRICE_API" /> Default</label>
+                <label
+                  ><input
+                    type="radio"
+                    name="defaultProvider"
+                    value="METAL_PRICE_API"
+                  />
+                  Default</label
+                >
               </div>
-              <label for="apiKey_METAL_PRICE_API" class="api-key-label">API Key</label>
-              <input type="password" id="apiKey_METAL_PRICE_API" placeholder="Enter your API key" />
-              <div class="api-key-note">Your API key is stored locally and never shared.</div>
+              <label for="apiKey_METAL_PRICE_API" class="api-key-label"
+                >API Key</label
+              >
+              <input
+                type="password"
+                id="apiKey_METAL_PRICE_API"
+                placeholder="Enter your API key"
+              />
+              <div class="api-key-note">
+                Your API key is stored locally and never shared.
+              </div>
               <div class="provider-actions">
-                <button type="button" class="btn api-info-btn" data-provider="METAL_PRICE_API">More Info</button>
-                <button type="button" class="btn api-sync-btn" data-provider="METAL_PRICE_API">Test & Sync</button>
+                <button
+                  type="button"
+                  class="btn api-info-btn"
+                  data-provider="METAL_PRICE_API"
+                >
+                  More Info
+                </button>
+                <button
+                  type="button"
+                  class="btn api-sync-btn"
+                  data-provider="METAL_PRICE_API"
+                >
+                  Test & Sync
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem">
+        <div
+          style="display: flex; justify-content: flex-end; margin-top: 1.5rem"
+        >
           <button type="button" class="btn" id="settingsCloseBtn">Close</button>
         </div>
       </div>
     </div>
 
     <div class="modal" id="apiInfoModal" style="display: none">
-        <div class="modal-content">
-        <h3 id="apiInfoTitle" style="margin-bottom: 1rem"></h3>
+      <div class="modal-content">
+        <h3 id="apiInfoTitle" style="margin-bottom: 1rem">
+          Provider Information
+        </h3>
         <div id="apiInfoBody" class="api-info-body"></div>
         <a
           id="apiInfoLink"
           href="#"
           target="_blank"
-          style="color: var(--primary); font-size: 0.875rem; text-decoration: none"
-          >Documentation</a
+          style="
+            color: var(--primary);
+            font-size: 0.875rem;
+            text-decoration: none;
+          "
+        ></a>
+        <div
+          style="display: flex; justify-content: flex-end; margin-top: 1.5rem"
         >
-        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem">
           <button type="button" class="btn" id="apiInfoCloseBtn">Close</button>
         </div>
       </div>

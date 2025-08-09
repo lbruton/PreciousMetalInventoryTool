@@ -11,7 +11,7 @@ const loadApiConfig = () => {
     if (stored) {
       const config = JSON.parse(stored);
       if (config.keys) {
-        Object.keys(config.keys).forEach(p => {
+        Object.keys(config.keys).forEach((p) => {
           if (config.keys[p]) {
             config.keys[p] = atob(config.keys[p]);
           }
@@ -21,14 +21,14 @@ const loadApiConfig = () => {
         config.keys = { [config.provider]: atob(config.apiKey) };
       }
       return {
-        provider: config.provider || '',
-        keys: config.keys || {}
+        provider: config.provider || "",
+        keys: config.keys || {},
       };
     }
   } catch (error) {
-    console.error('Error loading API config:', error);
+    console.error("Error loading API config:", error);
   }
-  return { provider: '', keys: {} };
+  return { provider: "", keys: {} };
 };
 
 /**
@@ -38,10 +38,10 @@ const loadApiConfig = () => {
 const saveApiConfig = (config) => {
   try {
     const configToSave = {
-      provider: config.provider || '',
-      keys: {}
+      provider: config.provider || "",
+      keys: {},
     };
-    Object.keys(config.keys || {}).forEach(p => {
+    Object.keys(config.keys || {}).forEach((p) => {
       if (config.keys[p]) {
         configToSave.keys[p] = btoa(config.keys[p]);
       }
@@ -50,7 +50,7 @@ const saveApiConfig = (config) => {
     apiConfig = config;
     updateApiStatus();
   } catch (error) {
-    console.error('Error saving API config:', error);
+    console.error("Error saving API config:", error);
   }
 };
 
@@ -60,7 +60,7 @@ const saveApiConfig = (config) => {
 const clearApiConfig = () => {
   localStorage.removeItem(API_KEY_STORAGE_KEY);
   localStorage.removeItem(API_CACHE_KEY);
-  apiConfig = { provider: '', keys: {} };
+  apiConfig = { provider: "", keys: {} };
   apiCache = null;
   updateApiStatus();
   updateSyncButtonStates();
@@ -73,7 +73,7 @@ const clearApiCache = () => {
   localStorage.removeItem(API_CACHE_KEY);
   apiCache = null;
   updateApiStatus();
-  alert('API cache cleared. Next sync will pull fresh data from the API.');
+  alert("API cache cleared. Next sync will pull fresh data from the API.");
 };
 
 /**
@@ -88,18 +88,18 @@ const refreshFromCache = () => {
 
   let updatedCount = 0;
   Object.entries(cache.data).forEach(([metal, price]) => {
-    const metalConfig = Object.values(METALS).find(m => m.key === metal);
+    const metalConfig = Object.values(METALS).find((m) => m.key === metal);
     if (metalConfig && price > 0) {
       // Save to localStorage
       localStorage.setItem(metalConfig.spotKey, price.toString());
       spotPrices[metal] = price;
-      
+
       // Update display
       elements.spotPriceDisplay[metal].textContent = formatDollar(price);
-      
+
       // Record in history as 'cached' to distinguish from fresh API calls
-      recordSpot(price, 'cached', metalConfig.name);
-      
+      recordSpot(price, "cached", metalConfig.name);
+
       updatedCount++;
     }
   });
@@ -109,7 +109,7 @@ const refreshFromCache = () => {
     updateSummary();
     return true;
   }
-  
+
   return false;
 };
 
@@ -123,9 +123,9 @@ const loadApiCache = () => {
     if (stored) {
       const cache = JSON.parse(stored);
       const now = new Date().getTime();
-      
+
       // Check if cache is still valid (within 24 hours)
-      if (cache.timestamp && (now - cache.timestamp) < API_CACHE_DURATION) {
+      if (cache.timestamp && now - cache.timestamp < API_CACHE_DURATION) {
         return cache;
       } else {
         // Cache expired, remove it
@@ -133,7 +133,7 @@ const loadApiCache = () => {
       }
     }
   } catch (error) {
-    console.error('Error loading API cache:', error);
+    console.error("Error loading API cache:", error);
   }
   return null;
 };
@@ -146,13 +146,13 @@ const saveApiCache = (data) => {
   try {
     const cacheObject = {
       timestamp: new Date().getTime(),
-      data: data
+      data: data,
     };
     localStorage.setItem(API_CACHE_KEY, JSON.stringify(cacheObject));
     apiCache = cacheObject;
     updateApiStatus();
   } catch (error) {
-    console.error('Error saving API cache:', error);
+    console.error("Error saving API cache:", error);
   }
 };
 
@@ -165,7 +165,7 @@ const saveApiCache = (data) => {
 const fetchSpotPricesFromApi = async (provider, apiKey) => {
   const providerConfig = API_PROVIDERS[provider];
   if (!providerConfig) {
-    throw new Error('Invalid API provider');
+    throw new Error("Invalid API provider");
   }
 
   const results = {};
@@ -174,22 +174,22 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
   // Fetch prices for each metal
   for (const [metal, endpoint] of Object.entries(providerConfig.endpoints)) {
     try {
-      const url = `${providerConfig.baseUrl}${endpoint.replace('{API_KEY}', apiKey)}`;
-      
+      const url = `${providerConfig.baseUrl}${endpoint.replace("{API_KEY}", apiKey)}`;
+
       // Use different headers based on provider
       const headers = {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       };
-      
+
       // Some providers use API key in header instead of URL
-      if (provider === 'METALS_DEV' && apiKey) {
-        headers['Authorization'] = `Bearer ${apiKey}`;
+      if (provider === "METALS_DEV" && apiKey) {
+        headers["Authorization"] = `Bearer ${apiKey}`;
       }
 
       const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: headers,
-        mode: 'cors'
+        mode: "cors",
       });
 
       if (!response.ok) {
@@ -198,7 +198,7 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
 
       const data = await response.json();
       const price = providerConfig.parseResponse(data, metal);
-      
+
       if (price && price > 0) {
         results[metal] = price;
       } else {
@@ -210,12 +210,12 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
   }
 
   if (Object.keys(results).length === 0) {
-    throw new Error(`No valid prices retrieved. Errors: ${errors.join(', ')}`);
+    throw new Error(`No valid prices retrieved. Errors: ${errors.join(", ")}`);
   }
 
   // If we got some results but not all, show a warning
   if (errors.length > 0) {
-    console.warn('Some metals failed to fetch:', errors);
+    console.warn("Some metals failed to fetch:", errors);
   }
 
   return results;
@@ -227,9 +227,18 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
  * @param {boolean} forceSync - Whether to force sync even if cache is valid
  * @returns {Promise<boolean>} Promise resolving to success status
  */
-const syncSpotPricesFromApi = async (showProgress = true, forceSync = false) => {
-  if (!apiConfig || !apiConfig.provider || !apiConfig.keys[apiConfig.provider]) {
-    alert('No API configuration found. Please configure an API provider first.');
+const syncSpotPricesFromApi = async (
+  showProgress = true,
+  forceSync = false,
+) => {
+  if (
+    !apiConfig ||
+    !apiConfig.provider ||
+    !apiConfig.keys[apiConfig.provider]
+  ) {
+    alert(
+      "No API configuration found. Please configure an API provider first.",
+    );
     return false;
   }
 
@@ -239,17 +248,22 @@ const syncSpotPricesFromApi = async (showProgress = true, forceSync = false) => 
     if (cache && cache.data && cache.timestamp) {
       const now = new Date().getTime();
       const cacheAge = now - cache.timestamp;
-      
+
       // If cache is less than 24 hours old, use cached data instead of API call
       if (cacheAge < API_CACHE_DURATION) {
         if (showProgress) {
           const hoursAgo = Math.floor(cacheAge / (1000 * 60 * 60));
           const minutesAgo = Math.floor(cacheAge / (1000 * 60));
-          const timeText = hoursAgo > 0 ? `${hoursAgo} hours ago` : `${minutesAgo} minutes ago`;
-          
-          alert(`Using cached prices from ${timeText}. To pull fresh data from the API, go to the API configuration and clear the cache first.`);
+          const timeText =
+            hoursAgo > 0
+              ? `${hoursAgo} hours ago`
+              : `${minutesAgo} minutes ago`;
+
+          alert(
+            `Using cached prices from ${timeText}. To pull fresh data from the API, go to the API configuration and clear the cache first.`,
+          );
         }
-        
+
         // Use cached data to refresh display
         return refreshFromCache();
       }
@@ -261,23 +275,26 @@ const syncSpotPricesFromApi = async (showProgress = true, forceSync = false) => 
   }
 
   try {
-    const spotPricesData = await fetchSpotPricesFromApi(apiConfig.provider, apiConfig.keys[apiConfig.provider]);
-    
+    const spotPricesData = await fetchSpotPricesFromApi(
+      apiConfig.provider,
+      apiConfig.keys[apiConfig.provider],
+    );
+
     // Update spot prices in the application
     let updatedCount = 0;
     Object.entries(spotPricesData).forEach(([metal, price]) => {
-      const metalConfig = Object.values(METALS).find(m => m.key === metal);
+      const metalConfig = Object.values(METALS).find((m) => m.key === metal);
       if (metalConfig && price > 0) {
         // Save to localStorage
         localStorage.setItem(metalConfig.spotKey, price.toString());
         spotPrices[metal] = price;
-        
+
         // Update display
         elements.spotPriceDisplay[metal].textContent = formatDollar(price);
-        
+
         // Record in history
-        recordSpot(price, 'api', metalConfig.name);
-        
+        recordSpot(price, "api", metalConfig.name);
+
         updatedCount++;
       }
     });
@@ -285,20 +302,22 @@ const syncSpotPricesFromApi = async (showProgress = true, forceSync = false) => 
     if (updatedCount > 0) {
       // Save to cache
       saveApiCache(spotPricesData);
-      
+
       // Update summary calculations
       updateSummary();
-      
+
       if (showProgress) {
-        alert(`Successfully synced ${updatedCount} metal prices from ${API_PROVIDERS[apiConfig.provider].name}`);
+        alert(
+          `Successfully synced ${updatedCount} metal prices from ${API_PROVIDERS[apiConfig.provider].name}`,
+        );
       }
-      
+
       return true;
     } else {
-      throw new Error('No valid prices were retrieved from API');
+      throw new Error("No valid prices were retrieved from API");
     }
   } catch (error) {
-    console.error('API sync error:', error);
+    console.error("API sync error:", error);
     if (showProgress) {
       alert(`Failed to sync prices: ${error.message}`);
     }
@@ -321,24 +340,24 @@ const testApiConnection = async (provider, apiKey) => {
     // Just test one metal (silver) to verify connection
     const providerConfig = API_PROVIDERS[provider];
     if (!providerConfig) {
-      throw new Error('Invalid provider');
+      throw new Error("Invalid provider");
     }
 
     const endpoint = providerConfig.endpoints.silver;
-    const url = `${providerConfig.baseUrl}${endpoint.replace('{API_KEY}', apiKey)}`;
-    
+    const url = `${providerConfig.baseUrl}${endpoint.replace("{API_KEY}", apiKey)}`;
+
     const headers = {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     };
-    
-    if (provider === 'METALS_DEV' && apiKey) {
-      headers['Authorization'] = `Bearer ${apiKey}`;
+
+    if (provider === "METALS_DEV" && apiKey) {
+      headers["Authorization"] = `Bearer ${apiKey}`;
     }
 
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: headers,
-      mode: 'cors'
+      mode: "cors",
     });
 
     if (!response.ok) {
@@ -346,11 +365,11 @@ const testApiConnection = async (provider, apiKey) => {
     }
 
     const data = await response.json();
-    const price = providerConfig.parseResponse(data, 'silver');
-    
+    const price = providerConfig.parseResponse(data, "silver");
+
     return price && price > 0;
   } catch (error) {
-    console.error('API connection test failed:', error);
+    console.error("API connection test failed:", error);
     return false;
   }
 };
@@ -361,12 +380,14 @@ const testApiConnection = async (provider, apiKey) => {
  */
 const handleProviderSync = async (provider) => {
   const keyInput = document.getElementById(`apiKey_${provider}`);
-  const radio = document.querySelector(`input[name="defaultProvider"][value="${provider}"]`);
+  const radio = document.querySelector(
+    `input[name="defaultProvider"][value="${provider}"]`,
+  );
   if (!keyInput) return;
 
   const apiKey = keyInput.value.trim();
   if (!apiKey) {
-    alert('Please enter your API key');
+    alert("Please enter your API key");
     return;
   }
 
@@ -383,7 +404,7 @@ const handleProviderSync = async (provider) => {
   // Test connection
   const ok = await testApiConnection(provider, apiKey);
   if (!ok) {
-    alert('API connection test failed.');
+    alert("API connection test failed.");
     return;
   }
 
@@ -391,12 +412,12 @@ const handleProviderSync = async (provider) => {
     const data = await fetchSpotPricesFromApi(provider, apiKey);
     let updatedCount = 0;
     Object.entries(data).forEach(([metal, price]) => {
-      const metalConfig = Object.values(METALS).find(m => m.key === metal);
+      const metalConfig = Object.values(METALS).find((m) => m.key === metal);
       if (metalConfig && price > 0) {
         localStorage.setItem(metalConfig.spotKey, price.toString());
         spotPrices[metal] = price;
         elements.spotPriceDisplay[metal].textContent = formatDollar(price);
-        recordSpot(price, 'api', metalConfig.name);
+        recordSpot(price, "api", metalConfig.name);
         updatedCount++;
       }
     });
@@ -404,13 +425,15 @@ const handleProviderSync = async (provider) => {
     if (updatedCount > 0) {
       saveApiCache(data);
       updateSummary();
-      alert(`Successfully synced ${updatedCount} metal prices from ${API_PROVIDERS[provider].name}`);
+      alert(
+        `Successfully synced ${updatedCount} metal prices from ${API_PROVIDERS[provider].name}`,
+      );
     } else {
-      alert('No valid prices retrieved from API');
+      alert("No valid prices retrieved from API");
     }
   } catch (error) {
-    console.error('API sync error:', error);
-    alert('Failed to sync prices: ' + error.message);
+    console.error("API sync error:", error);
+    alert("Failed to sync prices: " + error.message);
   }
 };
 
@@ -419,16 +442,19 @@ const handleProviderSync = async (provider) => {
  * @param {boolean} syncing - Whether sync is in progress
  */
 const updateSyncButtonStates = (syncing = false) => {
-  const hasApi = apiConfig && apiConfig.provider && apiConfig.keys[apiConfig.provider];
-  
-  Object.values(METALS).forEach(metalConfig => {
+  const hasApi =
+    apiConfig && apiConfig.provider && apiConfig.keys[apiConfig.provider];
+
+  Object.values(METALS).forEach((metalConfig) => {
     const syncBtn = document.getElementById(`syncBtn${metalConfig.name}`);
     if (syncBtn) {
       syncBtn.disabled = !hasApi || syncing;
-      syncBtn.textContent = syncing ? '...' : 'Sync';
-      syncBtn.title = hasApi 
-        ? (syncing ? 'Syncing...' : 'Sync from API') 
-        : 'Configure API first';
+      syncBtn.textContent = syncing ? "..." : "Sync";
+      syncBtn.title = hasApi
+        ? syncing
+          ? "Syncing..."
+          : "Sync from API"
+        : "Configure API first";
     }
   });
 };
@@ -437,40 +463,46 @@ const updateSyncButtonStates = (syncing = false) => {
  * Updates API status display in modal
  */
 const updateApiStatus = () => {
-  const statusDisplay = document.getElementById('apiStatusDisplay');
-  const statusText = document.getElementById('apiStatusText');
-  const cacheInfo = document.getElementById('apiCacheInfo');
-  
+  const statusDisplay = document.getElementById("apiStatusDisplay");
+  const statusText = document.getElementById("apiStatusText");
+  const cacheInfo = document.getElementById("apiCacheInfo");
+
   if (!statusDisplay || !statusText) return;
 
   // Reset classes
-  statusDisplay.className = '';
-  statusDisplay.style.cssText = statusDisplay.style.cssText.replace(/background[^;]*;?/g, '');
-  statusDisplay.style.cssText = statusDisplay.style.cssText.replace(/border-color[^;]*;?/g, '');
+  statusDisplay.className = "";
+  statusDisplay.style.cssText = statusDisplay.style.cssText.replace(
+    /background[^;]*;?/g,
+    "",
+  );
+  statusDisplay.style.cssText = statusDisplay.style.cssText.replace(
+    /border-color[^;]*;?/g,
+    "",
+  );
 
   if (apiConfig && apiConfig.provider && apiConfig.keys[apiConfig.provider]) {
     statusText.textContent = `Default: ${API_PROVIDERS[apiConfig.provider].name}`;
-    statusDisplay.classList.add('api-status-connected');
-    
+    statusDisplay.classList.add("api-status-connected");
+
     if (cacheInfo && apiCache && apiCache.timestamp) {
       const cacheAge = new Date().getTime() - apiCache.timestamp;
       const hoursAgo = Math.floor(cacheAge / (1000 * 60 * 60));
       const minutesAgo = Math.floor(cacheAge / (1000 * 60));
-      
+
       if (hoursAgo > 0) {
         cacheInfo.textContent = `Last synced: ${hoursAgo} hours ago`;
       } else if (minutesAgo > 0) {
         cacheInfo.textContent = `Last synced: ${minutesAgo} minutes ago`;
       } else {
-        cacheInfo.textContent = 'Just synced';
+        cacheInfo.textContent = "Just synced";
       }
     } else if (cacheInfo) {
-      cacheInfo.textContent = 'No cached data';
+      cacheInfo.textContent = "No cached data";
     }
   } else {
-    statusText.textContent = 'No API configured';
+    statusText.textContent = "No API configured";
     if (cacheInfo) {
-      cacheInfo.textContent = '';
+      cacheInfo.textContent = "";
     }
   }
 };
@@ -479,29 +511,31 @@ const updateApiStatus = () => {
  * Shows settings modal and populates API fields
  */
 const showSettingsModal = () => {
-  const modal = document.getElementById('settingsModal');
+  const modal = document.getElementById("settingsModal");
   if (!modal) return;
 
-  const currentConfig = loadApiConfig() || { provider: '', keys: {} };
+  const currentConfig = loadApiConfig() || { provider: "", keys: {} };
 
   Object.keys(API_PROVIDERS).forEach((prov) => {
     const input = document.getElementById(`apiKey_${prov}`);
-    const radio = document.querySelector(`input[name="defaultProvider"][value="${prov}"]`);
-    if (input) input.value = currentConfig.keys?.[prov] || '';
+    const radio = document.querySelector(
+      `input[name="defaultProvider"][value="${prov}"]`,
+    );
+    if (input) input.value = currentConfig.keys?.[prov] || "";
     if (radio) radio.checked = currentConfig.provider === prov;
   });
 
   updateApiStatus();
-  modal.style.display = 'flex';
+  modal.style.display = "flex";
 };
 
 /**
  * Hides settings modal
  */
 const hideSettingsModal = () => {
-  const modal = document.getElementById('settingsModal');
+  const modal = document.getElementById("settingsModal");
   if (modal) {
-    modal.style.display = 'none';
+    modal.style.display = "none";
   }
 };
 
@@ -510,33 +544,45 @@ const hideSettingsModal = () => {
  * @param {string} providerKey
  */
 const showProviderInfo = (providerKey) => {
-  const modal = document.getElementById('apiInfoModal');
+  const modal = document.getElementById("apiInfoModal");
   if (!modal || !API_PROVIDERS[providerKey]) return;
 
   const provider = API_PROVIDERS[providerKey];
-  const title = document.getElementById('apiInfoTitle');
-  const body = document.getElementById('apiInfoBody');
-  const link = document.getElementById('apiInfoLink');
+  const title = document.getElementById("apiInfoTitle");
+  const body = document.getElementById("apiInfoBody");
+  const link = document.getElementById("apiInfoLink");
 
-  if (title) title.textContent = provider.name;
+  if (title) title.textContent = "Provider Information";
   if (body) {
-    body.innerHTML = `Base URL: ${provider.baseUrl}<br>Metals: Silver, Gold, Platinum, Palladium`;
+    body.innerHTML = `
+      <div class="info-provider-name">${provider.name}</div>
+      <div>Base URL: ${provider.baseUrl}</div>
+      <div>Metals: Silver, Gold, Platinum, Palladium</div>
+      <div class="api-key-info">
+        <div>📋 <strong>API Key Management:</strong></div>
+        <ul>
+          <li>Visit the documentation link below to manage your API key</li>
+          <li>You can view usage, reset, or regenerate your key there</li>
+          <li>Keep your API key secure and never share it publicly</li>
+        </ul>
+      </div>
+    `;
   }
   if (link) {
     link.href = provider.documentation;
-    link.textContent = `${provider.name} Documentation`;
+    link.textContent = `📄 ${provider.name} Documentation & Key Management`;
   }
 
-  modal.style.display = 'flex';
+  modal.style.display = "flex";
 };
 
 /**
  * Hides provider information modal
  */
 const hideProviderInfo = () => {
-  const modal = document.getElementById('apiInfoModal');
+  const modal = document.getElementById("apiInfoModal");
   if (modal) {
-    modal.style.display = 'none';
+    modal.style.display = "none";
   }
 };
 
@@ -555,8 +601,8 @@ window.handleProviderSync = handleProviderSync;
 const showManualInput = (metal) => {
   const manualInput = document.getElementById(`manualInput${metal}`);
   if (manualInput) {
-    manualInput.style.display = 'block';
-    
+    manualInput.style.display = "block";
+
     // Focus the input field
     const input = document.getElementById(`userSpotPrice${metal}`);
     if (input) {
@@ -572,12 +618,12 @@ const showManualInput = (metal) => {
 const hideManualInput = (metal) => {
   const manualInput = document.getElementById(`manualInput${metal}`);
   if (manualInput) {
-    manualInput.style.display = 'none';
-    
+    manualInput.style.display = "none";
+
     // Clear the input
     const input = document.getElementById(`userSpotPrice${metal}`);
     if (input) {
-      input.value = '';
+      input.value = "";
     }
   }
 };
@@ -587,31 +633,32 @@ const hideManualInput = (metal) => {
  * @param {string} metal - Metal name (Silver, Gold, etc.)
  */
 const resetSpotPrice = (metal) => {
-  const metalConfig = Object.values(METALS).find(m => m.name === metal);
+  const metalConfig = Object.values(METALS).find((m) => m.name === metal);
   if (!metalConfig) return;
 
   let resetPrice = metalConfig.defaultPrice;
-  let source = 'default';
+  let source = "default";
 
   // If we have cached API data, use that instead
   if (apiCache && apiCache.data && apiCache.data[metalConfig.key]) {
     resetPrice = apiCache.data[metalConfig.key];
-    source = 'api';
+    source = "api";
   }
 
   // Update price
   localStorage.setItem(metalConfig.spotKey, resetPrice.toString());
   spotPrices[metalConfig.key] = resetPrice;
-  
+
   // Update display
-  elements.spotPriceDisplay[metalConfig.key].textContent = formatDollar(resetPrice);
-  
+  elements.spotPriceDisplay[metalConfig.key].textContent =
+    formatDollar(resetPrice);
+
   // Record in history
   recordSpot(resetPrice, source, metalConfig.name);
-  
+
   // Update summary
   updateSummary();
-  
+
   // Hide manual input if shown
   hideManualInput(metal);
 };
@@ -626,14 +673,19 @@ const createBackupData = () => {
     timestamp: new Date().toISOString(),
     inventory: loadData(LS_KEY, []),
     spotHistory: loadData(SPOT_HISTORY_KEY, []),
-    apiConfig: apiConfig && apiConfig.provider ? {
-      provider: apiConfig.provider,
-      providerName: API_PROVIDERS[apiConfig.provider]?.name || 'Unknown',
-      keyLength: apiConfig.keys[apiConfig.provider] ? apiConfig.keys[apiConfig.provider].length : 0,
-      hasKey: !!apiConfig.keys[apiConfig.provider],
-      timestamp: apiConfig.timestamp
-    } : null,
-    spotPrices: { ...spotPrices }
+    apiConfig:
+      apiConfig && apiConfig.provider
+        ? {
+            provider: apiConfig.provider,
+            providerName: API_PROVIDERS[apiConfig.provider]?.name || "Unknown",
+            keyLength: apiConfig.keys[apiConfig.provider]
+              ? apiConfig.keys[apiConfig.provider].length
+              : 0,
+            hasKey: !!apiConfig.keys[apiConfig.provider],
+            timestamp: apiConfig.timestamp,
+          }
+        : null,
+    spotPrices: { ...spotPrices },
   };
 
   return backupData;
@@ -644,53 +696,81 @@ const createBackupData = () => {
  */
 const downloadCompleteBackup = async () => {
   try {
-    const timestamp = new Date().toISOString().slice(0, 19).replace(/[T:]/g, '-');
-    
+    const timestamp = new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace(/[T:]/g, "-");
+
     // 1. Create inventory CSV using existing export logic
     const inventory = loadData(LS_KEY, []);
     if (inventory.length > 0) {
-      // Create CSV manually for backup instead of calling exportCsv() 
-      const headers = ["Metal","Name","Qty","Type","Weight(oz)","Purchase Price","Spot Price ($/oz)","Premium ($/oz)","Total Premium","Purchase Location","Storage Location","Notes","Date","Collectable"];
-      const sortedInventory = [...inventory].sort((a, b) => new Date(b.date) - new Date(a.date));
-      
-      const rows = sortedInventory.map(item => [
-        item.metal || 'Silver',
+      // Create CSV manually for backup instead of calling exportCsv()
+      const headers = [
+        "Metal",
+        "Name",
+        "Qty",
+        "Type",
+        "Weight(oz)",
+        "Purchase Price",
+        "Spot Price ($/oz)",
+        "Premium ($/oz)",
+        "Total Premium",
+        "Purchase Location",
+        "Storage Location",
+        "Notes",
+        "Date",
+        "Collectable",
+      ];
+      const sortedInventory = [...inventory].sort(
+        (a, b) => new Date(b.date) - new Date(a.date),
+      );
+
+      const rows = sortedInventory.map((item) => [
+        item.metal || "Silver",
         item.name,
         item.qty,
         item.type,
         parseFloat(item.weight).toFixed(4),
         formatDollar(item.price),
-        item.isCollectable ? 'N/A' : formatDollar(item.spotPriceAtPurchase),
-        item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz),
-        item.isCollectable ? 'N/A' : formatDollar(item.totalPremium),
+        item.isCollectable ? "N/A" : formatDollar(item.spotPriceAtPurchase),
+        item.isCollectable ? "N/A" : formatDollar(item.premiumPerOz),
+        item.isCollectable ? "N/A" : formatDollar(item.totalPremium),
         item.purchaseLocation,
-        item.storageLocation || 'Unknown',
-        item.notes || '',
+        item.storageLocation || "Unknown",
+        item.notes || "",
         item.date,
-        item.isCollectable ? 'Yes' : 'No'
+        item.isCollectable ? "Yes" : "No",
       ]);
-      
+
       const inventoryCsv = Papa.unparse([headers, ...rows]);
-      downloadFile(`inventory-backup-${timestamp}.csv`, inventoryCsv, 'text/csv');
+      downloadFile(
+        `inventory-backup-${timestamp}.csv`,
+        inventoryCsv,
+        "text/csv",
+      );
     }
-    
+
     // 2. Create spot history CSV
     const spotHistory = loadData(SPOT_HISTORY_KEY, []);
     if (spotHistory.length > 0) {
       const historyData = [
-        ['Timestamp', 'Metal', 'Price', 'Source'],
-        ...spotHistory.map(entry => [
+        ["Timestamp", "Metal", "Price", "Source"],
+        ...spotHistory.map((entry) => [
           entry.timestamp,
           entry.metal,
           entry.spot,
-          entry.source
-        ])
+          entry.source,
+        ]),
       ];
-      
+
       const historyCsv = Papa.unparse(historyData);
-      downloadFile(`spot-price-history-${timestamp}.csv`, historyCsv, 'text/csv');
+      downloadFile(
+        `spot-price-history-${timestamp}.csv`,
+        historyCsv,
+        "text/csv",
+      );
     }
-    
+
     // 3. Create complete JSON backup
     const completeBackup = {
       version: APP_VERSION,
@@ -699,19 +779,29 @@ const downloadCompleteBackup = async () => {
         inventory: inventory,
         spotHistory: spotHistory,
         spotPrices: { ...spotPrices },
-        apiConfig: apiConfig && apiConfig.provider ? {
-          provider: apiConfig.provider,
-          providerName: API_PROVIDERS[apiConfig.provider]?.name || 'Unknown',
-          hasKey: !!apiConfig.keys[apiConfig.provider],
-          keyLength: apiConfig.keys[apiConfig.provider] ? apiConfig.keys[apiConfig.provider].length : 0,
-          timestamp: apiConfig.timestamp
-        } : null
-      }
+        apiConfig:
+          apiConfig && apiConfig.provider
+            ? {
+                provider: apiConfig.provider,
+                providerName:
+                  API_PROVIDERS[apiConfig.provider]?.name || "Unknown",
+                hasKey: !!apiConfig.keys[apiConfig.provider],
+                keyLength: apiConfig.keys[apiConfig.provider]
+                  ? apiConfig.keys[apiConfig.provider].length
+                  : 0,
+                timestamp: apiConfig.timestamp,
+              }
+            : null,
+      },
     };
-    
+
     const backupJson = JSON.stringify(completeBackup, null, 2);
-    downloadFile(`complete-backup-${timestamp}.json`, backupJson, 'application/json');
-    
+    downloadFile(
+      `complete-backup-${timestamp}.json`,
+      backupJson,
+      "application/json",
+    );
+
     // 4. Create API documentation and restoration guide
     const backupData = createBackupData();
     const apiInfo = `# Precious Metals Tool - Complete Backup
@@ -727,7 +817,9 @@ Application Version: ${APP_VERSION}
 4. **backup-info-${timestamp}.md** - This documentation file
 
 ## API Configuration
-${backupData.apiConfig ? `
+${
+  backupData.apiConfig
+    ? `
 - Provider: ${backupData.apiConfig.providerName}
 - Has API Key: ${backupData.apiConfig.hasKey}
 - Key Length: ${backupData.apiConfig.keyLength} characters
@@ -737,20 +829,26 @@ ${backupData.apiConfig ? `
 After restoring, reconfigure your API key in the API settings.
 
 ### API Key Management
-${API_PROVIDERS[apiConfig?.provider] ? `
+${
+  API_PROVIDERS[apiConfig?.provider]
+    ? `
 **${API_PROVIDERS[apiConfig.provider].name}**
 - Documentation: ${API_PROVIDERS[apiConfig.provider].documentation}
 - If you need to reset your API key, visit the documentation link above
-` : ''}
-` : 'No API configuration found.'}
+`
+    : ""
+}
+`
+    : "No API configuration found."
+}
 
 ## Current Data Summary
 - Inventory Items: ${inventory.length}
 - Spot Price History: ${spotHistory.length} entries
-- Silver Price: ${spotPrices.silver || 'Not set'}
-- Gold Price: ${spotPrices.gold || 'Not set'}
-- Platinum Price: ${spotPrices.platinum || 'Not set'}
-- Palladium Price: ${spotPrices.palladium || 'Not set'}
+- Silver Price: ${spotPrices.silver || "Not set"}
+- Gold Price: ${spotPrices.gold || "Not set"}
+- Platinum Price: ${spotPrices.platinum || "Not set"}
+- Palladium Price: ${spotPrices.palladium || "Not set"}
 
 ## Restoration Instructions
 
@@ -760,14 +858,15 @@ ${API_PROVIDERS[apiConfig?.provider] ? `
 
 *This backup was created by Precious Metals Inventory Tool v${APP_VERSION}*
 `;
-    
-    downloadFile(`backup-info-${timestamp}.md`, apiInfo, 'text/markdown');
-    
-    alert(`Complete backup created! Downloaded files:\n\n✓ Inventory CSV (${inventory.length} items)\n✓ Spot price history (${spotHistory.length} entries)\n✓ Complete JSON backup\n✓ Documentation & restoration guide\n\nCheck your Downloads folder.`);
-    
+
+    downloadFile(`backup-info-${timestamp}.md`, apiInfo, "text/markdown");
+
+    alert(
+      `Complete backup created! Downloaded files:\n\n✓ Inventory CSV (${inventory.length} items)\n✓ Spot price history (${spotHistory.length} entries)\n✓ Complete JSON backup\n✓ Documentation & restoration guide\n\nCheck your Downloads folder.`,
+    );
   } catch (error) {
-    console.error('Backup error:', error);
-    alert('Error creating backup: ' + error.message);
+    console.error("Backup error:", error);
+    alert("Error creating backup: " + error.message);
   }
 };
 
