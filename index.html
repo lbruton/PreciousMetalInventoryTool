@@ -642,6 +642,16 @@
        Pagination controls limit display to selected items per page
        ============================================================================= -->
       <section class="table-section">
+        <div class="items-per-page">
+          <label for="itemsPerPage">Items:</label>
+          <select class="pagination-select" id="itemsPerPage">
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="25" selected>25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
         <table id="inventoryTable">
           <thead>
             <tr>
@@ -693,15 +703,6 @@
                     »
                   </button>
                 </div>
-              </div>
-              <div class="pagination-info-controls">
-                <select class="pagination-select" id="itemsPerPage">
-                  <option value="10">10</option>
-                  <option value="15">15</option>
-                  <option selected="" value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>
               </div>
             </div>
           </div>
