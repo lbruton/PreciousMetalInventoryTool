@@ -30,7 +30,7 @@ Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Me
   - **Comprehensive backup ZIP system** with all data formats and restoration guides
   - Responsive & accessible UI (mobile-first, ARIA, keyboard support)  
   - Modular JS architecture (constants, state, events, utils, inventory)  
-- **Version**: 3.1.13 (Cloud Sync placeholder and API quotas)
+- **Version**: 3.1.13 (Cloud Sync placeholder and API quotas with monthly reset)
 - **Last Updated**: August 8, 2025  
 
 ## 3. Project Structure

@@ -20,7 +20,7 @@ The tool features a **modular JavaScript architecture** with separate files for 
 
 ## ✨ Latest Changes (3.1.x Series)
 
-- **v3.1.13 - Cloud Sync & API Quotas**: Cloud Sync placeholder modal, API usage tracking with quotas, branding footer, and negative price import fix
+- **v3.1.13 - Cloud Sync & API Quotas**: Cloud Sync placeholder modal, API usage tracking with quotas and monthly reset, branding footer, and negative price import fix
 - **v3.1.12 - About Modal & Disclaimer**: Added mandatory disclaimer splash, About header button, and Sources link within modal; modal now includes styled header with version info
 - **v3.1.11 - UI Enhancements & Documentation**: Improved table usability and AI assistant guidance
   - Color-coded table items for better visual organization
@@ -114,7 +114,7 @@ All data is stored locally in the browser using localStorage with:
 If continuing development in a new chat session:
 
 1. **Current Version**: 3.1.13 (managed in `js/constants.js`)
-2. **Last Change**: Added Cloud Sync placeholder, API quotas, footer, and CSV import fix
+2. **Last Change**: Added Cloud Sync placeholder, API quotas with monthly reset, footer, and CSV import fix
 3. **Last Documentation Update**: August 8, 2025 - All docs synchronized
 4. **Architecture**: Fully modular with proper separation of concerns
 5. **Documentation**: Comprehensive JSDoc comments throughout codebase

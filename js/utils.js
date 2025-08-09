@@ -126,6 +126,16 @@ const todayStr = () => {
 };
 
 /**
+ * Returns current month key in YYYY-MM format
+ *
+ * @returns {string} Current month identifier
+ */
+const currentMonthKey = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`;
+};
+
+/**
  * Parses various date formats into standard YYYY-MM-DD format
  *
  * Handles:

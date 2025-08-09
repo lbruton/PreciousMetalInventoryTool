@@ -38,6 +38,8 @@ const loadApiConfig = () => {
       }
       const usage = config.usage || {};
       const metals = config.metals || {};
+      const currentMonth = currentMonthKey();
+      const savedMonth = config.usageMonth;
       Object.keys(API_PROVIDERS).forEach((p) => {
         if (!usage[p]) usage[p] = { quota: DEFAULT_API_QUOTA, used: 0 };
         if (!metals[p])
@@ -53,7 +55,12 @@ const loadApiConfig = () => {
           });
         }
       });
-      return {
+      let needsSave = false;
+      if (savedMonth !== currentMonth) {
+        Object.keys(usage).forEach((p) => (usage[p].used = 0));
+        needsSave = true;
+      }
+      const result = {
         provider: config.provider || "",
         keys: config.keys || {},
         cacheHours:
@@ -65,7 +72,12 @@ const loadApiConfig = () => {
         },
         metals,
         usage,
+        usageMonth: currentMonth,
       };
+      if (needsSave) {
+        saveApiConfig(result);
+      }
+      return result;
     }
   } catch (error) {
     console.error("Error loading API config:", error);
@@ -83,6 +95,7 @@ const loadApiConfig = () => {
     customConfig: { baseUrl: "", endpoint: "", format: "symbol" },
     metals,
     usage,
+    usageMonth: currentMonthKey(),
   };
 };
 
@@ -104,6 +117,7 @@ const saveApiConfig = (config) => {
       },
       metals: config.metals || {},
       usage: config.usage || {},
+      usageMonth: config.usageMonth || currentMonthKey(),
     };
     Object.keys(config.keys || {}).forEach((p) => {
       if (config.keys[p]) {
