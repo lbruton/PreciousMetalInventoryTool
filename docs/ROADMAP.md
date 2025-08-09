@@ -1,6 +1,6 @@
 # Precious Metals Inventory Tool - Development Roadmap
 
-## 🎯 Milestone: Version 3.2.0
+## 🎯 Milestone: Version 3.5.0
 **Target: Complete UI reorganization, enhanced data management, and multi-currency support**
 
 ---
@@ -8,7 +8,7 @@
 ## 📋 Implementation Ranking (Easiest → Most Complex)
 
 ### **PHASE 1: Quick Wins & Documentation** ⚡
-*Estimated Time: 1-2 weeks (12 subtasks)*
+*Scope: 12 subtasks*
 
 #### 1. **Documentation Standardization** (Complexity: ⭐) - 6 subtasks
 - **Task**: Use generic version references in all documentation except changelogs
@@ -36,7 +36,7 @@
 ---
 
 ### **PHASE 2: User Experience Improvements** 🎨
-*Estimated Time: 2-3 weeks (22 subtasks)*
+*Scope: 22 subtasks*
 
 #### 3. **Enhanced CSV Import Feedback** (Complexity: ⭐⭐) - 6 subtasks
 - **Task**: Provide detailed feedback on invalid CSV rows during import
@@ -78,7 +78,7 @@
 ---
 
 ### **PHASE 3: Data Management Enhancements** 🔧
-*Estimated Time: 3-4 weeks (15 subtasks)*
+*Scope: 15 subtasks*
 
 #### 6. **Table Spot Price Display Fix** (Complexity: ⭐⭐⭐) - 6 subtasks
 - **Task**: Ensure table shows spot price at purchase, not current
@@ -108,7 +108,7 @@
 ---
 
 ### **PHASE 4: Advanced Features** 🚀
-*Estimated Time: 4-6 weeks (21 subtasks)*
+*Scope: 21 subtasks*
 
 #### 8. **Multi-Currency Support** (Complexity: ⭐⭐⭐⭐⭐) - 11 subtasks
 - **Task**: Add support for multiple currencies with API compatibility matrix
@@ -148,7 +148,7 @@
 ### **Prerequisites**
 - Complete current bug fixes and stability improvements
 - Ensure comprehensive test coverage for existing features
-- Create development branch for v3.2.0 work
+- Create development branch for v3.5.0 work
 
 ### **Development Phases**
 1. **Phase 1 & 2**: Can be developed in parallel
@@ -170,7 +170,7 @@
 
 ---
 
-## 🎁 Version 3.2.0 Feature Summary
+## 🎁 Version 3.5.0 Feature Summary
 
 ### **New Features**
 - ✅ API usage tracking and limits
@@ -196,17 +196,7 @@
 
 ---
 
-## 📅 Estimated Timeline
-
-| Phase | Duration | Subtasks | Features |
-|-------|----------|----------|----------|
-| Phase 1 | 1-2 weeks | 12 tasks | Documentation, API tracking |
-| Phase 2 | 2-3 weeks | 22 tasks | UI improvements, modals |
-| Phase 3 | 3-4 weeks | 15 tasks | Data management, restore |
-| Phase 4 | 4-6 weeks | 21 tasks | Multi-currency, encryption |
-| **Total** | **10-15 weeks** | **70 tasks** | **Complete v3.2.0** |
-
-### **Multi-Agent Development Notes**
+## 🤝 Multi-Agent Development Notes
 - **Task Size**: Each subtask designed for ~2 hour completion time
 - **Parallel Work**: Multiple subtasks can be worked on simultaneously
 - **Dependencies**: Subtasks within phases may have dependencies (noted in planning docs)
@@ -224,7 +214,7 @@
 - GitHub preparation and branch management
 
 ### **Release**
-- Update to v3.2.0 in `constants.js`
+ - Update to v3.5.0 in `constants.js`
 - Complete changelog entry
 - Documentation synchronization
 - GitHub main branch merge

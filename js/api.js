@@ -36,7 +36,31 @@ const loadApiConfig = () => {
         // Legacy format migration
         config.keys = { [config.provider]: atob(config.apiKey) };
       }
-      return {
+      const usage = config.usage || {};
+      const metals = config.metals || {};
+      const currentMonth = currentMonthKey();
+      const savedMonth = config.usageMonth;
+      Object.keys(API_PROVIDERS).forEach((p) => {
+        if (!usage[p]) usage[p] = { quota: DEFAULT_API_QUOTA, used: 0 };
+        if (!metals[p])
+          metals[p] = {
+            silver: true,
+            gold: true,
+            platinum: true,
+            palladium: true,
+          };
+        else {
+          ["silver", "gold", "platinum", "palladium"].forEach((m) => {
+            if (typeof metals[p][m] === "undefined") metals[p][m] = true;
+          });
+        }
+      });
+      let needsSave = false;
+      if (savedMonth !== currentMonth) {
+        Object.keys(usage).forEach((p) => (usage[p].used = 0));
+        needsSave = true;
+      }
+      const result = {
         provider: config.provider || "",
         keys: config.keys || {},
         cacheHours:
@@ -46,16 +70,32 @@ const loadApiConfig = () => {
           endpoint: "",
           format: "symbol",
         },
+        metals,
+        usage,
+        usageMonth: currentMonth,
       };
+      if (needsSave) {
+        saveApiConfig(result);
+      }
+      return result;
     }
   } catch (error) {
     console.error("Error loading API config:", error);
   }
+  const usage = {};
+  const metals = {};
+  Object.keys(API_PROVIDERS).forEach((p) => {
+    usage[p] = { quota: DEFAULT_API_QUOTA, used: 0 };
+    metals[p] = { silver: true, gold: true, platinum: true, palladium: true };
+  });
   return {
     provider: "",
     keys: {},
     cacheHours: 24,
     customConfig: { baseUrl: "", endpoint: "", format: "symbol" },
+    metals,
+    usage,
+    usageMonth: currentMonthKey(),
   };
 };
 
@@ -75,6 +115,9 @@ const saveApiConfig = (config) => {
         endpoint: "",
         format: "symbol",
       },
+      metals: config.metals || {},
+      usage: config.usage || {},
+      usageMonth: config.usageMonth || currentMonthKey(),
     };
     Object.keys(config.keys || {}).forEach((p) => {
       if (config.keys[p]) {
@@ -160,6 +203,7 @@ const setProviderStatus = (provider, status) => {
 const updateProviderHistoryTables = () => {
   loadSpotHistory();
   const history = spotHistory.filter((e) => e.source === "api");
+  const config = loadApiConfig();
   Object.keys(API_PROVIDERS).forEach((prov) => {
     const container = document.querySelector(
       `.api-provider[data-provider="${prov}"] .provider-history`,
@@ -167,7 +211,9 @@ const updateProviderHistoryTables = () => {
     if (!container) return;
     const providerName = API_PROVIDERS[prov].name;
     const metals = ["Silver", "Gold", "Platinum", "Palladium"];
-    let html = "<table>";
+    const selections = config.metals?.[prov] || {};
+    let priceRow = '<div class="provider-price-row">';
+    let checkboxRow = '<div class="provider-checkbox-row">';
     metals.forEach((metal) => {
       const entries = history.filter(
         (e) => e.provider === providerName && e.metal === metal,
@@ -175,10 +221,32 @@ const updateProviderHistoryTables = () => {
       const last = entries.length
         ? formatDollar(entries[entries.length - 1].spot)
         : "-";
-      html += `<tr><td>${metal}</td><td>${last}</td></tr>`;
+      const key = metal.toLowerCase();
+      const checked = selections[key] !== false ? "checked" : "";
+      priceRow += `<span>${last}</span>`;
+      checkboxRow += `<label><input type="checkbox" class="provider-metal" data-provider="${prov}" data-metal="${key}" ${checked}/> ${metal}</label>`;
     });
-    html += "</table>";
-    container.innerHTML = html;
+    priceRow += "</div>";
+    checkboxRow += "</div>";
+    const usage = config.usage?.[prov] || {
+      quota: DEFAULT_API_QUOTA,
+      used: 0,
+    };
+    const usedPercent = Math.min((usage.used / usage.quota) * 100, 100);
+    const remainingPercent = 100 - usedPercent;
+    const warning = usage.used / usage.quota >= 0.9;
+    const usageHtml = `<div class="api-usage"><div class="usage-bar"><div class="used" style="width:${usedPercent}%"></div><div class="remaining" style="width:${remainingPercent}%"></div></div><div class="usage-text">${usage.used}/${usage.quota} calls${warning ? " 🚩" : ""}</div></div>`;
+    container.innerHTML = priceRow + checkboxRow + usageHtml;
+    container.querySelectorAll(".provider-metal").forEach((cb) => {
+      cb.addEventListener("change", (e) => {
+        const provId = e.target.dataset.provider;
+        const metalKey = e.target.dataset.metal;
+        const cfg = loadApiConfig();
+        if (!cfg.metals[provId]) cfg.metals[provId] = {};
+        cfg.metals[provId][metalKey] = e.target.checked;
+        saveApiConfig(cfg);
+      });
+    });
   });
 };
 
@@ -367,7 +435,10 @@ const hideApiHistoryModal = () => {
  */
 const showApiProvidersModal = () => {
   const modal = document.getElementById("apiProvidersModal");
-  if (modal) modal.style.display = "flex";
+  if (modal) {
+    updateProviderHistoryTables();
+    modal.style.display = "flex";
+  }
 };
 
 /**
@@ -557,6 +628,13 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
     throw new Error("Invalid API provider");
   }
 
+  const config = loadApiConfig();
+  const selected = config.metals?.[provider] || {};
+  const usage = config.usage?.[provider] || {
+    quota: DEFAULT_API_QUOTA,
+    used: 0,
+  };
+
   const results = {};
   const errors = [];
 
@@ -573,6 +651,7 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
       palladium: format === "symbol" ? "XPD" : "palladium",
     };
     for (const metal of Object.keys(metalCodes)) {
+      if (selected[metal] === false) continue;
       try {
         const endpoint = pattern
           .replace("{API_KEY}", apiKey)
@@ -587,6 +666,7 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
         const data = await response.json();
+        usage.used++;
         const price = providerConfig.parseResponse(data, metal);
         if (price && price > 0) {
           results[metal] = price;
@@ -600,6 +680,7 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
   } else {
     // Fetch prices for each metal using predefined endpoints
     for (const [metal, endpoint] of Object.entries(providerConfig.endpoints)) {
+      if (selected[metal] === false) continue;
       try {
         const url = `${providerConfig.baseUrl}${endpoint.replace("{API_KEY}", apiKey)}`;
 
@@ -622,6 +703,7 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
         }
 
         const data = await response.json();
+        usage.used++;
         const price = providerConfig.parseResponse(data, metal);
 
         if (price && price > 0) {
@@ -644,6 +726,8 @@ const fetchSpotPricesFromApi = async (provider, apiKey) => {
     console.warn("Some metals failed to fetch:", errors);
   }
 
+  config.usage[provider] = usage;
+  saveApiConfig(config);
   return results;
 };
 

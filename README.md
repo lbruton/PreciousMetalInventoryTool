@@ -1,6 +1,21 @@
-# Precious Metals Inventory Tool v3.1.12
+# Precious Metals Inventory Tool v3.1.13
 
 The Precious Metals Inventory Tool is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics and enhanced tracking capabilities.
+
+## Recent Updates in 3.1.x Series
+- **v3.1.13 - Cloud Sync & API Quotas**: CSV import fix, Cloud Sync placeholder, and API usage tracking with monthly reset
+- **v3.1.12 - About Modal & Disclaimer**: Mandatory disclaimer splash and refreshed About modal
+- **v3.1.11 - UI Enhancements & Documentation**: Improved table usability and consolidated workflow docs
+- **v3.1.10 - Project Maintenance**: Removed orphaned backup and debug files for improved maintainability
+- **v3.1.9 - UI Consistency**: Clear Cache button styling improvements across themes
+- **v3.1.8 - Backup System**: Full ZIP backup functionality with restoration guides
+- **v3.1.6 - Theme Toggle**: Fixed theme management with system preference detection
+
+## 🆕 What's New in v3.1.13
+- CSV import now resets negative prices to $0 while importing remaining data
+- Added Cloud Sync placeholder modal and per-provider API quota tracking with usage warnings and automatic monthly reset
+- Boating Accident button color reflects data presence and import/export behavior
+- Custom branding title support and new footer with GPL-3.0 license link
 
 ## 🆕 What's New in v3.1.12
 - **About Modal**: Mandatory disclaimer splash with version info and refreshed styling
@@ -18,14 +33,6 @@ The Precious Metals Inventory Tool is a comprehensive client-side web applicatio
   - Replaced with comprehensive `docs/MULTI_AGENT_WORKFLOW.md`
   - Enhanced multi-agent coordination protocols and quality standards
   - Streamlined documentation structure eliminates redundancy
-
-## Recent Updates in 3.1.x Series
-- **v3.1.12 - About Modal & Disclaimer**: Mandatory disclaimer splash and refreshed About modal
-- **v3.1.11 - UI Enhancements & Documentation**: Improved table usability and consolidated workflow docs
-- **v3.1.10 - Project Maintenance**: Removed orphaned backup and debug files for improved maintainability
-- **v3.1.9 - UI Consistency**: Clear Cache button styling improvements across themes
-- **v3.1.8 - Backup System**: Full ZIP backup functionality with restoration guides
-- **v3.1.6 - Theme Toggle**: Fixed theme management with system preference detection
 
 ## What's New in v3.1.8
 - **Full Backup System**: "Backup All Data" button creates a timestamped ZIP archive of the entire application state.

@@ -963,7 +963,12 @@ const importCsv = (file) => {
         const type = row['Type'] || row['type'] || 'Other';
         const weight = parseFloat(row['Weight(oz)'] || row['weight']);
         const priceStr = row['Purchase Price'] || row['price'];
-        const price = parseFloat(typeof priceStr === "string" ? priceStr.replace(/[^0-9.-]+/g,"") : priceStr);
+        let price = parseFloat(
+          typeof priceStr === "string"
+            ? priceStr.replace(/[^0-9.-]+/g, "")
+            : priceStr,
+        );
+        if (price < 0) price = 0;
         const purchaseLocation = row['Purchase Location'] || "Unknown";
         const storageLocation = row['Storage Location'] || "Unknown";
         const notes = row['Notes'] || "";

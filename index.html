@@ -1018,6 +1018,15 @@
         <button class="close-details-btn" id="closeDetailsBtn">Close</button>
       </div>
     </div>
+    <footer class="app-footer">
+      © 2025 stacktrackr.com. Open source project licensed
+      <a
+        href="https://www.gnu.org/licenses/gpl-3.0.en.html"
+        target="_blank"
+        rel="noopener"
+        >GPL-3.0</a
+      >.
+    </footer>
     <!-- =============================================================================
        ABOUT & DISCLAIMER MODAL
        Comprehensive application information and disclaimer modal similar to the
@@ -1097,9 +1106,7 @@
     <div class="modal" id="aboutModal" style="display: none">
       <div class="modal-content about-modal-content">
         <div class="modal-header about-modal-header">
-          <h1 class="about-title" id="aboutTitle">
-            Precious Metals Inventory Tool <span id="aboutVersion"></span>
-          </h1>
+          <h1>About</h1>
           <button
             aria-label="Close modal"
             class="modal-close"
@@ -1109,6 +1116,9 @@
           </button>
         </div>
         <div class="modal-body about-modal-body">
+          <h2 class="about-title" id="aboutTitle">
+            Precious Metals Inventory Tool <span id="aboutVersion"></span>
+          </h2>
           <!-- Key Features -->
           <div class="about-features">
             <div class="features-title">✨ Key Features</div>
@@ -1242,15 +1252,15 @@
             <p class="settings-subtext">Import or export your data files.</p>
             <div class="import-section import-export-grid">
               <label class="btn" id="importCsvBtn">
-                Import CSV
+                Import CSV 📥
                 <input accept=".csv" hidden id="importCsvFile" type="file" />
               </label>
               <label class="btn" id="importJsonBtn">
-                Import JSON
+                Import JSON 📥
                 <input accept=".json" hidden id="importJsonFile" type="file" />
               </label>
               <label class="btn" id="importExcelBtn">
-                Import Excel
+                Import Excel 📥
                 <input
                   accept=".xlsx,.xls"
                   hidden
@@ -1267,17 +1277,18 @@
             ></progress>
             <div class="import-progress-text" id="importProgressText"></div>
             <div class="export-section import-export-grid">
-              <button class="btn" id="exportCsvBtn">Export CSV</button>
-              <button class="btn" id="exportJsonBtn">Export JSON</button>
-              <button class="btn" id="exportExcelBtn">Export Excel</button>
-              <button class="btn" id="exportPdfBtn">Export PDF</button>
-              <button class="btn" id="exportHtmlBtn">Export HTML</button>
+              <button class="btn" id="exportCsvBtn">Export CSV 📤</button>
+              <button class="btn" id="exportJsonBtn">Export JSON 📤</button>
+              <button class="btn" id="exportExcelBtn">Export Excel 📤</button>
+              <button class="btn" id="exportPdfBtn">Export PDF 📤</button>
+              <button class="btn" id="exportHtmlBtn">Export HTML 📤</button>
+              <button class="btn secondary" id="cloudSyncBtn">Cloud Sync ☁️</button>
             </div>
           </div>
 
           <div class="settings-section boating-accident-section">
             <p class="settings-subtext">Backup or restore all data.</p>
-            <button id="boatingAccidentBtn">
+            <button class="btn danger" id="boatingAccidentBtn">
               🏴‍☠️ So you had a boating accident? 🏴‍☠️
             </button>
           </div>
@@ -1336,6 +1347,13 @@
                     </button>
                     <button
                       type="button"
+                      class="btn api-quota-btn"
+                      data-provider="METALS_DEV"
+                    >
+                      Quota
+                    </button>
+                    <button
+                      type="button"
                       class="btn api-clear-btn warning"
                       data-provider="METALS_DEV"
                     >
@@ -1386,6 +1404,13 @@
                       data-provider="METALS_API"
                     >
                       Test & Sync
+                    </button>
+                    <button
+                      type="button"
+                      class="btn api-quota-btn"
+                      data-provider="METALS_API"
+                    >
+                      Quota
                     </button>
                     <button
                       type="button"
@@ -1445,6 +1470,13 @@
                       data-provider="METAL_PRICE_API"
                     >
                       Test & Sync
+                    </button>
+                    <button
+                      type="button"
+                      class="btn api-quota-btn"
+                      data-provider="METAL_PRICE_API"
+                    >
+                      Quota
                     </button>
                     <button
                       type="button"
@@ -1520,6 +1552,13 @@
                     </button>
                     <button
                       type="button"
+                      class="btn api-quota-btn"
+                      data-provider="CUSTOM"
+                    >
+                      Quota
+                    </button>
+                    <button
+                      type="button"
                       class="btn api-clear-btn warning"
                       data-provider="CUSTOM"
                     >
@@ -1535,6 +1574,47 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="cloudSyncModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Cloud Sync</h2>
+          <button
+            aria-label="Close modal"
+            class="modal-close"
+            id="cloudSyncCloseBtn"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body" style="text-align: center">
+          ☁️ Feature coming soon ☁️
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="apiQuotaModal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>API Quota</h2>
+          <button
+            aria-label="Close modal"
+            class="modal-close"
+            id="apiQuotaCloseBtn"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body" style="text-align: center">
+          <label for="apiQuotaInput">Monthly quota:</label>
+          <input type="number" id="apiQuotaInput" min="1" />
+          <div style="margin-top: 1rem">
+            <button class="btn" id="apiQuotaSaveBtn">Save</button>
           </div>
         </div>
       </div>

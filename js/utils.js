@@ -25,7 +25,9 @@ const getVersionString = (prefix = "v") => `${prefix}${APP_VERSION}`;
  * @returns {string} Full title with version
  */
 const getAppTitle = (baseTitle = "Precious Metals Inventory Tool") =>
-  `${baseTitle} ${getVersionString()}`;
+  BRANDING_TITLE && BRANDING_TITLE.trim()
+    ? BRANDING_TITLE
+    : `${baseTitle} ${getVersionString()}`;
 
 /**
  * Performance monitoring utility
@@ -121,6 +123,16 @@ const pad2 = (n) => n.toString().padStart(2, "0");
 const todayStr = () => {
   const d = new Date();
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+};
+
+/**
+ * Returns current month key in YYYY-MM format
+ *
+ * @returns {string} Current month identifier
+ */
+const currentMonthKey = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`;
 };
 
 /**

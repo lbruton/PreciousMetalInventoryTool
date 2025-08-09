@@ -754,6 +754,28 @@ const setupEventListeners = () => {
       );
     }
 
+    if (elements.cloudSyncBtn) {
+      safeAttachListener(
+        elements.cloudSyncBtn,
+        "click",
+        () => {
+          if (elements.cloudSyncModal)
+            elements.cloudSyncModal.style.display = "flex";
+        },
+        "Cloud Sync button",
+      );
+    }
+
+    const cloudSyncCloseBtn = document.getElementById("cloudSyncCloseBtn");
+    if (cloudSyncCloseBtn && elements.cloudSyncModal) {
+      safeAttachListener(
+        cloudSyncCloseBtn,
+        "click",
+        () => (elements.cloudSyncModal.style.display = "none"),
+        "Cloud Sync close",
+      );
+    }
+
     // Backup All Button
     if (elements.backupAllBtn) {
       safeAttachListener(
@@ -778,9 +800,11 @@ const setupEventListeners = () => {
       if (!btn) return;
       const hasData = !!localStorage.getItem(LS_KEY);
       if (hasData) {
+        btn.classList.add("danger");
         btn.classList.remove("success");
         btn.textContent = "🏴‍☠️ So you had a boating accident? 🏴‍☠️";
       } else {
+        btn.classList.remove("danger");
         btn.classList.add("success");
         btn.textContent = "💎 All that glitters is not gold 💎";
       }
@@ -1054,6 +1078,7 @@ const setupApiEvents = () => {
   debugLog("Setting up API events...");
 
   try {
+    let quotaProvider = null;
     const settingsModal = document.getElementById("settingsModal");
     const settingsCloseBtn = document.getElementById("settingsCloseBtn");
     const infoModal = document.getElementById("apiInfoModal");
@@ -1146,6 +1171,29 @@ const setupApiEvents = () => {
       );
     });
 
+    document.querySelectorAll(".api-quota-btn").forEach((btn) => {
+      const provider = btn.getAttribute("data-provider");
+      safeAttachListener(
+        btn,
+        "click",
+        () => {
+          quotaProvider = provider;
+          const modal = elements.apiQuotaModal;
+          const input = document.getElementById("apiQuotaInput");
+          if (modal && input) {
+            const cfg = loadApiConfig();
+            const usage = cfg.usage?.[provider] || {
+              quota: DEFAULT_API_QUOTA,
+              used: 0,
+            };
+            input.value = usage.quota;
+            modal.style.display = "flex";
+          }
+        },
+        "API quota button",
+      );
+    });
+
     document.querySelectorAll(".api-clear-btn").forEach((btn) => {
       const provider = btn.getAttribute("data-provider");
       safeAttachListener(
@@ -1188,6 +1236,36 @@ const setupApiEvents = () => {
       );
     });
 
+    const quotaClose = document.getElementById("apiQuotaCloseBtn");
+    if (quotaClose && elements.apiQuotaModal) {
+      safeAttachListener(
+        quotaClose,
+        "click",
+        () => (elements.apiQuotaModal.style.display = "none"),
+        "API quota close",
+      );
+    }
+    const quotaSave = document.getElementById("apiQuotaSaveBtn");
+    if (quotaSave && elements.apiQuotaModal) {
+      safeAttachListener(
+        quotaSave,
+        "click",
+        () => {
+          const input = document.getElementById("apiQuotaInput");
+          const val = parseInt(input.value, 10);
+          if (!isNaN(val) && quotaProvider) {
+            const cfg = loadApiConfig();
+            if (!cfg.usage[quotaProvider])
+              cfg.usage[quotaProvider] = { quota: val, used: 0 };
+            cfg.usage[quotaProvider].quota = val;
+            saveApiConfig(cfg);
+            elements.apiQuotaModal.style.display = "none";
+            updateProviderHistoryTables();
+          }
+        },
+        "API quota save",
+      );
+    }
     const flushCacheBtn = document.getElementById("flushCacheBtn");
     if (flushCacheBtn) {
       safeAttachListener(
