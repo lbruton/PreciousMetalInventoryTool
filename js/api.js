@@ -659,6 +659,27 @@ const saveApiCache = (data, provider) => {
 };
 
 /**
+ * Automatically syncs spot prices if API keys exist and cache is stale
+ * @returns {Promise<void>} Resolves when sync completes or immediately if no sync needed
+ */
+const autoSyncSpotPrices = async () => {
+  if (
+    !apiConfig ||
+    !apiConfig.provider ||
+    !apiConfig.keys ||
+    !apiConfig.keys[apiConfig.provider]
+  ) {
+    return;
+  }
+
+  const cache = loadApiCache();
+  if (!cache || cache.provider !== apiConfig.provider) {
+    await syncSpotPricesFromApi(false, true);
+    updateSyncButtonStates();
+  }
+};
+
+/**
  * Makes API request for spot prices
  * @param {string} provider - Provider key from API_PROVIDERS
  * @param {string} apiKey - API key
@@ -1217,6 +1238,7 @@ window.showApiHistoryModal = showApiHistoryModal;
 window.hideApiHistoryModal = hideApiHistoryModal;
 window.clearApiHistory = clearApiHistory;
 window.syncAllProviders = syncAllProviders;
+window.autoSyncSpotPrices = autoSyncSpotPrices;
 
 /**
  * Shows manual price input for a specific metal
