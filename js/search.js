@@ -9,13 +9,14 @@
 const filterInventory = () => {
   let result = inventory;
 
-  if (columnFilter.field) {
-    const value = columnFilter.value.toLowerCase();
-    result = result.filter(item => {
-      const fieldVal = (item[columnFilter.field] || '').toString().toLowerCase();
+  // Apply stacked column filters
+  Object.entries(columnFilters).forEach(([field, val]) => {
+    const value = val.toLowerCase();
+    result = result.filter((item) => {
+      const fieldVal = (item[field] || "").toString().toLowerCase();
       return fieldVal === value;
     });
-  }
+  });
 
   if (!searchQuery.trim()) return result;
 
@@ -59,10 +60,10 @@ const filterInventory = () => {
  * @param {string} value - Value to match exactly
  */
 const applyColumnFilter = (field, value) => {
-  if (columnFilter.field === field && columnFilter.value === value) {
-    columnFilter = { field: null, value: null };
+  if (columnFilters[field] === value) {
+    delete columnFilters[field];
   } else {
-    columnFilter = { field, value };
+    columnFilters[field] = value;
   }
   searchQuery = '';
   if (elements.searchInput) elements.searchInput.value = '';

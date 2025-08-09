@@ -18,7 +18,7 @@ let itemsPerPage = 25; // Number of items to display per page
 let searchQuery = "";
 
 /** @type {{field: string|null, value: string|null}} Active column filter */
-let columnFilter = { field: null, value: null };
+let columnFilters = {};
 
 /** @type {Object} Chart instances for proper cleanup */
 let chartInstances = {
@@ -77,6 +77,7 @@ const elements = {
   editModal: null,
   editForm: null,
   cancelEditBtn: null,
+  editCloseBtn: null,
   editMetal: null,
   editName: null,
   editQty: null,
@@ -89,11 +90,29 @@ const elements = {
   editDate: null,
   editSpotPrice: null,
 
+  // Add modal elements
+  addModal: null,
+  addForm: null,
+  addCloseBtn: null,
+  cancelAddBtn: null,
+  addMetal: null,
+  addName: null,
+  addQty: null,
+  addType: null,
+  addWeight: null,
+  addPrice: null,
+  addPurchaseLocation: null,
+  addStorageLocation: null,
+  addNotes: null,
+  addDate: null,
+  addSpotPrice: null,
+
   // Notes modal elements
   notesModal: null,
   notesTextarea: null,
   saveNotesBtn: null,
   cancelNotesBtn: null,
+  notesCloseBtn: null,
 
   // Details modal elements
   detailsModal: null,
@@ -114,11 +133,11 @@ const elements = {
   firstPage: null,
   lastPage: null,
   pageNumbers: null,
-  paginationInfo: null,
 
   // Search elements
   searchInput: null,
   clearSearchBtn: null,
+  newItemBtn: null,
   searchResultsInfo: null,
 
   // About & acknowledgment modal elements

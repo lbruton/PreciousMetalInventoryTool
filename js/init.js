@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.editModal = safeGetElement("editModal");
     elements.editForm = safeGetElement("editForm");
     elements.cancelEditBtn = safeGetElement("cancelEdit");
+    elements.editCloseBtn = safeGetElement("editCloseBtn");
     elements.editMetal = safeGetElement("editMetal");
     elements.editName = safeGetElement("editName");
     elements.editQty = safeGetElement("editQty");
@@ -119,6 +120,23 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.editNotes = safeGetElement("editNotes");
     elements.editDate = safeGetElement("editDate");
     elements.editSpotPrice = safeGetElement("editSpotPrice");
+
+    // Add modal elements
+    elements.addModal = safeGetElement("addModal");
+    elements.addForm = safeGetElement("addForm");
+    elements.addCloseBtn = safeGetElement("addCloseBtn");
+    elements.cancelAddBtn = safeGetElement("cancelAdd");
+    elements.addMetal = safeGetElement("addMetal");
+    elements.addName = safeGetElement("addName");
+    elements.addQty = safeGetElement("addQty");
+    elements.addType = safeGetElement("addType");
+    elements.addWeight = safeGetElement("addWeight");
+    elements.addPrice = safeGetElement("addPrice");
+    elements.addPurchaseLocation = safeGetElement("addPurchaseLocation");
+    elements.addStorageLocation = safeGetElement("addStorageLocation");
+    elements.addNotes = safeGetElement("addNotes");
+    elements.addDate = safeGetElement("addDate");
+    elements.addSpotPrice = safeGetElement("addSpotPrice");
 
     // Show acknowledgment modal immediately and set up modal events
     if (typeof setupAckModalEvents === "function") {
@@ -136,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.notesTextarea = safeGetElement("notesTextarea");
     elements.saveNotesBtn = safeGetElement("saveNotes");
     elements.cancelNotesBtn = safeGetElement("cancelNotes");
+    elements.notesCloseBtn = safeGetElement("notesCloseBtn");
 
     // Pagination elements
     debugLog("Phase 5: Initializing pagination elements...");
@@ -145,12 +164,12 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.firstPage = safeGetElement("firstPage");
     elements.lastPage = safeGetElement("lastPage");
     elements.pageNumbers = safeGetElement("pageNumbers");
-    elements.paginationInfo = safeGetElement("paginationInfo");
 
     // Search elements
     debugLog("Phase 6: Initializing search elements...");
     elements.searchInput = safeGetElement("searchInput");
     elements.clearSearchBtn = safeGetElement("clearSearchBtn");
+    elements.newItemBtn = safeGetElement("newItemBtn");
     elements.searchResultsInfo = safeGetElement("searchResultsInfo");
 
     // Details modal elements

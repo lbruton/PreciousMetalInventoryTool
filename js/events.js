@@ -376,8 +376,88 @@ const setupEventListeners = () => {
         },
         "Main inventory form",
       );
+    }
+
+    // ADD FORM SUBMISSION
+    debugLog("Setting up add form...");
+    if (elements.addForm) {
+      safeAttachListener(
+        elements.addForm,
+        "submit",
+        function (e) {
+          e.preventDefault();
+
+          const metal = elements.addMetal.value;
+          const name = elements.addName.value.trim();
+          const qty = parseInt(elements.addQty.value, 10);
+          const type = elements.addType.value;
+          const weight = parseFloat(elements.addWeight.value);
+          const price = parseFloat(elements.addPrice.value);
+          const purchaseLocation =
+            elements.addPurchaseLocation.value.trim() || "Unknown";
+          const storageLocation =
+            elements.addStorageLocation.value.trim() || "Unknown";
+          const notes = elements.addNotes.value.trim() || "";
+          const date = elements.addDate.value || todayStr();
+          const isCollectable = document.getElementById("addCollectable").checked;
+          const spotPriceInput = elements.addSpotPrice.value.trim();
+
+          let spotPriceAtPurchase;
+          if (!isCollectable && spotPriceInput === "") {
+            const metalKey = metal.toLowerCase();
+            spotPriceAtPurchase = spotPrices[metalKey];
+          } else {
+            spotPriceAtPurchase = parseFloat(spotPriceInput);
+          }
+
+          if (
+            isNaN(qty) ||
+            qty < 1 ||
+            !Number.isInteger(qty) ||
+            isNaN(weight) ||
+            weight <= 0 ||
+            isNaN(price) ||
+            price < 0 ||
+            (!isCollectable &&
+              (isNaN(spotPriceAtPurchase) || spotPriceAtPurchase <= 0))
+          ) {
+            return alert("Please enter valid values for all fields.");
+          }
+
+          let premiumPerOz = 0;
+          let totalPremium = 0;
+          if (!isCollectable) {
+            const pricePerOz = price / weight;
+            premiumPerOz = pricePerOz - spotPriceAtPurchase;
+            totalPremium = premiumPerOz * qty * weight;
+          }
+
+          inventory.push({
+            metal,
+            name,
+            qty,
+            type,
+            weight,
+            price,
+            date,
+            purchaseLocation,
+            storageLocation,
+            notes,
+            spotPriceAtPurchase: isCollectable ? 0 : spotPriceAtPurchase,
+            premiumPerOz,
+            totalPremium,
+            isCollectable,
+          });
+
+          saveInventory();
+          renderTable();
+          elements.addModal.style.display = "none";
+          e.target.reset();
+        },
+        "Add form",
+      );
     } else {
-      console.error("Main inventory form not found!");
+      console.error("Add form not found!");
     }
 
     // EDIT FORM SUBMISSION
@@ -486,6 +566,40 @@ const setupEventListeners = () => {
       );
     }
 
+    if (elements.editCloseBtn) {
+      safeAttachListener(
+        elements.editCloseBtn,
+        "click",
+        function () {
+          elements.editModal.style.display = "none";
+          editingIndex = null;
+        },
+        "Close edit modal",
+      );
+    }
+
+    if (elements.addCloseBtn) {
+      safeAttachListener(
+        elements.addCloseBtn,
+        "click",
+        () => {
+          if (elements.addModal) elements.addModal.style.display = "none";
+        },
+        "Close add modal",
+      );
+    }
+
+    if (elements.cancelAddBtn) {
+      safeAttachListener(
+        elements.cancelAddBtn,
+        "click",
+        () => {
+          if (elements.addModal) elements.addModal.style.display = "none";
+        },
+        "Cancel add item",
+      );
+    }
+
     // NOTES MODAL BUTTONS
     if (elements.saveNotesBtn) {
       safeAttachListener(
@@ -525,6 +639,18 @@ const setupEventListeners = () => {
           notesIndex = null;
         },
         "Cancel notes button",
+      );
+    }
+
+    if (elements.notesCloseBtn) {
+      safeAttachListener(
+        elements.notesCloseBtn,
+        "click",
+        () => {
+          if (elements.notesModal) elements.notesModal.style.display = "none";
+          notesIndex = null;
+        },
+        "Close notes modal",
       );
     }
 
@@ -928,11 +1054,27 @@ const setupSearch = () => {
             elements.searchInput.value = "";
           }
           searchQuery = "";
-          columnFilter = { field: null, value: null };
+          columnFilters = {};
           currentPage = 1;
           renderTable();
         },
         "Clear search button",
+      );
+    }
+
+    if (elements.newItemBtn) {
+      safeAttachListener(
+        elements.newItemBtn,
+        "click",
+        () => {
+          if (elements.addForm) elements.addForm.reset();
+          if (elements.addModal) elements.addModal.style.display = "flex";
+          if (elements.addDate) elements.addDate.value = todayStr();
+          const collect = document.getElementById("addCollectable");
+          if (collect) collect.checked = false;
+          if (elements.addSpotPrice) elements.addSpotPrice.value = "";
+        },
+        "New item button",
       );
     }
 
