@@ -1,6 +1,6 @@
 # StackTrackr - Project Structure
 
-## Current Structure (Version 3.2.06rc)
+## Current Structure (Version 3.2.07rc)
 
 ```text
 ├── css/

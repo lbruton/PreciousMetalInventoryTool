@@ -39,6 +39,19 @@ const getAppTitle = (baseTitle = "StackTrackr") => {
 };
 
 /**
+ * Determines active domain for footer copyright
+ *
+ * @returns {string} Domain name to display
+ */
+const getFooterDomain = () => {
+  const host = window.location.hostname.toLowerCase();
+  if (host.includes("stackrtrackr.com")) return "stackrtrackr.com";
+  if (host.includes("stacktrackr.com")) return "stacktrackr.com";
+  if (host.includes("stackertrackr.com")) return "stackertrackr.com";
+  return "stacktrackr.com";
+};
+
+/**
  * Performance monitoring utility
  *
  * @param {Function} fn - Function to monitor
@@ -76,24 +89,8 @@ const getLastUpdateTime = (metalName) => {
 
   const latestEntry = metalEntries[metalEntries.length - 1];
   const timestamp = new Date(latestEntry.timestamp);
-  const now = new Date();
-  const diffMs = now - timestamp;
-  const diffMins = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  let timeText;
-  if (diffMins < 1) {
-    timeText = "Just now";
-  } else if (diffMins < 60) {
-    timeText = `${diffMins} min${diffMins === 1 ? "" : "s"} ago`;
-  } else if (diffHours < 24) {
-    timeText = `${diffHours} hr${diffHours === 1 ? "" : "s"} ago`;
-  } else if (diffDays < 30) {
-    timeText = `${diffDays} day${diffDays === 1 ? "" : "s"} ago`;
-  } else {
-    timeText = timestamp.toLocaleDateString();
-  }
+  const timeText = timestamp.toLocaleString();
 
   let sourceText;
   if (latestEntry.source === "api") {

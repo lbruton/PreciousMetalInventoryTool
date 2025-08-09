@@ -325,17 +325,138 @@
             </div>
           </div>
         </div>
+      </section><!-- =============================================================================
+         INVENTORY FORM SECTION
+         
+         Primary data entry form for adding new inventory items. Includes fields for:
+         - Metal type selection (Silver, Gold, Platinum, Palladium)
+         - Item details (name, type, quantity, weight)
+         - Purchase information (price, location, storage location, date)
+         
+         Form submission is handled by events.js with validation and automatic
+         premium calculation based on current spot prices
+         ============================================================================= -->
+      <!--
+        Legacy add item form - commented out pending removal after
+        verifying new modal workflow.
+      <section class="form-section">
+        ...
+      </section>
+      -->
+      <!-- =============================================================================
+         SEARCH FUNCTIONALITY
+         
+         Live search interface that filters inventory table in real-time.
+         Searches across all relevant fields including:
+         - Metal type, name, type, purchase/storage locations, date
+         - Quantity, weight, price values
+         - Collectable status (yes/no)
+         
+         Search is case-insensitive and supports partial matches
+         Implementation in search.js with filterInventory() function
+         ============================================================================= -->
+      <section class="search-section">
+        <div class="search-container">
+          <input
+            id="searchInput"
+            placeholder="Search inventory by metal, name, type, purchase location, storage location, notes, date..."
+            type="text"
+          />
+          <button class="btn" id="clearSearchBtn">Clear</button>
+          <button class="btn success" id="newItemBtn">New Item</button>
+        </div>
+        <div class="search-results-info" id="searchResultsInfo"></div>
+      </section>
+      <!-- =============================================================================
+         INVENTORY TABLE SECTION
+         
+         Main data display table showing all inventory items with:
+         - Sortable columns (click headers to sort ascending/descending)
+         - Clickable item names for editing (opens edit modal)
+         - Collectable status checkboxes for quick toggle
+         - Delete buttons with confirmation
+         - Responsive design with column resizing capability
+         
+      Table rendering handled by renderTable() in inventory.js
+       Pagination controls limit display to selected items per page
+       ============================================================================= -->
+      <section class="table-section">
+        <div class="items-per-page">
+          <span>Items:</span>
+          <select class="pagination-select" id="itemsPerPage">
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option selected value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+        <table id="inventoryTable">
+          <thead>
+            <tr>
+              <th class="shrink">Date</th>
+              <th class="shrink">Type</th>
+              <th class="shrink">Metal</th>
+              <th class="shrink">Qty</th>
+              <th class="expand">Name</th>
+              <th class="shrink">Weight (oz)</th>
+              <th class="shrink">Purchase Price ($)</th>
+              <th class="shrink">Spot at Purchase ($)</th>
+              <th class="shrink">Premium ($)</th>
+              <th class="shrink">Purchase Location</th>
+              <th class="shrink">Storage Location</th>
+              <th class="shrink">Collectable</th>
+              <th class="shrink">Notes</th>
+              <th class="shrink">Delete</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <!-- Pagination Controls -->
+        <section class="pagination-section">
+          <div class="pagination-container">
+            <div class="pagination-controls">
+              <div class="pagination-buttons">
+                <div class="pagination-left">
+                  <button
+                    class="pagination-btn"
+                    id="firstPage"
+                    title="First Page"
+                  >
+                    «
+                  </button>
+                  <button
+                    class="pagination-btn"
+                    id="prevPage"
+                    title="Previous Page"
+                  >
+                    ‹
+                  </button>
+                </div>
+                <div class="pagination-center" id="pageNumbers"></div>
+                <div class="pagination-right">
+                  <button class="pagination-btn" id="nextPage" title="Next Page">
+                    ›
+                  </button>
+                  <button class="pagination-btn" id="lastPage" title="Last Page">
+                    »
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </section>
       <!-- =============================================================================
          TOTALS SECTION
-         
+
          Comprehensive financial summary cards for each metal type showing:
          - Total items and weight in inventory
          - Purchase price vs current value calculations
          - Average prices (overall, collectable, non-collectable)
          - Premium analysis and profit/loss calculations
          - "View Details" buttons that open analytics modals with pie charts
-         
+
          All calculations are performed by updateSummary() in inventory.js
          Values are updated automatically when inventory changes
          ============================================================================= -->
@@ -576,128 +697,6 @@
             </button>
           </div>
         </div>
-      </section>
-      <!-- =============================================================================
-         INVENTORY FORM SECTION
-         
-         Primary data entry form for adding new inventory items. Includes fields for:
-         - Metal type selection (Silver, Gold, Platinum, Palladium)
-         - Item details (name, type, quantity, weight)
-         - Purchase information (price, location, storage location, date)
-         
-         Form submission is handled by events.js with validation and automatic
-         premium calculation based on current spot prices
-         ============================================================================= -->
-      <!--
-        Legacy add item form - commented out pending removal after
-        verifying new modal workflow.
-      <section class="form-section">
-        ...
-      </section>
-      -->
-      <!-- =============================================================================
-         SEARCH FUNCTIONALITY
-         
-         Live search interface that filters inventory table in real-time.
-         Searches across all relevant fields including:
-         - Metal type, name, type, purchase/storage locations, date
-         - Quantity, weight, price values
-         - Collectable status (yes/no)
-         
-         Search is case-insensitive and supports partial matches
-         Implementation in search.js with filterInventory() function
-         ============================================================================= -->
-      <section class="search-section">
-        <div class="search-container">
-          <input
-            id="searchInput"
-            placeholder="Search inventory by metal, name, type, purchase location, storage location, notes, date..."
-            type="text"
-          />
-          <button class="btn" id="clearSearchBtn">Clear</button>
-          <button class="btn success" id="newItemBtn">New Item</button>
-        </div>
-        <div class="search-results-info" id="searchResultsInfo"></div>
-      </section>
-      <!-- =============================================================================
-         INVENTORY TABLE SECTION
-         
-         Main data display table showing all inventory items with:
-         - Sortable columns (click headers to sort ascending/descending)
-         - Clickable item names for editing (opens edit modal)
-         - Collectable status checkboxes for quick toggle
-         - Delete buttons with confirmation
-         - Responsive design with column resizing capability
-         
-      Table rendering handled by renderTable() in inventory.js
-       Pagination controls limit display to selected items per page
-       ============================================================================= -->
-      <section class="table-section">
-        <div class="items-per-page">
-          <span>Items:</span>
-          <select class="pagination-select" id="itemsPerPage">
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option selected value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-        </div>
-        <table id="inventoryTable">
-          <thead>
-            <tr>
-              <th class="shrink">Date</th>
-              <th class="shrink">Type</th>
-              <th class="shrink">Metal</th>
-              <th class="shrink">Qty</th>
-              <th class="expand">Name</th>
-              <th class="shrink">Weight (oz)</th>
-              <th class="shrink">Purchase Price ($)</th>
-              <th class="shrink">Spot at Purchase ($)</th>
-              <th class="shrink">Premium ($)</th>
-              <th class="shrink">Purchase Location</th>
-              <th class="shrink">Storage Location</th>
-              <th class="shrink">Collectable</th>
-              <th class="shrink">Notes</th>
-              <th class="shrink">Delete</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <!-- Pagination Controls -->
-        <section class="pagination-section">
-          <div class="pagination-container">
-            <div class="pagination-controls">
-              <div class="pagination-buttons">
-                <div class="pagination-left">
-                  <button
-                    class="pagination-btn"
-                    id="firstPage"
-                    title="First Page"
-                  >
-                    «
-                  </button>
-                  <button
-                    class="pagination-btn"
-                    id="prevPage"
-                    title="Previous Page"
-                  >
-                    ‹
-                  </button>
-                </div>
-                <div class="pagination-center" id="pageNumbers"></div>
-                <div class="pagination-right">
-                  <button class="pagination-btn" id="nextPage" title="Next Page">
-                    ›
-                  </button>
-                  <button class="pagination-btn" id="lastPage" title="Last Page">
-                    »
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </section>
       <!-- =============================================================================
          IMPORT/EXPORT SECTION
@@ -1039,13 +1038,21 @@
       </div>
     </div>
     <footer class="app-footer">
-      © 2025 stacktrackr.com. Open source project licensed
+      © 2025 <span id="footerDomain">stacktrackr.com</span>. Open source project licensed
       <a
         href="https://www.gnu.org/licenses/gpl-3.0.en.html"
         target="_blank"
         rel="noopener"
         >GPL-3.0</a
       >.
+      <br />
+      Report issues or bugs here:
+      <a
+        href="https://github.com/lbruton/StackTrackr/issues"
+        target="_blank"
+        rel="noopener"
+        >https://github.com/lbruton/StackTrackr/issues</a
+      >
     </footer>
     <!-- =============================================================================
        ABOUT & DISCLAIMER MODAL
