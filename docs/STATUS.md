@@ -20,7 +20,7 @@ The tool features a **modular JavaScript architecture** with separate files for 
 
 ## ✨ Latest Changes (3.1.x Series)
 
-- **v3.1.13 - Cloud Sync & API Quotas**: Cloud Sync placeholder modal, API usage tracking with quotas and monthly reset, branding footer, and negative price import fix
+- **v3.1.13 - Cloud Sync & API Quotas**: Cloud Sync placeholder modal, API usage tracking with quotas and monthly reset, Sync All provider button, reorganized file tools, and interface polish
 - **v3.1.12 - About Modal & Disclaimer**: Added mandatory disclaimer splash, About header button, and Sources link within modal; modal now includes styled header with version info
 - **v3.1.11 - UI Enhancements & Documentation**: Improved table usability and AI assistant guidance
   - Color-coded table items for better visual organization
@@ -56,7 +56,7 @@ The tool features a **modular JavaScript architecture** with separate files for 
 - ✅ Real-time search across all fields **including notes**
 
 ### **Data Management**
-- ✅ Complete import/export functionality (CSV, JSON, Excel, PDF, HTML)
+- ✅ Complete import/export functionality (CSV, JSON, Excel, PDF)
 - ✅ **Comprehensive backup ZIP system** with all data formats
 - ✅ **Notes field included in all export formats**
 - ✅ Backwards compatibility with automatic data migration

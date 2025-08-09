@@ -550,12 +550,6 @@ input[type="submit"] {
   cursor: pointer;
 }
 
-.provider-actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-}
 
 .provider-footer {
   display: flex;
@@ -575,19 +569,39 @@ input[type="submit"] {
 .provider-history {
   font-size: 0.75rem;
   margin-top: 0.25rem;
+  text-align: center;
 }
 
-.provider-price-row,
-.provider-checkbox-row {
+.provider-history table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.provider-history th,
+.provider-history td {
+  padding: 0 0.5rem;
+  text-align: center;
+}
+
+.provider-history th.provider-label {
+  font-weight: 600;
+  text-align: right;
+}
+
+.provider-actions {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: var(--spacing-sm);
 }
 
-.provider-price-row span,
-.provider-checkbox-row label {
-  flex: 1;
-  text-align: center;
+.provider-default-btn {
+  margin-right: auto;
+}
+
+.provider-actions-right {
+  display: flex;
+  gap: var(--spacing-sm);
 }
 
 .provider-checkbox-row label {
@@ -595,7 +609,7 @@ input[type="submit"] {
 }
 
 .api-usage {
-  margin-top: var(--spacing);
+  margin: var(--spacing) auto 0;
 }
 
 .api-usage .usage-bar {
@@ -708,13 +722,9 @@ input[type="submit"] {
 .settings-actions {
   margin-top: 1rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.settings-actions-right {
-  display: flex;
   gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .settings-subtext {
@@ -2027,9 +2037,20 @@ td input:checked + .slider:before {
   font-size: 1.125rem;
 }
 
+.file-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing);
+}
+
+.import-block,
+.export-block {
+  flex: 1;
+}
+
 .import-export-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--spacing-sm);
 }
 

@@ -1223,14 +1223,15 @@
               <button type="button" class="btn" id="providersBtn">
                 Providers 🖥️
               </button>
-              <div class="settings-actions-right">
-                <button type="button" class="btn danger" id="flushCacheBtn">
-                  Flush Cache 🚽
-                </button>
-                <button type="button" class="btn" id="apiHistoryBtn">
-                  History 📜
-                </button>
-              </div>
+              <button type="button" class="btn success" id="syncAllBtn">
+                Sync All ♻️
+              </button>
+              <button type="button" class="btn danger" id="flushCacheBtn">
+                Flush Cache 🚽
+              </button>
+              <button type="button" class="btn" id="apiHistoryBtn">
+                History 📜
+              </button>
             </div>
           </div>
 
@@ -1250,60 +1251,60 @@
           <div class="settings-section">
             <h3>Files</h3>
             <p class="settings-subtext">Import or export your data files.</p>
-            <div class="import-section import-export-grid">
-              <label class="btn" id="importCsvBtn">
-                Import CSV <span class="import-icon">⬇️</span>
-                <input accept=".csv" hidden id="importCsvFile" type="file" />
-              </label>
-              <label class="btn" id="importJsonBtn">
-                Import JSON <span class="import-icon">⬇️</span>
-                <input accept=".json" hidden id="importJsonFile" type="file" />
-              </label>
-              <label class="btn" id="importExcelBtn">
-                Import Excel <span class="import-icon">⬇️</span>
-                <input
-                  accept=".xlsx,.xls"
-                  hidden
-                  id="importExcelFile"
-                  type="file"
-                />
-              </label>
-              <button class="btn secondary" id="cloudSyncBtn">Cloud Sync ☁️</button>
-            </div>
-            <progress
-              class="import-progress"
-              id="importProgress"
-              value="0"
-              max="0"
-            ></progress>
-            <div class="import-progress-text" id="importProgressText"></div>
-            <div class="export-section import-export-grid">
-              <button class="btn" id="exportCsvBtn">
-                Export CSV <span class="export-icon">⬆️</span>
-              </button>
-              <button class="btn" id="exportJsonBtn">
-                Export JSON <span class="export-icon">⬆️</span>
-              </button>
-              <button class="btn" id="exportExcelBtn">
-                Export Excel <span class="export-icon">⬆️</span>
-              </button>
-              <button class="btn" id="exportPdfBtn">
-                Export PDF <span class="export-icon">⬆️</span>
-              </button>
-              <button class="btn" id="exportHtmlBtn">
-                Export HTML <span class="export-icon">⬆️</span>
-              </button>
+            <div class="file-blocks">
+              <div class="import-block">
+                <div class="import-export-grid">
+                  <label class="btn" id="importCsvBtn">
+                    Import CSV <span class="import-icon">📤</span>
+                    <input accept=".csv" hidden id="importCsvFile" type="file" />
+                  </label>
+                  <label class="btn" id="importJsonBtn">
+                    Import JSON <span class="import-icon">📤</span>
+                    <input accept=".json" hidden id="importJsonFile" type="file" />
+                  </label>
+                  <label class="btn" id="importExcelBtn">
+                    Import Excel <span class="import-icon">📤</span>
+                    <input
+                      accept=".xlsx,.xls"
+                      hidden
+                      id="importExcelFile"
+                      type="file"
+                    />
+                  </label>
+                  <button class="btn secondary" id="cloudSyncBtn">Cloud Sync ☁️</button>
+                </div>
+                <progress
+                  class="import-progress"
+                  id="importProgress"
+                  value="0"
+                  max="0"
+                ></progress>
+                <div class="import-progress-text" id="importProgressText"></div>
+              </div>
+              <div class="export-block">
+                <div class="import-export-grid">
+                  <button class="btn" id="exportCsvBtn">
+                    Export CSV <span class="export-icon">📥</span>
+                  </button>
+                  <button class="btn" id="exportJsonBtn">
+                    Export JSON <span class="export-icon">📥</span>
+                  </button>
+                  <button class="btn" id="exportExcelBtn">
+                    Export Excel <span class="export-icon">📥</span>
+                  </button>
+                  <button class="btn" id="exportPdfBtn">
+                    Export PDF <span class="export-icon">📥</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="settings-section boating-accident-section">
-            <p class="settings-subtext">Backup or restore all data.</p>
+            <p class="settings-subtext">Clear all data from the app.</p>
             <div class="backup-buttons">
-              <button class="btn success" id="backupAllBtn">
-                💎 All That Glitters 💎
-              </button>
               <button class="btn danger" id="boatingAccidentBtn">
-                🏴‍☠️ Had a boating accident? 🏴‍☠️
+                🏴‍☠️ Have you had a boating accident? 🏴‍☠️
               </button>
             </div>
           </div>
@@ -1324,6 +1325,10 @@
           </button>
         </div>
         <div class="modal-body">
+          <p class="settings-subtext">
+            Enter 1–4 API keys below, choose a default provider, and enable the
+            metals you want each service to update.
+          </p>
           <div class="api-providers">
               <div class="api-provider" data-provider="METALS_DEV">
                 <div class="provider-header">
@@ -1355,32 +1360,34 @@
                   <div class="provider-actions">
                     <button
                       type="button"
-                      class="btn api-sync-btn success"
-                      data-provider="METALS_DEV"
-                    >
-                      Test & Sync
-                    </button>
-                    <button
-                      type="button"
-                      class="btn api-quota-btn"
-                      data-provider="METALS_DEV"
-                    >
-                      Quota
-                    </button>
-                    <button
-                      type="button"
-                      class="btn api-clear-btn warning"
-                      data-provider="METALS_DEV"
-                    >
-                      Clear Key
-                    </button>
-                    <button
-                      type="button"
                       class="btn provider-default-btn"
                       data-provider="METALS_DEV"
                     >
                       Default
                     </button>
+                    <div class="provider-actions-right">
+                      <button
+                        type="button"
+                        class="btn api-quota-btn"
+                        data-provider="METALS_DEV"
+                      >
+                        Quota
+                      </button>
+                      <button
+                        type="button"
+                        class="btn api-clear-btn warning"
+                        data-provider="METALS_DEV"
+                      >
+                        Clear Key
+                      </button>
+                      <button
+                        type="button"
+                        class="btn api-sync-btn success"
+                        data-provider="METALS_DEV"
+                      >
+                        Test & Sync
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1415,32 +1422,34 @@
                   <div class="provider-actions">
                     <button
                       type="button"
-                      class="btn api-sync-btn success"
-                      data-provider="METALS_API"
-                    >
-                      Test & Sync
-                    </button>
-                    <button
-                      type="button"
-                      class="btn api-quota-btn"
-                      data-provider="METALS_API"
-                    >
-                      Quota
-                    </button>
-                    <button
-                      type="button"
-                      class="btn api-clear-btn warning"
-                      data-provider="METALS_API"
-                    >
-                      Clear Key
-                    </button>
-                    <button
-                      type="button"
                       class="btn provider-default-btn"
                       data-provider="METALS_API"
                     >
                       Default
                     </button>
+                    <div class="provider-actions-right">
+                      <button
+                        type="button"
+                        class="btn api-quota-btn"
+                        data-provider="METALS_API"
+                      >
+                        Quota
+                      </button>
+                      <button
+                        type="button"
+                        class="btn api-clear-btn warning"
+                        data-provider="METALS_API"
+                      >
+                        Clear Key
+                      </button>
+                      <button
+                        type="button"
+                        class="btn api-sync-btn success"
+                        data-provider="METALS_API"
+                      >
+                        Test & Sync
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1481,32 +1490,34 @@
                   <div class="provider-actions">
                     <button
                       type="button"
-                      class="btn api-sync-btn success"
-                      data-provider="METAL_PRICE_API"
-                    >
-                      Test & Sync
-                    </button>
-                    <button
-                      type="button"
-                      class="btn api-quota-btn"
-                      data-provider="METAL_PRICE_API"
-                    >
-                      Quota
-                    </button>
-                    <button
-                      type="button"
-                      class="btn api-clear-btn warning"
-                      data-provider="METAL_PRICE_API"
-                    >
-                      Clear Key
-                    </button>
-                    <button
-                      type="button"
                       class="btn provider-default-btn"
                       data-provider="METAL_PRICE_API"
                     >
                       Default
                     </button>
+                    <div class="provider-actions-right">
+                      <button
+                        type="button"
+                        class="btn api-quota-btn"
+                        data-provider="METAL_PRICE_API"
+                      >
+                        Quota
+                      </button>
+                      <button
+                        type="button"
+                        class="btn api-clear-btn warning"
+                        data-provider="METAL_PRICE_API"
+                      >
+                        Clear Key
+                      </button>
+                      <button
+                        type="button"
+                        class="btn api-sync-btn success"
+                        data-provider="METAL_PRICE_API"
+                      >
+                        Test & Sync
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1560,32 +1571,34 @@
                   <div class="provider-actions">
                     <button
                       type="button"
-                      class="btn api-sync-btn success"
-                      data-provider="CUSTOM"
-                    >
-                      Test & Sync
-                    </button>
-                    <button
-                      type="button"
-                      class="btn api-quota-btn"
-                      data-provider="CUSTOM"
-                    >
-                      Quota
-                    </button>
-                    <button
-                      type="button"
-                      class="btn api-clear-btn warning"
-                      data-provider="CUSTOM"
-                    >
-                      Clear Key
-                    </button>
-                    <button
-                      type="button"
                       class="btn provider-default-btn"
                       data-provider="CUSTOM"
                     >
                       Default
                     </button>
+                    <div class="provider-actions-right">
+                      <button
+                        type="button"
+                        class="btn api-quota-btn"
+                        data-provider="CUSTOM"
+                      >
+                        Quota
+                      </button>
+                      <button
+                        type="button"
+                        class="btn api-clear-btn warning"
+                        data-provider="CUSTOM"
+                      >
+                        Clear Key
+                      </button>
+                      <button
+                        type="button"
+                        class="btn api-sync-btn success"
+                        data-provider="CUSTOM"
+                      >
+                        Test & Sync
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

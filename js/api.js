@@ -212,8 +212,8 @@ const updateProviderHistoryTables = () => {
     const providerName = API_PROVIDERS[prov].name;
     const metals = ["Silver", "Gold", "Platinum", "Palladium"];
     const selections = config.metals?.[prov] || {};
-    let priceRow = '<div class="provider-price-row">';
-    let checkboxRow = '<div class="provider-checkbox-row">';
+    let table = '<table class="provider-table"><tr class="provider-price-row"><th class="provider-label">Last Price:</th>';
+    let checkboxRow = '<tr class="provider-checkbox-row"><th class="provider-label">Enable:</th>';
     metals.forEach((metal) => {
       const entries = history.filter(
         (e) => e.provider === providerName && e.metal === metal,
@@ -223,11 +223,11 @@ const updateProviderHistoryTables = () => {
         : "-";
       const key = metal.toLowerCase();
       const checked = selections[key] !== false ? "checked" : "";
-      priceRow += `<span>${last}</span>`;
-      checkboxRow += `<label><input type="checkbox" class="provider-metal" data-provider="${prov}" data-metal="${key}" ${checked}/> ${metal}</label>`;
+      table += `<td>${last}</td>`;
+      checkboxRow += `<td><label><input type="checkbox" class="provider-metal" data-provider="${prov}" data-metal="${key}" ${checked}/> ${metal}</label></td>`;
     });
-    priceRow += "</div>";
-    checkboxRow += "</div>";
+    table += '</tr>';
+    checkboxRow += '</tr></table>';
     const usage = config.usage?.[prov] || {
       quota: DEFAULT_API_QUOTA,
       used: 0,
@@ -236,7 +236,7 @@ const updateProviderHistoryTables = () => {
     const remainingPercent = 100 - usedPercent;
     const warning = usage.used / usage.quota >= 0.9;
     const usageHtml = `<div class="api-usage"><div class="usage-bar"><div class="used" style="width:${usedPercent}%"></div><div class="remaining" style="width:${remainingPercent}%"></div></div><div class="usage-text">${usage.used}/${usage.quota} calls${warning ? " 🚩" : ""}</div></div>`;
-    container.innerHTML = priceRow + checkboxRow + usageHtml;
+    container.innerHTML = table + checkboxRow + usageHtml;
     container.querySelectorAll(".provider-metal").forEach((cb) => {
       cb.addEventListener("change", (e) => {
         const provId = e.target.dataset.provider;
@@ -991,6 +991,37 @@ const handleProviderSync = async (provider) => {
 };
 
 /**
+ * Syncs all configured providers and records results
+ */
+const syncAllProviders = async () => {
+  const config = loadApiConfig();
+  if (!config || !config.keys) return;
+  for (const prov of Object.keys(API_PROVIDERS)) {
+    const apiKey = config.keys[prov];
+    if (!apiKey) continue;
+    try {
+      const data = await fetchSpotPricesFromApi(prov, apiKey);
+      Object.entries(data).forEach(([metal, price]) => {
+        const metalConfig = Object.values(METALS).find((m) => m.key === metal);
+        if (metalConfig && price > 0) {
+          recordSpot(
+            price,
+            "api",
+            metalConfig.name,
+            API_PROVIDERS[prov].name,
+          );
+        }
+      });
+      setProviderStatus(prov, "connected");
+    } catch (err) {
+      console.error(`Sync failed for ${prov}:`, err);
+      setProviderStatus(prov, "error");
+    }
+  }
+  updateProviderHistoryTables();
+};
+
+/**
  * Updates sync button states based on API availability
  * @param {boolean} syncing - Whether sync is in progress
  */
@@ -1137,6 +1168,7 @@ window.setCacheDuration = setCacheDuration;
 window.showApiHistoryModal = showApiHistoryModal;
 window.hideApiHistoryModal = hideApiHistoryModal;
 window.clearApiHistory = clearApiHistory;
+window.syncAllProviders = syncAllProviders;
 
 /**
  * Shows manual price input for a specific metal

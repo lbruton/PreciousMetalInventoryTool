@@ -745,15 +745,6 @@ const setupEventListeners = () => {
         "PDF export",
       );
     }
-    if (elements.exportHtmlBtn) {
-      safeAttachListener(
-        elements.exportHtmlBtn,
-        "click",
-        exportHtml,
-        "HTML export",
-      );
-    }
-
     if (elements.cloudSyncBtn) {
       safeAttachListener(
         elements.cloudSyncBtn,
@@ -773,43 +764,6 @@ const setupEventListeners = () => {
         "click",
         () => (elements.cloudSyncModal.style.display = "none"),
         "Cloud Sync close",
-      );
-    }
-
-    // Backup/Restore Button
-    if (elements.backupAllBtn) {
-      safeAttachListener(
-        elements.backupAllBtn,
-        "click",
-        async () => {
-          if (
-            confirm(
-              "Create a complete backup? Click Cancel to restore from a backup file.",
-            )
-          ) {
-            if (typeof createBackupZip === "function") {
-              await createBackupZip();
-            } else {
-              alert("Creating backup using export functions...");
-              exportCsv();
-              exportJson();
-            }
-          } else {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = ".zip";
-            input.addEventListener("change", (e) => {
-              if (
-                e.target.files.length > 0 &&
-                typeof restoreBackupZip === "function"
-              ) {
-                restoreBackupZip(e.target.files[0]);
-              }
-            });
-            input.click();
-          }
-        },
-        "Backup all button",
       );
     }
 
@@ -1280,6 +1234,20 @@ const setupApiEvents = () => {
           }
         },
         "API history button",
+      );
+    }
+
+    const syncAllBtn = document.getElementById("syncAllBtn");
+    if (syncAllBtn) {
+      safeAttachListener(
+        syncAllBtn,
+        "click",
+        () => {
+          if (typeof syncAllProviders === "function") {
+            syncAllProviders();
+          }
+        },
+        "Sync all providers button",
       );
     }
 
