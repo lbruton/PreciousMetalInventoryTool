@@ -1218,184 +1218,188 @@
        ============================================================================= -->
     <div class="modal" id="settingsModal" style="display: none">
       <div class="modal-content">
-        <h2 style="margin-bottom: 1rem; color: var(--primary)">Settings</h2>
+        <div class="modal-header">
+          <h2>Settings</h2>
+        </div>
+        <div class="modal-body">
+          <div class="settings-section">
+            <h3 style="margin-bottom: 1rem">API Configuration</h3>
 
-        <div class="settings-section">
-          <h3 style="margin-bottom: 1rem">API Configuration</h3>
-
-          <div class="api-providers">
-            <div class="api-provider" data-provider="METALS_DEV">
-              <div class="provider-header">
-                <span class="provider-name">Metals.dev</span>
-                <span class="provider-url">https://api.metals.dev/v1</span>
-              </div>
-              <a href="#" class="api-info-link" data-provider="METALS_DEV">
-                Provider Information
-              </a>
-              <div class="provider-actions">
-                <button
-                  type="button"
-                  class="btn api-sync-btn"
-                  data-provider="METALS_DEV"
-                >
-                  Test & Sync
-                </button>
-                <button
-                  type="button"
-                  class="btn api-clear-btn"
-                  data-provider="METALS_DEV"
-                >
-                  Clear Key
-                </button>
-                <label
-                  ><input
-                    type="radio"
-                    name="defaultProvider"
-                    value="METALS_DEV"
-                    checked
+            <div class="api-providers">
+              <div class="api-provider" data-provider="METALS_DEV">
+                <div class="provider-header">
+                  <span class="provider-name">Metals.dev</span>
+                  <span class="provider-url">https://api.metals.dev/v1</span>
+                </div>
+                <a href="#" class="api-info-link" data-provider="METALS_DEV">
+                  Provider Information
+                </a>
+                <div class="provider-actions">
+                  <button
+                    type="button"
+                    class="btn api-sync-btn"
+                    data-provider="METALS_DEV"
+                  >
+                    Test & Sync
+                  </button>
+                  <button
+                    type="button"
+                    class="btn api-clear-btn"
+                    data-provider="METALS_DEV"
+                  >
+                    Clear Key
+                  </button>
+                  <label
+                    ><input
+                      type="radio"
+                      name="defaultProvider"
+                      value="METALS_DEV"
+                      checked
+                    />
+                    Default</label
+                  >
+                </div>
+                <div class="api-key-row">
+                  <label for="apiKey_METALS_DEV">Key:</label>
+                  <input
+                    type="password"
+                    id="apiKey_METALS_DEV"
+                    placeholder="Enter your API key"
                   />
-                  Default</label
-                >
+                </div>
+                <div class="api-key-note">
+                  Your API key is stored locally and never shared.
+                </div>
+                <div class="provider-status">
+                  <span class="status-dot"></span>
+                  <span class="status-text">Disconnected</span>
+                </div>
               </div>
-              <div class="api-key-row">
-                <label for="apiKey_METALS_DEV">Key:</label>
-                <input
-                  type="password"
-                  id="apiKey_METALS_DEV"
-                  placeholder="Enter your API key"
-                />
-              </div>
-              <div class="api-key-note">
-                Your API key is stored locally and never shared.
-              </div>
-              <div class="provider-status">
-                <span class="status-dot"></span>
-                <span class="status-text">Disconnected</span>
-              </div>
-            </div>
 
-            <div class="api-provider" data-provider="METALS_API">
-              <div class="provider-header">
-                <span class="provider-name">Metals-API.com</span>
-                <span class="provider-url">https://metals-api.com/api</span>
-              </div>
-              <a href="#" class="api-info-link" data-provider="METALS_API">
-                Provider Information
-              </a>
-              <div class="provider-actions">
-                <button
-                  type="button"
-                  class="btn api-sync-btn"
-                  data-provider="METALS_API"
-                >
-                  Test & Sync
-                </button>
-                <button
-                  type="button"
-                  class="btn api-clear-btn"
-                  data-provider="METALS_API"
-                >
-                  Clear Key
-                </button>
-                <label
-                  ><input
-                    type="radio"
-                    name="defaultProvider"
-                    value="METALS_API"
+              <div class="api-provider" data-provider="METALS_API">
+                <div class="provider-header">
+                  <span class="provider-name">Metals-API.com</span>
+                  <span class="provider-url">https://metals-api.com/api</span>
+                </div>
+                <a href="#" class="api-info-link" data-provider="METALS_API">
+                  Provider Information
+                </a>
+                <div class="provider-actions">
+                  <button
+                    type="button"
+                    class="btn api-sync-btn"
+                    data-provider="METALS_API"
+                  >
+                    Test & Sync
+                  </button>
+                  <button
+                    type="button"
+                    class="btn api-clear-btn"
+                    data-provider="METALS_API"
+                  >
+                    Clear Key
+                  </button>
+                  <label
+                    ><input
+                      type="radio"
+                      name="defaultProvider"
+                      value="METALS_API"
+                    />
+                    Default</label
+                  >
+                </div>
+                <div class="api-key-row">
+                  <label for="apiKey_METALS_API">Key:</label>
+                  <input
+                    type="password"
+                    id="apiKey_METALS_API"
+                    placeholder="Enter your API key"
                   />
-                  Default</label
-                >
+                </div>
+                <div class="api-key-note">
+                  Your API key is stored locally and never shared.
+                </div>
+                <div class="provider-status">
+                  <span class="status-dot"></span>
+                  <span class="status-text">Disconnected</span>
+                </div>
               </div>
-              <div class="api-key-row">
-                <label for="apiKey_METALS_API">Key:</label>
-                <input
-                  type="password"
-                  id="apiKey_METALS_API"
-                  placeholder="Enter your API key"
-                />
-              </div>
-              <div class="api-key-note">
-                Your API key is stored locally and never shared.
-              </div>
-              <div class="provider-status">
-                <span class="status-dot"></span>
-                <span class="status-text">Disconnected</span>
-              </div>
-            </div>
 
-            <div class="api-provider" data-provider="METAL_PRICE_API">
-              <div class="provider-header">
-                <span class="provider-name">MetalPriceAPI.com</span>
-                <span class="provider-url"
-                  >https://api.metalpriceapi.com/v1</span
-                >
-              </div>
-              <a href="#" class="api-info-link" data-provider="METAL_PRICE_API">
-                Provider Information
-              </a>
-              <div class="provider-actions">
-                <button
-                  type="button"
-                  class="btn api-sync-btn"
+              <div class="api-provider" data-provider="METAL_PRICE_API">
+                <div class="provider-header">
+                  <span class="provider-name">MetalPriceAPI.com</span>
+                  <span class="provider-url"
+                    >https://api.metalpriceapi.com/v1</span
+                  >
+                </div>
+                <a
+                  href="#"
+                  class="api-info-link"
                   data-provider="METAL_PRICE_API"
                 >
-                  Test & Sync
-                </button>
-                <button
-                  type="button"
-                  class="btn api-clear-btn"
-                  data-provider="METAL_PRICE_API"
-                >
-                  Clear Key
-                </button>
-                <label
-                  ><input
-                    type="radio"
-                    name="defaultProvider"
-                    value="METAL_PRICE_API"
+                  Provider Information
+                </a>
+                <div class="provider-actions">
+                  <button
+                    type="button"
+                    class="btn api-sync-btn"
+                    data-provider="METAL_PRICE_API"
+                  >
+                    Test & Sync
+                  </button>
+                  <button
+                    type="button"
+                    class="btn api-clear-btn"
+                    data-provider="METAL_PRICE_API"
+                  >
+                    Clear Key
+                  </button>
+                  <label
+                    ><input
+                      type="radio"
+                      name="defaultProvider"
+                      value="METAL_PRICE_API"
+                    />
+                    Default</label
+                  >
+                </div>
+                <div class="api-key-row">
+                  <label for="apiKey_METAL_PRICE_API">Key:</label>
+                  <input
+                    type="password"
+                    id="apiKey_METAL_PRICE_API"
+                    placeholder="Enter your API key"
                   />
-                  Default</label
-                >
-              </div>
-              <div class="api-key-row">
-                <label for="apiKey_METAL_PRICE_API">Key:</label>
-                <input
-                  type="password"
-                  id="apiKey_METAL_PRICE_API"
-                  placeholder="Enter your API key"
-                />
-              </div>
-              <div class="api-key-note">
-                Your API key is stored locally and never shared.
-              </div>
-              <div class="provider-status">
-                <span class="status-dot"></span>
-                <span class="status-text">Disconnected</span>
+                </div>
+                <div class="api-key-note">
+                  Your API key is stored locally and never shared.
+                </div>
+                <div class="provider-status">
+                  <span class="status-dot"></span>
+                  <span class="status-text">Disconnected</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="cache-duration-row">
-            <label for="apiCacheDuration">Cache Duration:</label>
-            <select id="apiCacheDuration">
-              <option value="0">No Cache</option>
-              <option value="1">1 hour</option>
-              <option value="6">6 hours</option>
-              <option value="12">12 hours</option>
-              <option value="24">24 hours</option>
-            </select>
-          </div>
+            <div class="cache-duration-row">
+              <label for="apiCacheDuration">Cache Duration:</label>
+              <select id="apiCacheDuration">
+                <option value="0">No Cache</option>
+                <option value="1">1 hour</option>
+                <option value="6">6 hours</option>
+                <option value="12">12 hours</option>
+                <option value="24">24 hours</option>
+              </select>
+            </div>
 
-          <div class="settings-actions">
-            <button type="button" class="btn" id="clearApiCacheBtn">
-              Clear API Cache
-            </button>
+            <div class="settings-actions">
+              <button type="button" class="btn" id="clearApiCacheBtn">
+                Clear API Cache
+              </button>
+            </div>
           </div>
         </div>
-
-        <div
-          style="display: flex; justify-content: flex-end; margin-top: 1.5rem"
-        >
+        <div class="modal-footer">
           <button type="button" class="btn" id="settingsCloseBtn">Close</button>
         </div>
       </div>

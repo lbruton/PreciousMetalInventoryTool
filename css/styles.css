@@ -598,6 +598,49 @@ input[type="submit"] {
   margin-top: 0.75rem;
 }
 
+/* Settings modal layout */
+#settingsModal .modal-content {
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+#settingsModal .modal-header {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 1;
+}
+
+#settingsModal .modal-header h2 {
+  margin: 0;
+  color: var(--primary);
+}
+
+#settingsModal .modal-body {
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#settingsModal .modal-body::-webkit-scrollbar {
+  display: none;
+}
+
+#settingsModal .modal-footer {
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+}
+
 /* =============================================================================
    TOTALS CARDS
    ============================================================================= */
