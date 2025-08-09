@@ -366,8 +366,10 @@ const validateInventoryItem = (item) => {
     errors.push("Weight must be a positive number");
   }
 
-  if (!item.price || isNaN(Number(item.price)) || Number(item.price) <= 0) {
-    errors.push("Price must be a positive number");
+  if (item.price === undefined || item.price === null || isNaN(Number(item.price))) {
+    errors.push("Price must be a number");
+  } else if (Number(item.price) < 0) {
+    errors.push("Price cannot be negative");
   }
 
   // Optional field validations
