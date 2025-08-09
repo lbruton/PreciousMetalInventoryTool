@@ -1,8 +1,9 @@
-# StackTrackr v3.2.04rc
+# StackTrackr v3.2.05rc
 
 StackTrackr is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics and enhanced tracking capabilities.
 
 ## Recent Updates
+- **v3.2.05rc - Splash Opt-Out**: Disclaimer modal can be hidden permanently
 - **v3.2.04rc - Import Negative Price Handling**: Negative prices default to $0 during imports
 - **v3.2.03rc - Cache Flush Confirmation**: Added warning before clearing API cache and history
 - **v3.2.02rc - Feature Complete Release Candidate**: Rebranded to StackTrackr and prepared for final release
@@ -15,6 +16,9 @@ StackTrackr is a comprehensive client-side web application for tracking precious
 - **v3.1.9 - UI Consistency**: Clear Cache button styling improvements across themes
 - **v3.1.8 - Backup System**: Full ZIP backup functionality with restoration guides
 - **v3.1.6 - Theme Toggle**: Fixed theme management with system preference detection
+
+## 🆕 What's New in v3.2.05rc
+- Added "Do not show this again" option to the disclaimer splash
 
 ## 🆕 What's New in v3.2.04rc
 - Negative prices in imported files now default to $0 instead of causing errors
@@ -220,7 +224,7 @@ This project is designed to be maintainable and extensible. When making changes:
 This project is open source and available for personal use.
 
 ---
-**Current Version**: 3.2.04rc
+**Current Version**: 3.2.05rc
 **Last Updated**: August 9, 2025
 **Status**: Feature complete release candidate
 

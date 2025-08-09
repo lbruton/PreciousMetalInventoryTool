@@ -27,7 +27,7 @@ const hideAboutModal = () => {
  */
 const showAckModal = () => {
   const ackModal = document.getElementById("ackModal");
-  if (ackModal) {
+  if (ackModal && !localStorage.getItem(ACK_DISMISSED_KEY)) {
     populateAckModal();
     ackModal.style.display = "flex";
     document.body.style.overflow = "hidden";
@@ -49,6 +49,12 @@ const hideAckModal = () => {
  * Accepts the acknowledgment and hides the modal
  */
 const acceptAck = () => {
+  const dontShow = document.getElementById("ackDontShow");
+  if (dontShow && dontShow.checked) {
+    localStorage.setItem(ACK_DISMISSED_KEY, "1");
+  } else {
+    localStorage.removeItem(ACK_DISMISSED_KEY);
+  }
   hideAckModal();
 };
 

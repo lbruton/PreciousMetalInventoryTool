@@ -1511,6 +1511,17 @@ td input:checked + .slider:before {
   scrollbar-color: var(--primary) var(--bg-secondary);
 }
 
+.ack-options {
+  margin-top: 1rem;
+  color: var(--text-color);
+}
+
+.ack-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .about-modal-body::-webkit-scrollbar {
   width: 8px;
 }

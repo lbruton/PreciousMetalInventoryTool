@@ -93,7 +93,7 @@ const API_PROVIDERS = {
 // =============================================================================
 
 /** @constant {string} APP_VERSION - Application version */
-const APP_VERSION = "3.2.04rc";
+const APP_VERSION = "3.2.05rc";
 
 /** @constant {string} BRANDING_TITLE - Optional custom application title */
 const BRANDING_TITLE = "StackTrackr";
@@ -106,6 +106,9 @@ const SPOT_HISTORY_KEY = "metalSpotHistory";
 
 /** @constant {string} THEME_KEY - LocalStorage key for theme preference */
 const THEME_KEY = "appTheme";
+
+/** @constant {string} ACK_DISMISSED_KEY - LocalStorage key for acknowledgment dismissal */
+const ACK_DISMISSED_KEY = "ackDismissed";
 
 /** @constant {string} API_KEY_STORAGE_KEY - LocalStorage key for API provider information */
 const API_KEY_STORAGE_KEY = "metalApiConfig";

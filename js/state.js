@@ -126,6 +126,7 @@ const elements = {
   aboutModal: null,
   ackModal: null,
   ackAcceptBtn: null,
+  ackDontShow: null,
 
   // Settings & API elements
   settingsBtn: null,

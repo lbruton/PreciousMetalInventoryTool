@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.aboutModal = safeGetElement("aboutModal");
     elements.ackModal = safeGetElement("ackModal");
     elements.ackAcceptBtn = safeGetElement("ackAcceptBtn");
+    elements.ackDontShow = safeGetElement("ackDontShow");
     elements.editModal = safeGetElement("editModal");
     elements.editForm = safeGetElement("editForm");
     elements.cancelEditBtn = safeGetElement("cancelEdit");
