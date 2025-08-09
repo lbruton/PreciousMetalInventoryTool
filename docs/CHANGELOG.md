@@ -8,6 +8,9 @@
 
 ## 📋 Version History
 
+### Version 3.2.05rc – Splash Opt-Out (2025-08-09)
+- Added optional "Do not show this again" checkbox to disclaimer splash
+
 ### Version 3.2.04rc – Import Negative Price Handling (2025-08-09)
 - Negative prices in CSV, JSON, and Excel imports now default to $0 instead of causing validation errors
 
