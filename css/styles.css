@@ -171,9 +171,26 @@ label {
   box-shadow: var(--shadow-sm);
 }
 
-.app-header h1 {
+.app-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-title h1 {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 2rem;
+  margin: 0;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
 }
 
 .container {
@@ -1511,20 +1528,6 @@ td input:checked + .slider:before {
   scrollbar-color: var(--primary) var(--bg-secondary);
 }
 
-.ack-options {
-  margin-top: 1rem;
-  color: var(--text-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.ack-options label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
-}
 
 .about-modal-body::-webkit-scrollbar {
   width: 8px;
@@ -1548,7 +1551,7 @@ td input:checked + .slider:before {
   font-size: 1.125rem;
   line-height: 1.7;
   color: var(--text-secondary);
-  margin-bottom: var(--spacing-xl);
+  margin: var(--spacing-xl) 0;
   text-align: center;
   padding: var(--spacing-lg);
   background: var(--bg-secondary);
