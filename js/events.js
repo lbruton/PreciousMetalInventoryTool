@@ -1118,21 +1118,19 @@ const setupApiEvents = () => {
       );
     }
 
-    document
-      .querySelectorAll('input[name="defaultProvider"]')
-      .forEach((radio) => {
-        const provider = radio.value;
-        safeAttachListener(
-          radio,
-          "change",
-          () => {
-            if (radio.checked && typeof setDefaultProvider === "function") {
-              setDefaultProvider(provider);
-            }
-          },
-          "Default provider radio",
-        );
-      });
+    document.querySelectorAll(".provider-default-btn").forEach((btn) => {
+      const provider = btn.getAttribute("data-provider");
+      safeAttachListener(
+        btn,
+        "click",
+        () => {
+          if (typeof setDefaultProvider === "function") {
+            setDefaultProvider(provider);
+          }
+        },
+        "Default provider button",
+      );
+    });
 
     const clearCacheBtn = document.getElementById("clearApiCacheBtn");
     if (clearCacheBtn) {
@@ -1148,6 +1146,60 @@ const setupApiEvents = () => {
       );
     }
 
+    const historyBtn = document.getElementById("apiHistoryBtn");
+    if (historyBtn) {
+      safeAttachListener(
+        historyBtn,
+        "click",
+        () => {
+          if (typeof showApiHistoryModal === "function") {
+            showApiHistoryModal();
+          }
+        },
+        "API history button",
+      );
+    }
+
+    const historyModal = document.getElementById("apiHistoryModal");
+    const historyCloseBtn = document.getElementById("apiHistoryCloseBtn");
+    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+    if (historyModal) {
+      safeAttachListener(
+        historyModal,
+        "click",
+        (e) => {
+          if (e.target === historyModal && typeof hideApiHistoryModal === "function") {
+            hideApiHistoryModal();
+          }
+        },
+        "API history modal background",
+      );
+    }
+    if (historyCloseBtn) {
+      safeAttachListener(
+        historyCloseBtn,
+        "click",
+        () => {
+          if (typeof hideApiHistoryModal === "function") {
+            hideApiHistoryModal();
+          }
+        },
+        "API history close button",
+      );
+    }
+    if (clearHistoryBtn) {
+      safeAttachListener(
+        clearHistoryBtn,
+        "click",
+        () => {
+          if (typeof clearApiHistory === "function") {
+            clearApiHistory();
+          }
+        },
+        "Clear API history button",
+      );
+    }
+
     // ESC key to close modals
     safeAttachListener(
       document,
@@ -1156,6 +1208,7 @@ const setupApiEvents = () => {
         if (e.key === "Escape") {
           const settingsModal = document.getElementById("settingsModal");
           const infoModal = document.getElementById("apiInfoModal");
+          const historyModal = document.getElementById("apiHistoryModal");
           const editModal = document.getElementById("editModal");
           const detailsModal = document.getElementById("detailsModal");
 
@@ -1171,6 +1224,12 @@ const setupApiEvents = () => {
             typeof hideProviderInfo === "function"
           ) {
             hideProviderInfo();
+          } else if (
+            historyModal &&
+            historyModal.style.display === "flex" &&
+            typeof hideApiHistoryModal === "function"
+          ) {
+            hideApiHistoryModal();
           } else if (editModal && editModal.style.display === "flex") {
             editModal.style.display = "none";
             editingIndex = null;
