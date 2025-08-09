@@ -2002,6 +2002,18 @@ td input:checked + .slider:before {
 }
 
 /* =============================================================================
+   TABLE CONTROLS
+   ============================================================================= */
+
+.table-top-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* =============================================================================
    PAGINATION
    ============================================================================= */
 
@@ -2037,46 +2049,6 @@ td input:checked + .slider:before {
   flex-grow: 1;
 }
 
-.pagination-info-controls {
-  display: flex;
-  justify-content: center;
-  margin-top: var(--spacing-sm);
-}
-
-.page-numbers {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-}
-
-.page-numbers button {
-  min-width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-weight: 500;
-  transition: var(--transition);
-  cursor: pointer;
-  padding: 0;
-}
-
-.page-numbers button:hover:not(.active) {
-  background: var(--bg-secondary);
-  border-color: var(--border-hover);
-}
-
-.page-numbers button.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-  font-weight: 600;
-}
-
 .pagination-btn {
   min-width: 2.5rem;
   height: 2.5rem;
@@ -2101,6 +2073,13 @@ td input:checked + .slider:before {
 .pagination-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.pagination-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  font-weight: 600;
 }
 
 
@@ -2396,12 +2375,6 @@ input:disabled + .slider {
   .pagination-center {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: var(--spacing-sm);
-  }
-
-  .pagination-info-controls {
-    flex-direction: column;
-    align-items: center;
     gap: var(--spacing-sm);
   }
 
