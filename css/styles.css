@@ -553,17 +553,19 @@ input[type="submit"] {
 
 .provider-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   margin-top: 0.5rem;
   gap: 1rem;
-  flex-wrap: wrap;
 }
 
 .provider-info {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  align-items: center;
+  text-align: center;
 }
 
 .provider-history {
@@ -593,15 +595,13 @@ input[type="submit"] {
   align-items: center;
   flex-wrap: wrap;
   gap: var(--spacing-sm);
-}
-
-.provider-default-btn {
-  margin-right: auto;
+  justify-content: center;
 }
 
 .provider-actions-right {
   display: flex;
   gap: var(--spacing-sm);
+  justify-content: center;
 }
 
 .provider-checkbox-row label {
@@ -724,7 +724,28 @@ input[type="submit"] {
   display: flex;
   gap: 1rem;
   justify-content: center;
+  flex-wrap: nowrap;
+}
+
+.api-status-summary {
+  margin-top: 0.5rem;
+  display: flex;
   flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+.api-status-summary .status-item.connected {
+  color: var(--success);
+}
+
+.api-status-summary .status-item.disconnected {
+  color: var(--text-secondary);
+}
+
+.api-status-summary .status-item.error {
+  color: var(--danger);
 }
 
 .settings-subtext {
@@ -853,8 +874,8 @@ input[type="submit"] {
 
 /* Settings modal layout */
 #settingsModal .modal-content {
-  max-width: 600px;
-  max-height: 80vh;
+  max-width: 750px;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -2056,13 +2077,14 @@ td input:checked + .slider:before {
 
 .import-export-grid .btn,
 .import-export-grid label.btn {
-  height: auto;
-  min-height: 2.75rem;
+  height: 2.75rem;
   padding: var(--spacing-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  margin: 0;
+  line-height: 1;
 }
 
 .import-export-grid label.btn {
@@ -2184,7 +2206,7 @@ input:disabled + .slider {
 }
 
 .export-icon {
-  color: var(--danger);
+  color: var(--info);
 }
 
 /* =============================================================================
