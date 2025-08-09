@@ -233,7 +233,8 @@ const updateProviderHistoryTables = () => {
     const metals = ["Silver", "Gold", "Platinum", "Palladium"];
     const selections = config.metals?.[prov] || {};
     let table = '<table class="provider-table"><tr class="provider-price-row"><th class="provider-label">Last Price:</th>';
-    let checkboxRow = '<tr class="provider-checkbox-row"><th class="provider-label">Enable:</th>';
+    let checkboxRow =
+      '<tr class="provider-checkbox-row"><th class="provider-label">Enable:</th>';
     metals.forEach((metal) => {
       const entries = history.filter(
         (e) => e.provider === providerName && e.metal === metal,
@@ -244,7 +245,7 @@ const updateProviderHistoryTables = () => {
       const key = metal.toLowerCase();
       const checked = selections[key] !== false ? "checked" : "";
       table += `<td>${last}</td>`;
-      checkboxRow += `<td><label><input type="checkbox" class="provider-metal" data-provider="${prov}" data-metal="${key}" ${checked}/> ${metal}</label></td>`;
+      checkboxRow += `<td><label><input type="checkbox" class="provider-metal" data-provider="${prov}" data-metal="${key}" ${checked}/><span class="provider-metal-name">${metal}</span></label></td>`;
     });
     table += '</tr>';
     checkboxRow += '</tr></table>';
