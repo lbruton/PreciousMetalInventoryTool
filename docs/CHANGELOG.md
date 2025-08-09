@@ -8,6 +8,9 @@
 
 ## 📋 Version History
 
+### Version 3.2.06rc – Auto Spot Price Sync (2025-08-09)
+- Automatically refreshes spot prices at startup when API keys exist and the cache is expired
+
 ### Version 3.2.05rc – Splash Opt-Out (2025-08-09)
 - Disclaimer splash now hides permanently after the acknowledgment button is clicked, removing the previous checkbox
 - Simplified acknowledgment layout with improved placement and styling

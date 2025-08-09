@@ -673,9 +673,20 @@ const autoSyncSpotPrices = async () => {
   }
 
   const cache = loadApiCache();
-  if (!cache || cache.provider !== apiConfig.provider) {
+  const now = Date.now();
+  const duration = getCacheDurationMs();
+
+  const cacheValid =
+    cache &&
+    cache.provider === apiConfig.provider &&
+    cache.timestamp &&
+    now - cache.timestamp < duration;
+
+  if (!cacheValid) {
     await syncSpotPricesFromApi(false, true);
     updateSyncButtonStates();
+  } else {
+    refreshFromCache();
   }
 };
 
