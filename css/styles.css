@@ -856,11 +856,12 @@ td input:checked + .slider:before {
 
 .about-modal-content {
   width: 75vw;
-  height: 75vh;
   max-width: 1200px;
-  max-height: none;
   padding: 0;
   overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .about-modal-header {
@@ -911,7 +912,7 @@ td input:checked + .slider:before {
 .about-modal-body {
   padding: var(--spacing-xl);
   overflow-y: auto;
-  max-height: calc(75vh - 120px);
+  flex: 1;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--bg-secondary);
 }
@@ -1161,11 +1162,13 @@ td input:checked + .slider:before {
 .acceptance-text {
   font-size: 0.875rem;
   color: var(--text-muted);
+  margin-top: var(--spacing-lg);
   margin-bottom: var(--spacing-lg);
   line-height: 1.5;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
 
 .about-accept-btn {
@@ -1191,8 +1194,8 @@ td input:checked + .slider:before {
 @media (max-width: 768px) {
   .about-modal-content {
     width: 95vw;
-    height: 90vh;
     margin: var(--spacing-sm);
+    max-height: 95vh;
   }
 
   .about-title {
@@ -1209,7 +1212,6 @@ td input:checked + .slider:before {
 
   .about-modal-body {
     padding: var(--spacing);
-    max-height: calc(90vh - 120px);
   }
 
   .about-alert .alert-content {

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <!--
   Precious Metals Inventory Tool - Main Application Interface
   
@@ -10,48 +10,71 @@
   Application version is managed dynamically via constants.js
 -->
 <html lang="en">
-<head>
-  <!--
+  <head>
+    <!--
     Content Security Policy is intentionally relaxed to ensure
     local file execution when opening this tool with the file:// protocol.
     The previous strict policy blocked external scripts and prevented
     the interface from rendering. The simplified policy below permits
     all sources while keeping inline execution restrictions.
   -->
-  <meta http-equiv="Content-Security-Policy"
-        content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes" name="viewport"/>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+    />
+    <meta charset="utf-8" />
+    <meta
+      content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=yes"
+      name="viewport"
+    />
 
-<!-- Title is dynamically updated by init.js using APP_VERSION constant -->
-<title>Precious Metals Inventory Tool</title>
-<!-- FILE PROTOCOL COMPATIBILITY - MUST LOAD FIRST -->
-<script src="./js/file-protocol-fix.js"></script>
+    <!-- Title is dynamically updated by init.js using APP_VERSION constant -->
+    <title>Precious Metals Inventory Tool</title>
+    <!-- FILE PROTOCOL COMPATIBILITY - MUST LOAD FIRST -->
+    <script src="./js/file-protocol-fix.js"></script>
 
-<!-- External libraries for data import/export functionality -->
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-<!-- Chart.js for pie charts -->
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-<!-- JSZip for backup functionality -->
-<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- External libraries for data import/export functionality -->
+    <script
+      defer=""
+      src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"
+    ></script>
+    <script
+      defer=""
+      src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"
+    ></script>
+    <script
+      defer=""
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+    ></script>
+    <script
+      defer=""
+      src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"
+    ></script>
+    <!-- Chart.js for pie charts -->
+    <script
+      defer=""
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"
+    ></script>
+    <!-- JSZip for backup functionality -->
+    <script
+      defer=""
+      src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
+    ></script>
 
-  <link rel="stylesheet" href="./css/styles.css">
-</head>
-<body>
-<!-- Application Header -->
-<div class="app-header">
-<h1>Precious Metals Inventory Tool</h1>
-<div style="margin-left: auto; display: flex; gap: 0.5rem;">
-<button class="btn" id="apiBtn" title="API Configuration">API</button>
-  <button class="btn" id="aboutBtn" title="About">About</button>
-  <button class="btn" id="themeToggle">Dark Mode</button>
-  </div>
-  </div>
-  <div class="container">
-<!-- =============================================================================
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <!-- Application Header -->
+    <div class="app-header">
+      <h1>Precious Metals Inventory Tool</h1>
+      <div style="margin-left: auto; display: flex; gap: 0.5rem">
+        <button class="btn" id="apiBtn" title="API Configuration">API</button>
+        <button class="btn" id="aboutBtn" title="About">About</button>
+        <button class="btn" id="themeToggle">Dark Mode</button>
+      </div>
+    </div>
+    <div class="container">
+      <!-- =============================================================================
          SPOT PRICES SECTION
          
          Displays current spot prices for all four supported metals and provides
@@ -62,103 +85,237 @@
          
          Spot prices are used for premium calculations and profit/loss analysis
          ============================================================================= -->
-<section class="spot-prices">
-<div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-<!-- Silver spot price controls -->
-<div class="spot-input silver">
-<div class="spot-card">
-<div class="spot-card-label">Silver Spot Price</div>
-<div class="spot-card-value" id="spotPriceDisplaySilver">$ -</div>
-<div class="spot-card-timestamp" id="spotTimestampSilver">No data</div>
-</div>
-<div class="spot-actions">
-<button class="btn spot-action-btn" id="syncBtnSilver" title="Sync from API" disabled>Sync</button>
-<button class="btn spot-action-btn" id="addBtnSilver" title="Add/Override Price">Add</button>
-<button class="btn spot-action-btn" id="resetBtnSilver" title="Reset to Default/API">Reset</button>
-</div>
-<div class="manual-input" id="manualInputSilver" style="display: none;">
-<label for="userSpotPriceSilver">Manual Silver Price</label>
-<div class="currency-input">
-<input id="userSpotPriceSilver" min="0" placeholder="Enter price" step="0.01" type="number"/>
-</div>
-<div class="grid grid-2">
-<button class="btn" id="saveSpotBtnSilver">Save</button>
-<button class="btn" id="cancelSpotBtnSilver">Cancel</button>
-</div>
-</div>
-</div>
-<!-- Gold spot price controls -->
-<div class="spot-input gold">
-<div class="spot-card">
-<div class="spot-card-label">Gold Spot Price</div>
-<div class="spot-card-value" id="spotPriceDisplayGold">$ -</div>
-<div class="spot-card-timestamp" id="spotTimestampGold">No data</div>
-</div>
-<div class="spot-actions">
-<button class="btn spot-action-btn" id="syncBtnGold" title="Sync from API" disabled>Sync</button>
-<button class="btn spot-action-btn" id="addBtnGold" title="Add/Override Price">Add</button>
-<button class="btn spot-action-btn" id="resetBtnGold" title="Reset to Default/API">Reset</button>
-</div>
-<div class="manual-input" id="manualInputGold" style="display: none;">
-<label for="userSpotPriceGold">Manual Gold Price</label>
-<div class="currency-input">
-<input id="userSpotPriceGold" min="0" placeholder="Enter price" step="0.01" type="number"/>
-</div>
-<div class="grid grid-2">
-<button class="btn" id="saveSpotBtnGold">Save</button>
-<button class="btn" id="cancelSpotBtnGold">Cancel</button>
-</div>
-</div>
-</div>
-<!-- Platinum spot price controls -->
-<div class="spot-input platinum">
-<div class="spot-card">
-<div class="spot-card-label">Platinum Spot Price</div>
-<div class="spot-card-value" id="spotPriceDisplayPlatinum">$ -</div>
-<div class="spot-card-timestamp" id="spotTimestampPlatinum">No data</div>
-</div>
-<div class="spot-actions">
-<button class="btn spot-action-btn" id="syncBtnPlatinum" title="Sync from API" disabled>Sync</button>
-<button class="btn spot-action-btn" id="addBtnPlatinum" title="Add/Override Price">Add</button>
-<button class="btn spot-action-btn" id="resetBtnPlatinum" title="Reset to Default/API">Reset</button>
-</div>
-<div class="manual-input" id="manualInputPlatinum" style="display: none;">
-<label for="userSpotPricePlatinum">Manual Platinum Price</label>
-<div class="currency-input">
-<input id="userSpotPricePlatinum" min="0" placeholder="Enter price" step="0.01" type="number"/>
-</div>
-<div class="grid grid-2">
-<button class="btn" id="saveSpotBtnPlatinum">Save</button>
-<button class="btn" id="cancelSpotBtnPlatinum">Cancel</button>
-</div>
-</div>
-</div>
-<!-- Palladium spot price controls -->
-<div class="spot-input palladium">
-<div class="spot-card">
-<div class="spot-card-label">Palladium Spot Price</div>
-<div class="spot-card-value" id="spotPriceDisplayPalladium">$ -</div>
-<div class="spot-card-timestamp" id="spotTimestampPalladium">No data</div>
-</div>
-<div class="spot-actions">
-<button class="btn spot-action-btn" id="syncBtnPalladium" title="Sync from API" disabled>Sync</button>
-<button class="btn spot-action-btn" id="addBtnPalladium" title="Add/Override Price">Add</button>
-<button class="btn spot-action-btn" id="resetBtnPalladium" title="Reset to Default/API">Reset</button>
-</div>
-<div class="manual-input" id="manualInputPalladium" style="display: none;">
-<label for="userSpotPricePalladium">Manual Palladium Price</label>
-<div class="currency-input">
-<input id="userSpotPricePalladium" min="0" placeholder="Enter price" step="0.01" type="number"/>
-</div>
-<div class="grid grid-2">
-<button class="btn" id="saveSpotBtnPalladium">Save</button>
-<button class="btn" id="cancelSpotBtnPalladium">Cancel</button>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- =============================================================================
+      <section class="spot-prices">
+        <div
+          class="grid"
+          style="
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+          "
+        >
+          <!-- Silver spot price controls -->
+          <div class="spot-input silver">
+            <div class="spot-card">
+              <div class="spot-card-label">Silver Spot Price</div>
+              <div class="spot-card-value" id="spotPriceDisplaySilver">$ -</div>
+              <div class="spot-card-timestamp" id="spotTimestampSilver">
+                No data
+              </div>
+            </div>
+            <div class="spot-actions">
+              <button
+                class="btn spot-action-btn"
+                id="syncBtnSilver"
+                title="Sync from API"
+                disabled
+              >
+                Sync
+              </button>
+              <button
+                class="btn spot-action-btn"
+                id="addBtnSilver"
+                title="Add/Override Price"
+              >
+                Add
+              </button>
+              <button
+                class="btn spot-action-btn"
+                id="resetBtnSilver"
+                title="Reset to Default/API"
+              >
+                Reset
+              </button>
+            </div>
+            <div
+              class="manual-input"
+              id="manualInputSilver"
+              style="display: none"
+            >
+              <label for="userSpotPriceSilver">Manual Silver Price</label>
+              <div class="currency-input">
+                <input
+                  id="userSpotPriceSilver"
+                  min="0"
+                  placeholder="Enter price"
+                  step="0.01"
+                  type="number"
+                />
+              </div>
+              <div class="grid grid-2">
+                <button class="btn" id="saveSpotBtnSilver">Save</button>
+                <button class="btn" id="cancelSpotBtnSilver">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <!-- Gold spot price controls -->
+          <div class="spot-input gold">
+            <div class="spot-card">
+              <div class="spot-card-label">Gold Spot Price</div>
+              <div class="spot-card-value" id="spotPriceDisplayGold">$ -</div>
+              <div class="spot-card-timestamp" id="spotTimestampGold">
+                No data
+              </div>
+            </div>
+            <div class="spot-actions">
+              <button
+                class="btn spot-action-btn"
+                id="syncBtnGold"
+                title="Sync from API"
+                disabled
+              >
+                Sync
+              </button>
+              <button
+                class="btn spot-action-btn"
+                id="addBtnGold"
+                title="Add/Override Price"
+              >
+                Add
+              </button>
+              <button
+                class="btn spot-action-btn"
+                id="resetBtnGold"
+                title="Reset to Default/API"
+              >
+                Reset
+              </button>
+            </div>
+            <div
+              class="manual-input"
+              id="manualInputGold"
+              style="display: none"
+            >
+              <label for="userSpotPriceGold">Manual Gold Price</label>
+              <div class="currency-input">
+                <input
+                  id="userSpotPriceGold"
+                  min="0"
+                  placeholder="Enter price"
+                  step="0.01"
+                  type="number"
+                />
+              </div>
+              <div class="grid grid-2">
+                <button class="btn" id="saveSpotBtnGold">Save</button>
+                <button class="btn" id="cancelSpotBtnGold">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <!-- Platinum spot price controls -->
+          <div class="spot-input platinum">
+            <div class="spot-card">
+              <div class="spot-card-label">Platinum Spot Price</div>
+              <div class="spot-card-value" id="spotPriceDisplayPlatinum">
+                $ -
+              </div>
+              <div class="spot-card-timestamp" id="spotTimestampPlatinum">
+                No data
+              </div>
+            </div>
+            <div class="spot-actions">
+              <button
+                class="btn spot-action-btn"
+                id="syncBtnPlatinum"
+                title="Sync from API"
+                disabled
+              >
+                Sync
+              </button>
+              <button
+                class="btn spot-action-btn"
+                id="addBtnPlatinum"
+                title="Add/Override Price"
+              >
+                Add
+              </button>
+              <button
+                class="btn spot-action-btn"
+                id="resetBtnPlatinum"
+                title="Reset to Default/API"
+              >
+                Reset
+              </button>
+            </div>
+            <div
+              class="manual-input"
+              id="manualInputPlatinum"
+              style="display: none"
+            >
+              <label for="userSpotPricePlatinum">Manual Platinum Price</label>
+              <div class="currency-input">
+                <input
+                  id="userSpotPricePlatinum"
+                  min="0"
+                  placeholder="Enter price"
+                  step="0.01"
+                  type="number"
+                />
+              </div>
+              <div class="grid grid-2">
+                <button class="btn" id="saveSpotBtnPlatinum">Save</button>
+                <button class="btn" id="cancelSpotBtnPlatinum">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <!-- Palladium spot price controls -->
+          <div class="spot-input palladium">
+            <div class="spot-card">
+              <div class="spot-card-label">Palladium Spot Price</div>
+              <div class="spot-card-value" id="spotPriceDisplayPalladium">
+                $ -
+              </div>
+              <div class="spot-card-timestamp" id="spotTimestampPalladium">
+                No data
+              </div>
+            </div>
+            <div class="spot-actions">
+              <button
+                class="btn spot-action-btn"
+                id="syncBtnPalladium"
+                title="Sync from API"
+                disabled
+              >
+                Sync
+              </button>
+              <button
+                class="btn spot-action-btn"
+                id="addBtnPalladium"
+                title="Add/Override Price"
+              >
+                Add
+              </button>
+              <button
+                class="btn spot-action-btn"
+                id="resetBtnPalladium"
+                title="Reset to Default/API"
+              >
+                Reset
+              </button>
+            </div>
+            <div
+              class="manual-input"
+              id="manualInputPalladium"
+              style="display: none"
+            >
+              <label for="userSpotPricePalladium">Manual Palladium Price</label>
+              <div class="currency-input">
+                <input
+                  id="userSpotPricePalladium"
+                  min="0"
+                  placeholder="Enter price"
+                  step="0.01"
+                  type="number"
+                />
+              </div>
+              <div class="grid grid-2">
+                <button class="btn" id="saveSpotBtnPalladium">Save</button>
+                <button class="btn" id="cancelSpotBtnPalladium">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- =============================================================================
          TOTALS SECTION
          
          Comprehensive financial summary cards for each metal type showing:
@@ -171,215 +328,254 @@
          All calculations are performed by updateSummary() in inventory.js
          Values are updated automatically when inventory changes
          ============================================================================= -->
-<section class="totals-section">
-<div class="totals">
-<!-- Silver totals card -->
-<div class="total-card silver">
-<div class="total-title">Silver Totals</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Total Items:</span>
-<span class="total-value" id="totalItemsSilver">0</span>
-</div>
-<div class="total-item">
-<span class="total-label">Total Weight:</span>
-<span class="total-value" id="totalWeightSilver">0.00</span> oz
+      <section class="totals-section">
+        <div class="totals">
+          <!-- Silver totals card -->
+          <div class="total-card silver">
+            <div class="total-title">Silver Totals</div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Total Items:</span>
+                <span class="total-value" id="totalItemsSilver">0</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Total Weight:</span>
+                <span class="total-value" id="totalWeightSilver">0.00</span> oz
+              </div>
             </div>
-</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Purchase Price:</span>
-<span class="total-value" id="totalPurchasedSilver">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Current Value:</span>
-<span class="total-value" id="currentValueSilver">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Price (oz):</span>
-<span class="total-value" id="avgPriceSilver">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Collectable Price (oz):</span>
-<span class="total-value" id="avgCollectablePriceSilver">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Non-collectable Price (oz):</span>
-<span class="total-value" id="avgNonCollectablePriceSilver">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Premium (oz):</span>
-<span class="total-value" id="avgPremiumSilver">$0.00</span>
-</div>
-</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Total Premium Paid:</span>
-<span class="total-value" id="totalPremiumSilver">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Total Loss/Profit:</span>
-<span class="total-value" id="lossProfitSilver">$0.00</span>
-</div>
-</div>
-<button class="details-btn" data-metal="Silver">View Details</button>
-</div>
-<!-- Gold totals card -->
-<div class="total-card gold">
-<div class="total-title">Gold Totals</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Total Items:</span>
-<span class="total-value" id="totalItemsGold">0</span>
-</div>
-<div class="total-item">
-<span class="total-label">Total Weight:</span>
-<span class="total-value" id="totalWeightGold">0.00</span> oz
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Purchase Price:</span>
+                <span class="total-value" id="totalPurchasedSilver">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Current Value:</span>
+                <span class="total-value" id="currentValueSilver">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Price (oz):</span>
+                <span class="total-value" id="avgPriceSilver">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Collectable Price (oz):</span>
+                <span class="total-value" id="avgCollectablePriceSilver"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label"
+                  >Average Non-collectable Price (oz):</span
+                >
+                <span class="total-value" id="avgNonCollectablePriceSilver"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Premium (oz):</span>
+                <span class="total-value" id="avgPremiumSilver">$0.00</span>
+              </div>
             </div>
-</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Purchase Price:</span>
-<span class="total-value" id="totalPurchasedGold">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Current Value:</span>
-<span class="total-value" id="currentValueGold">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Price (oz):</span>
-<span class="total-value" id="avgPriceGold">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Collectable Price (oz):</span>
-<span class="total-value" id="avgCollectablePriceGold">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Non-collectable Price (oz):</span>
-<span class="total-value" id="avgNonCollectablePriceGold">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Premium (oz):</span>
-<span class="total-value" id="avgPremiumGold">$0.00</span>
-</div>
-</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Total Premium Paid:</span>
-<span class="total-value" id="totalPremiumGold">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Total Loss/Profit:</span>
-<span class="total-value" id="lossProfitGold">$0.00</span>
-</div>
-</div>
-<button class="details-btn" data-metal="Gold">View Details</button>
-</div>
-<!-- Platinum totals card -->
-<div class="total-card platinum">
-<div class="total-title">Platinum Totals</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Total Items:</span>
-<span class="total-value" id="totalItemsPlatinum">0</span>
-</div>
-<div class="total-item">
-<span class="total-label">Total Weight:</span>
-<span class="total-value" id="totalWeightPlatinum">0.00</span>
-</div>
-</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Purchase Price:</span>
-<span class="total-value" id="totalPurchasedPlatinum">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Current Value:</span>
-<span class="total-value" id="currentValuePlatinum">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Price (oz):</span>
-<span class="total-value" id="avgPricePlatinum">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Collectable Price (oz):</span>
-<span class="total-value" id="avgCollectablePricePlatinum">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Non-collectable Price (oz):</span>
-<span class="total-value" id="avgNonCollectablePricePlatinum">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Premium (oz):</span>
-<span class="total-value" id="avgPremiumPlatinum">$0.00</span>
-</div>
-</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Total Premium Paid:</span>
-<span class="total-value" id="totalPremiumPlatinum">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Total Loss/Profit:</span>
-<span class="total-value" id="lossProfitPlatinum">$0.00</span>
-</div>
-</div>
-<button class="details-btn" data-metal="Platinum">View Details</button>
-</div>
-<!-- Palladium totals card -->
-<div class="total-card palladium">
-<div class="total-title">Palladium Totals</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Total Items:</span>
-<span class="total-value" id="totalItemsPalladium">0</span>
-</div>
-<div class="total-item">
-<span class="total-label">Total Weight:</span>
-<span class="total-value" id="totalWeightPalladium">0.00</span> oz
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Total Premium Paid:</span>
+                <span class="total-value" id="totalPremiumSilver">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Total Loss/Profit:</span>
+                <span class="total-value" id="lossProfitSilver">$0.00</span>
+              </div>
             </div>
-</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Purchase Price:</span>
-<span class="total-value" id="totalPurchasedPalladium">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Current Value:</span>
-<span class="total-value" id="currentValuePalladium">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Price (oz):</span>
-<span class="total-value" id="avgPricePalladium">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Collectable Price (oz):</span>
-<span class="total-value" id="avgCollectablePricePalladium">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Non-collectable Price (oz):</span>
-<span class="total-value" id="avgNonCollectablePricePalladium">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Average Premium (oz):</span>
-<span class="total-value" id="avgPremiumPalladium">$0.00</span>
-</div>
-</div>
-<div class="total-group">
-<div class="total-item">
-<span class="total-label">Total Premium Paid:</span>
-<span class="total-value" id="totalPremiumPalladium">$0.00</span>
-</div>
-<div class="total-item">
-<span class="total-label">Total Loss/Profit:</span>
-<span class="total-value" id="lossProfitPalladium">$0.00</span>
-</div>
-</div>
-<button class="details-btn" data-metal="Palladium">View Details</button>
-</div>
-</div>
-</section>
-<!-- =============================================================================
+            <button class="details-btn" data-metal="Silver">
+              View Details
+            </button>
+          </div>
+          <!-- Gold totals card -->
+          <div class="total-card gold">
+            <div class="total-title">Gold Totals</div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Total Items:</span>
+                <span class="total-value" id="totalItemsGold">0</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Total Weight:</span>
+                <span class="total-value" id="totalWeightGold">0.00</span> oz
+              </div>
+            </div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Purchase Price:</span>
+                <span class="total-value" id="totalPurchasedGold">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Current Value:</span>
+                <span class="total-value" id="currentValueGold">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Price (oz):</span>
+                <span class="total-value" id="avgPriceGold">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Collectable Price (oz):</span>
+                <span class="total-value" id="avgCollectablePriceGold"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label"
+                  >Average Non-collectable Price (oz):</span
+                >
+                <span class="total-value" id="avgNonCollectablePriceGold"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Premium (oz):</span>
+                <span class="total-value" id="avgPremiumGold">$0.00</span>
+              </div>
+            </div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Total Premium Paid:</span>
+                <span class="total-value" id="totalPremiumGold">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Total Loss/Profit:</span>
+                <span class="total-value" id="lossProfitGold">$0.00</span>
+              </div>
+            </div>
+            <button class="details-btn" data-metal="Gold">View Details</button>
+          </div>
+          <!-- Platinum totals card -->
+          <div class="total-card platinum">
+            <div class="total-title">Platinum Totals</div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Total Items:</span>
+                <span class="total-value" id="totalItemsPlatinum">0</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Total Weight:</span>
+                <span class="total-value" id="totalWeightPlatinum">0.00</span>
+              </div>
+            </div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Purchase Price:</span>
+                <span class="total-value" id="totalPurchasedPlatinum"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label">Current Value:</span>
+                <span class="total-value" id="currentValuePlatinum">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Price (oz):</span>
+                <span class="total-value" id="avgPricePlatinum">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Collectable Price (oz):</span>
+                <span class="total-value" id="avgCollectablePricePlatinum"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label"
+                  >Average Non-collectable Price (oz):</span
+                >
+                <span class="total-value" id="avgNonCollectablePricePlatinum"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Premium (oz):</span>
+                <span class="total-value" id="avgPremiumPlatinum">$0.00</span>
+              </div>
+            </div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Total Premium Paid:</span>
+                <span class="total-value" id="totalPremiumPlatinum">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Total Loss/Profit:</span>
+                <span class="total-value" id="lossProfitPlatinum">$0.00</span>
+              </div>
+            </div>
+            <button class="details-btn" data-metal="Platinum">
+              View Details
+            </button>
+          </div>
+          <!-- Palladium totals card -->
+          <div class="total-card palladium">
+            <div class="total-title">Palladium Totals</div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Total Items:</span>
+                <span class="total-value" id="totalItemsPalladium">0</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Total Weight:</span>
+                <span class="total-value" id="totalWeightPalladium">0.00</span>
+                oz
+              </div>
+            </div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Purchase Price:</span>
+                <span class="total-value" id="totalPurchasedPalladium"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label">Current Value:</span>
+                <span class="total-value" id="currentValuePalladium"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Price (oz):</span>
+                <span class="total-value" id="avgPricePalladium">$0.00</span>
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Collectable Price (oz):</span>
+                <span class="total-value" id="avgCollectablePricePalladium"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label"
+                  >Average Non-collectable Price (oz):</span
+                >
+                <span class="total-value" id="avgNonCollectablePricePalladium"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label">Average Premium (oz):</span>
+                <span class="total-value" id="avgPremiumPalladium">$0.00</span>
+              </div>
+            </div>
+            <div class="total-group">
+              <div class="total-item">
+                <span class="total-label">Total Premium Paid:</span>
+                <span class="total-value" id="totalPremiumPalladium"
+                  >$0.00</span
+                >
+              </div>
+              <div class="total-item">
+                <span class="total-label">Total Loss/Profit:</span>
+                <span class="total-value" id="lossProfitPalladium">$0.00</span>
+              </div>
+            </div>
+            <button class="details-btn" data-metal="Palladium">
+              View Details
+            </button>
+          </div>
+        </div>
+      </section>
+      <!-- =============================================================================
          INVENTORY FORM SECTION
          
          Primary data entry form for adding new inventory items. Includes fields for:
@@ -390,77 +586,97 @@
          Form submission is handled by events.js with validation and automatic
          premium calculation based on current spot prices
          ============================================================================= -->
-<section class="form-section">
-<form id="inventoryForm">
-<!-- First row of form fields -->
-<div class="grid grid-2">
-<div>
-<label for="itemMetal">Metal</label>
-<select id="itemMetal">
-<option value="Silver">Silver</option>
-<option value="Gold">Gold</option>
-<option value="Platinum">Platinum</option>
-<option value="Palladium">Palladium</option>
-</select>
-</div>
-<div>
-<label for="itemType">Type</label>
-<select id="itemType">
-<option value="Round">Round</option>
-<option value="Bar">Bar</option>
-<option value="Coin">Coin</option>
-<option value="Note">Note</option>
-<option value="Other">Other</option>
-</select>
-</div>
-<div>
-<label for="itemQty">Quantity</label>
-<input id="itemQty" min="1" required="" step="1" type="number"/>
-</div>
-<div>
-<label for="itemWeight">Weight (oz)</label>
-<input id="itemWeight" min="0.0001" required="" step="0.0001" type="number"/>
-</div>
-</div>
-<!-- Second row of form fields -->
-<div class="grid grid-2">
-<div>
-<label for="itemName">Name</label>
-<input id="itemName" required="" type="text"/>
-</div>
-<div>
-<label for="purchaseLocation">Purchase Location</label>
-<input id="purchaseLocation" required="" type="text"/>
-</div>
-<div>
-<label for="storageLocation">Storage Location</label>
-<input id="storageLocation" type="text" placeholder="Vault A, Safe B, etc..."/>
-</div>
-<div>
-<label for="itemNotes">Notes</label>
-<input id="itemNotes" type="text" placeholder="Additional notes or comments..."/>
-</div>
-</div>
-<!-- Third row of form fields -->
-<div class="grid grid-2">
-<div>
-<label for="itemPrice">Purchase Price ($)</label>
-<div class="currency-input">
-<input id="itemPrice" min="0" required="" step="0.01" type="number"/>
-</div>
-</div>
-<div>
-<label for="itemDate">Purchase Date</label>
-<input id="itemDate" required="" type="date"/>
-</div>
-</div>
-<!-- Form submission button -->
-<div style="margin-top: 0.5rem;">
-<button class="btn" type="submit">Add to Inventory</button>
-</div>
-</form>
-</section>
-<!-- =============================================================================
+      <section class="form-section">
+        <form id="inventoryForm">
+          <!-- First row of form fields -->
+          <div class="grid grid-2">
+            <div>
+              <label for="itemMetal">Metal</label>
+              <select id="itemMetal">
+                <option value="Silver">Silver</option>
+                <option value="Gold">Gold</option>
+                <option value="Platinum">Platinum</option>
+                <option value="Palladium">Palladium</option>
+              </select>
+            </div>
+            <div>
+              <label for="itemType">Type</label>
+              <select id="itemType">
+                <option value="Round">Round</option>
+                <option value="Bar">Bar</option>
+                <option value="Coin">Coin</option>
+                <option value="Note">Note</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label for="itemQty">Quantity</label>
+              <input id="itemQty" min="1" required="" step="1" type="number" />
+            </div>
+            <div>
+              <label for="itemWeight">Weight (oz)</label>
+              <input
+                id="itemWeight"
+                min="0.0001"
+                required=""
+                step="0.0001"
+                type="number"
+              />
+            </div>
+          </div>
+          <!-- Second row of form fields -->
+          <div class="grid grid-2">
+            <div>
+              <label for="itemName">Name</label>
+              <input id="itemName" required="" type="text" />
+            </div>
+            <div>
+              <label for="purchaseLocation">Purchase Location</label>
+              <input id="purchaseLocation" required="" type="text" />
+            </div>
+            <div>
+              <label for="storageLocation">Storage Location</label>
+              <input
+                id="storageLocation"
+                type="text"
+                placeholder="Vault A, Safe B, etc..."
+              />
+            </div>
+            <div>
+              <label for="itemNotes">Notes</label>
+              <input
+                id="itemNotes"
+                type="text"
+                placeholder="Additional notes or comments..."
+              />
+            </div>
+          </div>
+          <!-- Third row of form fields -->
+          <div class="grid grid-2">
+            <div>
+              <label for="itemPrice">Purchase Price ($)</label>
+              <div class="currency-input">
+                <input
+                  id="itemPrice"
+                  min="0"
+                  required=""
+                  step="0.01"
+                  type="number"
+                />
+              </div>
+            </div>
+            <div>
+              <label for="itemDate">Purchase Date</label>
+              <input id="itemDate" required="" type="date" />
+            </div>
+          </div>
+          <!-- Form submission button -->
+          <div style="margin-top: 0.5rem">
+            <button class="btn" type="submit">Add to Inventory</button>
+          </div>
+        </form>
+      </section>
+      <!-- =============================================================================
          SEARCH FUNCTIONALITY
          
          Live search interface that filters inventory table in real-time.
@@ -472,14 +688,18 @@
          Search is case-insensitive and supports partial matches
          Implementation in search.js with filterInventory() function
          ============================================================================= -->
-<section class="search-section">
-<div class="search-container">
-<input id="searchInput" placeholder="Search inventory by metal, name, type, purchase location, storage location, notes, date..." type="text"/>
-<button class="btn" id="clearSearchBtn">Clear</button>
-</div>
-<div class="search-results-info" id="searchResultsInfo"></div>
-</section>
-<!-- =============================================================================
+      <section class="search-section">
+        <div class="search-container">
+          <input
+            id="searchInput"
+            placeholder="Search inventory by metal, name, type, purchase location, storage location, notes, date..."
+            type="text"
+          />
+          <button class="btn" id="clearSearchBtn">Clear</button>
+        </div>
+        <div class="search-results-info" id="searchResultsInfo"></div>
+      </section>
+      <!-- =============================================================================
          INVENTORY TABLE SECTION
          
          Main data display table showing all inventory items with:
@@ -492,54 +712,70 @@
          Table rendering handled by renderTable() in inventory.js
          Pagination controls limit display to selected items per page
          ============================================================================= -->
-<section class="table-section">
-<table id="inventoryTable">
-<thead>
-<tr>
-<th class="shrink">Date</th>
-<th class="shrink">Type</th>
-<th class="shrink">Metal</th>
-<th class="shrink">Qty</th>
-<th class="expand">Name</th>
-<th class="shrink">Weight (oz)</th>
-<th class="shrink">Purchase Price ($)</th>
-<th class="shrink">Spot at Purchase ($)</th>
-<th class="shrink">Premium ($)</th>
-<th class="shrink">Purchase Location</th>
-<th class="shrink">Storage Location</th>
-<th class="shrink">Collectable</th>
-<th class="shrink">Notes</th>
-<th class="shrink">Delete</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-<!-- Pagination Controls -->
-<section class="pagination-section">
-<div class="pagination-container">
-<div class="pagination-controls">
-<div class="pagination-buttons">
-<button class="pagination-btn" id="firstPage" title="First Page">«</button>
-<button class="pagination-btn" id="prevPage" title="Previous Page">‹</button>
-<div class="page-numbers" id="pageNumbers"></div>
-<button class="pagination-btn" id="nextPage" title="Next Page">›</button>
-<button class="pagination-btn" id="lastPage" title="Last Page">»</button>
-</div>
-<div class="pagination-info-controls">
-<span class="pagination-info" id="paginationInfo">1 of 1</span>
-<select class="pagination-select" id="itemsPerPage">
-<option value="10">10</option>
-<option value="15">15</option>
-<option selected="" value="25">25</option>
-<option value="50">50</option>
-<option value="100">100</option>
-</select>
-</div>
-</div>
-</div>
-</section>
-</section>
-<!-- =============================================================================
+      <section class="table-section">
+        <table id="inventoryTable">
+          <thead>
+            <tr>
+              <th class="shrink">Date</th>
+              <th class="shrink">Type</th>
+              <th class="shrink">Metal</th>
+              <th class="shrink">Qty</th>
+              <th class="expand">Name</th>
+              <th class="shrink">Weight (oz)</th>
+              <th class="shrink">Purchase Price ($)</th>
+              <th class="shrink">Spot at Purchase ($)</th>
+              <th class="shrink">Premium ($)</th>
+              <th class="shrink">Purchase Location</th>
+              <th class="shrink">Storage Location</th>
+              <th class="shrink">Collectable</th>
+              <th class="shrink">Notes</th>
+              <th class="shrink">Delete</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <!-- Pagination Controls -->
+        <section class="pagination-section">
+          <div class="pagination-container">
+            <div class="pagination-controls">
+              <div class="pagination-buttons">
+                <button
+                  class="pagination-btn"
+                  id="firstPage"
+                  title="First Page"
+                >
+                  «
+                </button>
+                <button
+                  class="pagination-btn"
+                  id="prevPage"
+                  title="Previous Page"
+                >
+                  ‹
+                </button>
+                <div class="page-numbers" id="pageNumbers"></div>
+                <button class="pagination-btn" id="nextPage" title="Next Page">
+                  ›
+                </button>
+                <button class="pagination-btn" id="lastPage" title="Last Page">
+                  »
+                </button>
+              </div>
+              <div class="pagination-info-controls">
+                <span class="pagination-info" id="paginationInfo">1 of 1</span>
+                <select class="pagination-select" id="itemsPerPage">
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option selected="" value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+      <!-- =============================================================================
          IMPORT/EXPORT SECTION
          
          Comprehensive data management with support for multiple formats:
@@ -559,170 +795,195 @@
          All import/export functions include data validation and error handling
          Implementation in inventory.js with format-specific parsing
          ============================================================================= -->
-<section class="import-export-section">
-<h2>Import Options</h2>
-<div class="import-section import-export-grid">
-<label class="btn" id="importCsvBtn">
-          Import CSV
-          <input accept=".csv" hidden="" id="importCsvFile" type="file"/>
-</label>
-<label class="btn" id="importJsonBtn">
-          Import JSON
-          <input accept=".json" hidden="" id="importJsonFile" type="file"/>
-</label>
-<label class="btn" id="importExcelBtn">
-          Import Excel
-          <input accept=".xlsx,.xls" hidden="" id="importExcelFile" type="file"/>
-</label>
-</div>
-<h2>Export Options</h2>
-<div class="export-section import-export-grid">
-<button class="btn" id="exportCsvBtn">Export CSV</button>
-<button class="btn" id="exportJsonBtn">Export JSON</button>
-<button class="btn" id="exportExcelBtn">Export Excel</button>
-<button class="btn" id="exportPdfBtn">Export PDF</button>
-<button class="btn" id="exportHtmlBtn">Export HTML</button>
-</div>
-</section>
-
-</div>
-<!-- "Boating Accident" and backup features -->
-<section class="boating-accident-section">
-<div class="grid grid-2">
-<button id="backupAllBtn" class="btn">Backup All Data</button>
-<button id="boatingAccidentBtn">Boating Accident</button>
-</div>
-</section>
-<!-- =============================================================================
+      <section class="import-export-section">
+        <h2>Import Options</h2>
+        <div class="import-section import-export-grid">
+          <label class="btn" id="importCsvBtn">
+            Import CSV
+            <input accept=".csv" hidden="" id="importCsvFile" type="file" />
+          </label>
+          <label class="btn" id="importJsonBtn">
+            Import JSON
+            <input accept=".json" hidden="" id="importJsonFile" type="file" />
+          </label>
+          <label class="btn" id="importExcelBtn">
+            Import Excel
+            <input
+              accept=".xlsx,.xls"
+              hidden=""
+              id="importExcelFile"
+              type="file"
+            />
+          </label>
+        </div>
+        <h2>Export Options</h2>
+        <div class="export-section import-export-grid">
+          <button class="btn" id="exportCsvBtn">Export CSV</button>
+          <button class="btn" id="exportJsonBtn">Export JSON</button>
+          <button class="btn" id="exportExcelBtn">Export Excel</button>
+          <button class="btn" id="exportPdfBtn">Export PDF</button>
+          <button class="btn" id="exportHtmlBtn">Export HTML</button>
+        </div>
+      </section>
+    </div>
+    <!-- =============================================================================
        EDIT MODAL
-       
+
        Comprehensive item editing interface that appears when:
        - User clicks on item name in table
        - Edit button is pressed (in older versions)
-       
        Features:
        - All item fields editable including historical spot price
        - Collectable toggle switch with explanatory text
        - Real-time validation and premium recalculation
        - Save/Cancel actions with confirmation
-       
+
        Modal display controlled by editItem() function in inventory.js
        Form submission handled in events.js with data validation
        ============================================================================= -->
-<div class="modal" id="editModal" style="display: none;">
-<div class="modal-content">
-<h2 style="margin-bottom: 1rem; color: var(--primary);">Edit Inventory Item</h2>
-<form id="editForm">
-<!-- First row of edit form fields -->
-<div class="grid grid-2">
-<div>
-<label for="editMetal">Metal</label>
-<select id="editMetal">
-<option value="Silver">Silver</option>
-<option value="Gold">Gold</option>
-<option value="Platinum">Platinum</option>
-<option value="Palladium">Palladium</option>
-</select>
-</div>
-<div>
-<label for="editType">Type</label>
-<select id="editType">
-<option value="Round">Round</option>
-<option value="Bar">Bar</option>
-<option value="Coin">Coin</option>
-<option value="Note">Note</option>
-<option value="Other">Other</option>
-</select>
-</div>
-<div>
-<label for="editQty">Quantity</label>
-<input id="editQty" min="1" required="" step="1" type="number"/>
-</div>
-<div>
-<label for="editWeight">Weight (oz)</label>
-<input id="editWeight" min="0.0001" required="" step="0.0001" type="number"/>
-</div>
-</div>
-<!-- Second row of edit form fields -->
-<div class="grid grid-2">
-<div>
-<label for="editName">Name</label>
-<input id="editName" required="" type="text"/>
-</div>
-<div>
-<label for="editPurchaseLocation">Purchase Location</label>
-<input id="editPurchaseLocation" required="" type="text"/>
-</div>
-<div>
-<label for="editStorageLocation">Storage Location</label>
-<input id="editStorageLocation" type="text" placeholder="Vault A, Safe B, etc..."/>
-</div>
-<div>
-<label for="editNotes">Notes</label>
-<input id="editNotes" type="text" placeholder="Additional notes or comments..."/>
-</div>
-</div>
-<!-- Third row of edit form fields -->
-<div class="grid grid-2">
-<div>
-<label for="editPrice">Purchase Price ($)</label>
-<div class="currency-input">
-<input id="editPrice" min="0" required="" step="0.01" type="number"/>
-</div>
-</div>
-<div>
-<label for="editDate">Purchase Date</label>
-<input id="editDate" required="" type="date"/>
-</div>
-</div>
-<!-- Special field for editing historical spot prices -->
-<div class="grid grid-2">
-<div>
-<label for="editSpotPrice">Spot Price ($/oz)</label>
-<div class="currency-input">
-<input id="editSpotPrice" min="0" required="" step="0.01" type="number"/>
-</div>
-</div>
-</div>
-<!-- Collectable toggle -->
-<div style="margin-top: 0.5rem;">
-<label for="editCollectable">Collectable Item</label>
-<label class="switch">
-<input id="editCollectable" type="checkbox"/>
-<span class="slider"></span>
-</label>
-<div class="collectable-explanation">
-            Collectable items may have additional numismatic value beyond their metal content
+    <div class="modal" id="editModal" style="display: none">
+      <div class="modal-content">
+        <h2 style="margin-bottom: 1rem; color: var(--primary)">
+          Edit Inventory Item
+        </h2>
+        <form id="editForm">
+          <!-- First row of edit form fields -->
+          <div class="grid grid-2">
+            <div>
+              <label for="editMetal">Metal</label>
+              <select id="editMetal">
+                <option value="Silver">Silver</option>
+                <option value="Gold">Gold</option>
+                <option value="Platinum">Platinum</option>
+                <option value="Palladium">Palladium</option>
+              </select>
+            </div>
+            <div>
+              <label for="editType">Type</label>
+              <select id="editType">
+                <option value="Round">Round</option>
+                <option value="Bar">Bar</option>
+                <option value="Coin">Coin</option>
+                <option value="Note">Note</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label for="editQty">Quantity</label>
+              <input id="editQty" min="1" required="" step="1" type="number" />
+            </div>
+            <div>
+              <label for="editWeight">Weight (oz)</label>
+              <input
+                id="editWeight"
+                min="0.0001"
+                required=""
+                step="0.0001"
+                type="number"
+              />
+            </div>
           </div>
-</div>
-<!-- Form action buttons -->
-<div style="margin-top: 1rem; text-align: right;">
-<button class="btn" id="cancelEdit" type="button">Cancel</button>
-<button class="btn premium" type="submit">Save Changes</button>
-</div>
-</form>
-</div>
-</div>
+          <!-- Second row of edit form fields -->
+          <div class="grid grid-2">
+            <div>
+              <label for="editName">Name</label>
+              <input id="editName" required="" type="text" />
+            </div>
+            <div>
+              <label for="editPurchaseLocation">Purchase Location</label>
+              <input id="editPurchaseLocation" required="" type="text" />
+            </div>
+            <div>
+              <label for="editStorageLocation">Storage Location</label>
+              <input
+                id="editStorageLocation"
+                type="text"
+                placeholder="Vault A, Safe B, etc..."
+              />
+            </div>
+            <div>
+              <label for="editNotes">Notes</label>
+              <input
+                id="editNotes"
+                type="text"
+                placeholder="Additional notes or comments..."
+              />
+            </div>
+          </div>
+          <!-- Third row of edit form fields -->
+          <div class="grid grid-2">
+            <div>
+              <label for="editPrice">Purchase Price ($)</label>
+              <div class="currency-input">
+                <input
+                  id="editPrice"
+                  min="0"
+                  required=""
+                  step="0.01"
+                  type="number"
+                />
+              </div>
+            </div>
+            <div>
+              <label for="editDate">Purchase Date</label>
+              <input id="editDate" required="" type="date" />
+            </div>
+          </div>
+          <!-- Special field for editing historical spot prices -->
+          <div class="grid grid-2">
+            <div>
+              <label for="editSpotPrice">Spot Price ($/oz)</label>
+              <div class="currency-input">
+                <input
+                  id="editSpotPrice"
+                  min="0"
+                  required=""
+                  step="0.01"
+                  type="number"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Collectable toggle -->
+          <div style="margin-top: 0.5rem">
+            <label for="editCollectable">Collectable Item</label>
+            <label class="switch">
+              <input id="editCollectable" type="checkbox" />
+              <span class="slider"></span>
+            </label>
+            <div class="collectable-explanation">
+              Collectable items may have additional numismatic value beyond
+              their metal content
+            </div>
+          </div>
+          <!-- Form action buttons -->
+          <div style="margin-top: 1rem; text-align: right">
+            <button class="btn" id="cancelEdit" type="button">Cancel</button>
+            <button class="btn premium" type="submit">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
-<!-- =============================================================================
+    <!-- =============================================================================
        NOTES MODAL
 
        Simple modal for viewing and editing item notes. Opens when the Notes
        button is clicked in the inventory table. Allows users to update the
        notes field without opening the full edit form.
        ============================================================================= -->
-<div class="modal" id="notesModal" style="display: none;">
-  <div class="modal-content">
-    <h2 style="margin-bottom: 1rem; color: var(--primary);">Item Notes</h2>
-    <textarea id="notesTextarea" rows="6" style="width: 100%;"></textarea>
-    <div style="margin-top: 1rem; text-align: right;">
-      <button class="btn" id="cancelNotes" type="button">Cancel</button>
-      <button class="btn premium" id="saveNotes" type="button">Save</button>
+    <div class="modal" id="notesModal" style="display: none">
+      <div class="modal-content">
+        <h2 style="margin-bottom: 1rem; color: var(--primary)">Item Notes</h2>
+        <textarea id="notesTextarea" rows="6" style="width: 100%"></textarea>
+        <div style="margin-top: 1rem; text-align: right">
+          <button class="btn" id="cancelNotes" type="button">Cancel</button>
+          <button class="btn premium" id="saveNotes" type="button">Save</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- =============================================================================
+    <!-- =============================================================================
        DETAILS MODAL WITH PIE CHARTS
        
        Advanced analytics modal opened from "View Details" buttons on totals cards.
@@ -741,228 +1002,377 @@
        Modal implementation in detailsModal.js with Chart.js integration
        Data preparation and chart rendering handled by charts.js
        ============================================================================= -->
-<div class="modal" id="detailsModal" style="display: none;">
-<div class="details-modal-content">
-<h2 class="details-modal-title" id="detailsModalTitle"></h2>
-<!-- Pie Charts Section -->
-<div class="charts-section">
-<div class="chart-container">
-<div class="chart-title">Breakdown by Type</div>
-<div class="chart-canvas-container">
-<canvas class="chart-canvas" id="typeChart"></canvas>
-</div>
-</div>
-<div class="chart-container">
-<div class="chart-title">Breakdown by Purchase Location</div>
-<div class="chart-canvas-container">
-<canvas class="chart-canvas" id="locationChart"></canvas>
-</div>
-</div>
-</div>
-<!-- Data Tables Section -->
-<div class="details-content">
-<!-- Type breakdown column -->
-<div class="details-section">
-<div class="details-section-title">Type Details</div>
-<div class="details-breakdown" id="typeBreakdown">
-<!-- Content will be populated by JavaScript -->
-</div>
-</div>
-<!-- Location breakdown column -->
-<div class="details-section">
-<div class="details-section-title">Location Details</div>
-<div class="details-breakdown" id="locationBreakdown">
-<!-- Content will be populated by JavaScript -->
-</div>
-</div>
-</div>
-<button class="close-details-btn" id="closeDetailsBtn">Close</button>
-</div>
-</div>
-<!-- =============================================================================
+    <div class="modal" id="detailsModal" style="display: none">
+      <div class="details-modal-content">
+        <h2 class="details-modal-title" id="detailsModalTitle"></h2>
+        <!-- Pie Charts Section -->
+        <div class="charts-section">
+          <div class="chart-container">
+            <div class="chart-title">Breakdown by Type</div>
+            <div class="chart-canvas-container">
+              <canvas class="chart-canvas" id="typeChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div class="chart-title">Breakdown by Purchase Location</div>
+            <div class="chart-canvas-container">
+              <canvas class="chart-canvas" id="locationChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <!-- Data Tables Section -->
+        <div class="details-content">
+          <!-- Type breakdown column -->
+          <div class="details-section">
+            <div class="details-section-title">Type Details</div>
+            <div class="details-breakdown" id="typeBreakdown">
+              <!-- Content will be populated by JavaScript -->
+            </div>
+          </div>
+          <!-- Location breakdown column -->
+          <div class="details-section">
+            <div class="details-section-title">Location Details</div>
+            <div class="details-breakdown" id="locationBreakdown">
+              <!-- Content will be populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+        <button class="close-details-btn" id="closeDetailsBtn">Close</button>
+      </div>
+    </div>
+    <!-- =============================================================================
        ABOUT & DISCLAIMER MODAL
        Comprehensive application information and disclaimer modal similar to the
        original splash page design with enhanced features and detailed information.
        ============================================================================= -->
-<div class="modal" id="ackModal" style="display: none;">
-  <div class="modal-content about-modal-content">
-    <div class="modal-header about-modal-header">
-      <h1 class="about-title">Precious Metals Inventory Tool <span id="ackVersion"></span></h1>
-      <button aria-label="Close modal" class="modal-close" id="ackCloseBtn">×</button>
-    </div>
-    <div class="modal-body about-modal-body">
-      <!-- Application Description -->
-      <div class="about-description">
-        Track your precious metal investments with comprehensive spot price tracking, premium calculations,
-        and detailed reporting. Add items to your inventory, monitor current values across Silver, Gold,
-        Platinum, and Palladium, and export your data in multiple formats including CSV, JSON, Excel,
-        PDF, and HTML.
-      </div>
-
-      <!-- Important Notice -->
-      <div class="about-alert">
-        <div class="alert-header">
-          <span class="alert-icon">⚠️</span>
-          <strong>Important Privacy & Data Notice</strong>
+    <div class="modal" id="ackModal" style="display: none">
+      <div class="modal-content about-modal-content">
+        <div class="modal-header about-modal-header">
+          <h1 class="about-title">
+            Precious Metals Inventory Tool <span id="ackVersion"></span>
+          </h1>
+          <button aria-label="Close modal" class="modal-close" id="ackCloseBtn">
+            ×
+          </button>
         </div>
-        <div class="alert-content">
-          <p><strong>Your Privacy is Protected:</strong> All data is stored locally in your browser using localStorage and <em>never transmitted to any server</em>. Your precious metals inventory information remains completely private and under your control.</p>
+        <div class="modal-body about-modal-body">
+          <!-- Application Description -->
+          <div class="about-description">
+            Track your precious metal investments with comprehensive spot price
+            tracking, premium calculations, and detailed reporting. Add items to
+            your inventory, monitor current values across Silver, Gold,
+            Platinum, and Palladium, and export your data in multiple formats
+            including CSV, JSON, Excel, PDF, and HTML.
+          </div>
 
-          <p><strong>Data Backup Responsibility:</strong> Since data is stored locally, it will be lost if you clear browser history, reset browser data, or use private browsing mode. Use the "Backup All Data" feature regularly to save your information.</p>
+          <!-- Important Notice -->
+          <div class="about-alert">
+            <div class="alert-header">
+              <span class="alert-icon">⚠️</span>
+              <strong>Important Privacy & Data Notice</strong>
+            </div>
+            <div class="alert-content">
+              <p>
+                <strong>Your Privacy is Protected:</strong> All data is stored
+                locally in your browser using localStorage and
+                <em>never transmitted to any server</em>. Your precious metals
+                inventory information remains completely private and under your
+                control.
+              </p>
 
-          <p><strong>Use at Your Own Risk:</strong> This tool is provided for informational and organizational purposes only. The developer assumes no responsibility for any financial decisions, investment choices, or data loss. Always verify spot prices and calculations independently.</p>
+              <p>
+                <strong>Data Backup Responsibility:</strong> Since data is
+                stored locally, it will be lost if you clear browser history,
+                reset browser data, or use private browsing mode. Remember to
+                export your data regularly to keep a copy.
+              </p>
 
-          <p><strong>Spot Price Accuracy:</strong> Prices displayed are for reference only and may not reflect real-time market conditions. Always confirm current pricing with your dealer or official market sources before making transactions.</p>
-        </div>
-        <div class="acceptance-text">
-          By continuing, you acknowledge that you understand this tool stores data locally,
-          you are responsible for backing up your data, and you use this application at your own risk.
-        </div>
-      </div>
-      <div class="alert-actions">
-        <button class="btn btn-primary about-accept-btn" id="ackAcceptBtn">
-          ✅ I Understand - Continue to Application
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="modal" id="aboutModal" style="display: none;">
-  <div class="modal-content about-modal-content">
-    <div class="modal-header about-modal-header">
-      <h1 class="about-title" id="aboutTitle">Precious Metals Inventory Tool <span id="aboutVersion"></span></h1>
-      <button aria-label="Close modal" class="modal-close" id="aboutCloseBtn">×</button>
-    </div>
-    <div class="modal-body about-modal-body">
-      <!-- Key Features -->
-      <div class="about-features">
-        <div class="features-title">✨ Key Features</div>
-        <div class="features-grid">
-          <div class="feature-item">📊 Live Spot Price Tracking</div>
-          <div class="feature-item">💰 Premium & Profit Calculations</div>
-          <div class="feature-item">📈 Advanced Analytics & Charts</div>
-          <div class="feature-item">📁 Multi-Format Import/Export</div>
-          <div class="feature-item">🔍 Real-time Search & Filtering</div>
-          <div class="feature-item">🏦 Storage Location Tracking</div>
-          <div class="feature-item">🎨 Dark/Light Theme Support</div>
-          <div class="feature-item">🔒 100% Local Storage</div>
-        </div>
-      </div>
+              <p>
+                <strong>Use at Your Own Risk:</strong> This tool is provided for
+                informational and organizational purposes only. The developer
+                assumes no responsibility for any financial decisions,
+                investment choices, or data loss. Always verify spot prices and
+                calculations independently.
+              </p>
 
-      <!-- What's New and Roadmap -->
-      <div class="about-info-grid">
-        <div class="about-section">
-          <div class="section-title">🚀 What's New in <span id="aboutCurrentVersion"></span></div>
-          <ul id="aboutChangelogLatest" class="changelog-list"></ul>
-        </div>
-
-        <div class="about-section" id="aboutRoadmapSection">
-          <div class="section-title">🗺️ Development Roadmap</div>
-          <div class="roadmap-content">
-            <p>This project is actively maintained with regular updates and improvements. Future enhancements may include:</p>
-            <ul class="roadmap-list">
-              <li>Multi-currency support for international users</li>
-              <li>Enhanced backup encryption for sensitive data</li>
-              <li>Additional API provider integrations</li>
-              <li>Advanced reporting and analytics features</li>
-              <li>Mobile application companion</li>
-            </ul>
+              <p>
+                <strong>Spot Price Accuracy:</strong> Prices displayed are for
+                reference only and may not reflect real-time market conditions.
+                Always confirm current pricing with your dealer or official
+                market sources before making transactions.
+              </p>
+            </div>
+          </div>
+          <div class="alert-actions">
+            <button class="btn btn-primary about-accept-btn" id="ackAcceptBtn">
+              ✅ I Understand - Continue to Application
+            </button>
+          </div>
+          <div class="acceptance-text">
+            By continuing, you acknowledge that you understand this tool stores
+            data locally, you are responsible for backing up your data, and you
+            use this application at your own risk.
           </div>
         </div>
       </div>
-
-      <!-- Previous Version Changes -->
-      <div class="about-section" id="aboutChangelogPreviousSection">
-        <div class="section-title" id="aboutChangelogPreviousTitle">📋 Previous Changes</div>
-        <ul id="aboutChangelogPrevious" class="changelog-list"></ul>
-      </div>
-      
-      <!-- Resources Section -->
-      <div class="about-section">
-        <div class="section-title">📄 Resources & Links</div>
-        <div class="resources-grid">
-          <a class="resource-btn" href="sample.csv" download="sample.csv">
-            📄 Download Sample Data
-          </a>
-          <a class="resource-btn" href="https://github.com/lbruton/Precious-Metals-Inventory" target="_blank" rel="noopener">
-            📁 View Source Code
-          </a>
-          <button class="resource-btn" id="aboutShowChangelogBtn">
-            📜 View Full Changelog
+    </div>
+    <div class="modal" id="aboutModal" style="display: none">
+      <div class="modal-content about-modal-content">
+        <div class="modal-header about-modal-header">
+          <h1 class="about-title" id="aboutTitle">
+            Precious Metals Inventory Tool <span id="aboutVersion"></span>
+          </h1>
+          <button
+            aria-label="Close modal"
+            class="modal-close"
+            id="aboutCloseBtn"
+          >
+            ×
           </button>
         </div>
+        <div class="modal-body about-modal-body">
+          <!-- Key Features -->
+          <div class="about-features">
+            <div class="features-title">✨ Key Features</div>
+            <div class="features-grid">
+              <div class="feature-item">📊 Live Spot Price Tracking</div>
+              <div class="feature-item">💰 Premium & Profit Calculations</div>
+              <div class="feature-item">📈 Advanced Analytics & Charts</div>
+              <div class="feature-item">📁 Multi-Format Import/Export</div>
+              <div class="feature-item">🔍 Real-time Search & Filtering</div>
+              <div class="feature-item">🏦 Storage Location Tracking</div>
+              <div class="feature-item">🎨 Dark/Light Theme Support</div>
+              <div class="feature-item">🔒 100% Local Storage</div>
+            </div>
+          </div>
+
+          <!-- What's New and Roadmap -->
+          <div class="about-info-grid">
+            <div class="about-section">
+              <div class="section-title">
+                🚀 What's New in <span id="aboutCurrentVersion"></span>
+              </div>
+              <ul id="aboutChangelogLatest" class="changelog-list"></ul>
+            </div>
+
+            <div class="about-section" id="aboutRoadmapSection">
+              <div class="section-title">🗺️ Development Roadmap</div>
+              <div class="roadmap-content">
+                <p>
+                  This project is actively maintained with regular updates and
+                  improvements. Future enhancements may include:
+                </p>
+                <ul class="roadmap-list">
+                  <li>Multi-currency support for international users</li>
+                  <li>Enhanced backup encryption for sensitive data</li>
+                  <li>Additional API provider integrations</li>
+                  <li>Advanced reporting and analytics features</li>
+                  <li>Mobile application companion</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resources Section -->
+          <div class="about-section">
+            <div class="section-title">📄 Resources & Links</div>
+            <div class="resources-grid">
+              <a class="resource-btn" href="sample.csv" download="sample.csv">
+                📄 Download Sample Data
+              </a>
+              <a
+                class="resource-btn"
+                href="https://github.com/lbruton/Precious-Metals-Inventory"
+                target="_blank"
+                rel="noopener"
+              >
+                📁 View Source Code
+              </a>
+              <button class="resource-btn" id="aboutShowChangelogBtn">
+                📜 View Full Changelog
+              </button>
+            </div>
+          </div>
+
+          <div class="about-section boating-accident-section">
+            <button id="boatingAccidentBtn">
+              So you had a boating accident?
+            </button>
+          </div>
+        </div>
       </div>
-      
     </div>
-  </div>
-</div>
-<!-- =============================================================================
+    <!-- =============================================================================
        API CONFIGURATION MODAL
        
        Modal for configuring API providers and keys for live spot price data.
        Includes provider selection, API key input, and status display.
        Data is stored in localStorage with 24-hour caching system.
        ============================================================================= -->
-<div class="modal" id="apiModal" style="display: none;">
-<div class="modal-content">
-<h2 style="margin-bottom: 1rem; color: var(--primary);">API Configuration</h2>
-<p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.875rem;">
-Configure an API provider to automatically sync spot prices. Your API key is stored locally and never transmitted to our servers.
-</p>
+    <div class="modal" id="apiModal" style="display: none">
+      <div class="modal-content">
+        <h2 style="margin-bottom: 1rem; color: var(--primary)">
+          API Configuration
+        </h2>
+        <p
+          style="
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+          "
+        >
+          Configure an API provider to automatically sync spot prices. Your API
+          key is stored locally and never transmitted to our servers.
+        </p>
 
-<!-- API Status Display -->
-<div id="apiStatusDisplay" style="margin-bottom: 1rem; padding: 0.75rem; border-radius: var(--radius); background: var(--bg-secondary); border: 1px solid var(--border);">
-<div id="apiStatusText">No API configured</div>
-<div id="apiCacheInfo" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;"></div>
-</div>
+        <!-- API Status Display -->
+        <div
+          id="apiStatusDisplay"
+          style="
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+          "
+        >
+          <div id="apiStatusText">No API configured</div>
+          <div
+            id="apiCacheInfo"
+            style="
+              font-size: 0.75rem;
+              color: var(--text-muted);
+              margin-top: 0.25rem;
+            "
+          ></div>
+        </div>
 
-<form id="apiConfigForm">
-<div style="margin-bottom: 1rem;">
-<label for="apiProvider">API Provider</label>
-<select id="apiProvider">
-<option value="">Select a provider...</option>
-<option value="METALS_DEV">Metals.dev</option>
-<option value="METALS_API">Metals-API.com</option>
-<option value="METAL_PRICE_API">MetalPriceAPI.com</option>
-</select>
-<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
-Choose your preferred metals pricing API provider
-</div>
-</div>
+        <form id="apiConfigForm">
+          <div style="margin-bottom: 1rem">
+            <label for="apiProvider">API Provider</label>
+            <select id="apiProvider">
+              <option value="">Select a provider...</option>
+              <option value="METALS_DEV">Metals.dev</option>
+              <option value="METALS_API">Metals-API.com</option>
+              <option value="METAL_PRICE_API">MetalPriceAPI.com</option>
+            </select>
+            <div
+              style="
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                margin-top: 0.25rem;
+              "
+            >
+              Choose your preferred metals pricing API provider
+            </div>
+          </div>
 
-<div style="margin-bottom: 1rem;">
-<label for="apiKey">API Key</label>
-<input type="password" id="apiKey" placeholder="Enter your API key" />
-<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
-Your API key is stored locally and encrypted
-</div>
-</div>
+          <div style="margin-bottom: 1rem">
+            <label for="apiKey">API Key</label>
+            <input
+              type="password"
+              id="apiKey"
+              placeholder="Enter your API key"
+            />
+            <div
+              style="
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                margin-top: 0.25rem;
+              "
+            >
+              Your API key is stored locally and encrypted
+            </div>
+          </div>
 
-<div style="margin-bottom: 1rem;">
-<label>
-<input type="checkbox" id="testConnection" checked /> Test connection when saving
-</label>
-</div>
+          <div style="margin-bottom: 1rem">
+            <label>
+              <input type="checkbox" id="testConnection" checked /> Test
+              connection when saving
+            </label>
+          </div>
 
-<!-- Provider Information Panel -->
-<div id="providerInfo" style="display: none; margin-bottom: 1rem; padding: 0.75rem; background: var(--bg-tertiary); border-radius: var(--radius); border: 1px solid var(--border);">
-<div style="font-weight: 600; margin-bottom: 0.5rem;">Provider Information</div>
-<div id="providerDetails" style="font-size: 0.875rem; color: var(--text-secondary);"></div>
-<a id="providerDocs" href="#" target="_blank" style="color: var(--primary); font-size: 0.875rem; text-decoration: none;">📄 View Documentation</a>
-</div>
+          <!-- Provider Information Panel -->
+          <div
+            id="providerInfo"
+            style="
+              display: none;
+              margin-bottom: 1rem;
+              padding: 0.75rem;
+              background: var(--bg-tertiary);
+              border-radius: var(--radius);
+              border: 1px solid var(--border);
+            "
+          >
+            <div style="font-weight: 600; margin-bottom: 0.5rem">
+              Provider Information
+            </div>
+            <div
+              id="providerDetails"
+              style="font-size: 0.875rem; color: var(--text-secondary)"
+            ></div>
+            <a
+              id="providerDocs"
+              href="#"
+              target="_blank"
+              style="
+                color: var(--primary);
+                font-size: 0.875rem;
+                text-decoration: none;
+              "
+              >📄 View Documentation</a
+            >
+          </div>
 
-<!-- Action buttons -->
-<div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
-<button type="button" class="btn" id="apiCancelBtn">Cancel</button>
-<button type="button" class="btn" id="apiSyncNowBtn" style="background: var(--primary);" title="Force sync fresh data from API now">Sync Now</button>
-<button type="button" class="btn" id="apiClearCacheBtn" style="background: var(--info);" title="Clear cached data to force fresh API sync on next sync">Clear Cache</button>
-<button type="button" class="btn" id="apiClearBtn" style="background: var(--warning);">Clear Config</button>
-<button type="submit" class="btn" id="apiSaveBtn" style="background: var(--success);">Save & Test</button>
-</div>
-</form>
-</div>
-</div>
-<!-- =============================================================================
+          <!-- Action buttons -->
+          <div
+            style="
+              display: flex;
+              gap: 0.75rem;
+              justify-content: flex-end;
+              margin-top: 1.5rem;
+            "
+          >
+            <button type="button" class="btn" id="apiCancelBtn">Cancel</button>
+            <button
+              type="button"
+              class="btn"
+              id="apiSyncNowBtn"
+              style="background: var(--primary)"
+              title="Force sync fresh data from API now"
+            >
+              Sync Now
+            </button>
+            <button
+              type="button"
+              class="btn"
+              id="apiClearCacheBtn"
+              style="background: var(--info)"
+              title="Clear cached data to force fresh API sync on next sync"
+            >
+              Clear Cache
+            </button>
+            <button
+              type="button"
+              class="btn"
+              id="apiClearBtn"
+              style="background: var(--warning)"
+            >
+              Clear Config
+            </button>
+            <button
+              type="submit"
+              class="btn"
+              id="apiSaveBtn"
+              style="background: var(--success)"
+            >
+              Save & Test
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- =============================================================================
        JAVASCRIPT MODULE LOADING
        
        Modular architecture with proper dependency order:
@@ -978,20 +1388,20 @@ Your API key is stored locally and encrypted
        External libraries (Chart.js, jsPDF, PapaParse, XLSX) loaded via CDN
        ============================================================================= -->
 
-<script defer src="./js/constants.js"></script>
-<script defer src="./js/state.js"></script>
-<script defer src="./js/utils.js"></script>
-<script defer src="./js/charts.js"></script>
-<script defer src="./js/theme.js"></script>
-<script defer src="./js/search.js"></script>
-<script defer src="./js/sorting.js"></script>
-<script defer src="./js/pagination.js"></script>
-<script defer src="./js/detailsModal.js"></script>
-<script defer src="./js/spot.js"></script>
-<script defer src="./js/api.js"></script>
-<script defer src="./js/inventory.js"></script>
-<script defer src="./js/about.js"></script>
-<script defer src="./js/events.js"></script>
-<script defer src="./js/init.js"></script>
-</body>
+    <script defer src="./js/constants.js"></script>
+    <script defer src="./js/state.js"></script>
+    <script defer src="./js/utils.js"></script>
+    <script defer src="./js/charts.js"></script>
+    <script defer src="./js/theme.js"></script>
+    <script defer src="./js/search.js"></script>
+    <script defer src="./js/sorting.js"></script>
+    <script defer src="./js/pagination.js"></script>
+    <script defer src="./js/detailsModal.js"></script>
+    <script defer src="./js/spot.js"></script>
+    <script defer src="./js/api.js"></script>
+    <script defer src="./js/inventory.js"></script>
+    <script defer src="./js/about.js"></script>
+    <script defer src="./js/events.js"></script>
+    <script defer src="./js/init.js"></script>
+  </body>
 </html>
