@@ -8,6 +8,9 @@
 
 ## 📋 Version History
 
+### Version 3.2.03rc – Cache Flush Confirmation (2025-08-09)
+- Added warning prompt before clearing API cache and history
+
 ### Version 3.2.02rc – Feature Complete Release Candidate (2025-08-09)
 - Rebranded application to StackTrackr
 - Marked as feature complete release candidate for the 3.2.x series
