@@ -322,6 +322,8 @@ const setupEventListeners = () => {
             elements.storageLocation.value.trim() || "Unknown";
           const notes = elements.itemNotes.value.trim() || "";
           const date = elements.itemDate.value || todayStr();
+          const spotPriceInput = elements.itemSpotPrice.value.trim();
+          const isCollectable = document.getElementById("itemCollectable").checked;
 
           if (
             isNaN(qty) ||
@@ -335,16 +337,16 @@ const setupEventListeners = () => {
             return alert("Please enter valid values for all fields.");
           }
 
-          // Get current spot price
+          // Determine spot price at purchase
           const metalKey = metal.toLowerCase();
-          const spotPriceAtPurchase = spotPrices[metalKey];
+          const spotPriceAtPurchase =
+            spotPriceInput === ""
+              ? spotPrices[metalKey] ?? 0
+              : parseFloat(spotPriceInput);
 
           // Calculate premium per ounce (only for non-collectible items)
           let premiumPerOz = 0;
           let totalPremium = 0;
-
-          // For new items, they're not collectable by default
-          const isCollectable = false;
 
           if (!isCollectable) {
             const pricePerOz = price / weight;
@@ -373,6 +375,7 @@ const setupEventListeners = () => {
           renderTable();
           this.reset();
           elements.itemDate.value = todayStr();
+          if (elements.addModal) elements.addModal.style.display = "none";
         },
         "Main inventory form",
       );
@@ -415,7 +418,7 @@ const setupEventListeners = () => {
           let spotPriceAtPurchase;
           if (!isCollectable && spotPriceInput === "") {
             const metalKey = metal.toLowerCase();
-            spotPriceAtPurchase = spotPrices[metalKey];
+            spotPriceAtPurchase = spotPrices[metalKey] ?? 0;
           } else {
             spotPriceAtPurchase = parseFloat(spotPriceInput);
           }
@@ -486,6 +489,40 @@ const setupEventListeners = () => {
       );
     }
 
+    if (elements.editCloseBtn) {
+      safeAttachListener(
+        elements.editCloseBtn,
+        "click",
+        () => {
+          elements.editModal.style.display = "none";
+          editingIndex = null;
+        },
+        "Edit modal close button",
+      );
+    }
+
+    if (elements.addCloseBtn) {
+      safeAttachListener(
+        elements.addCloseBtn,
+        "click",
+        () => {
+          elements.addModal.style.display = "none";
+        },
+        "Add modal close button",
+      );
+    }
+
+    if (elements.cancelAddBtn) {
+      safeAttachListener(
+        elements.cancelAddBtn,
+        "click",
+        () => {
+          if (elements.addModal) elements.addModal.style.display = "none";
+        },
+        "Cancel add button",
+      );
+    }
+
     // NOTES MODAL BUTTONS
     if (elements.saveNotesBtn) {
       safeAttachListener(
@@ -525,6 +562,22 @@ const setupEventListeners = () => {
           notesIndex = null;
         },
         "Cancel notes button",
+      );
+    }
+
+    if (elements.notesCloseBtn) {
+      safeAttachListener(
+        elements.notesCloseBtn,
+        "click",
+        () => {
+          const modalElement =
+            elements.notesModal || document.getElementById("notesModal");
+          if (modalElement) {
+            modalElement.style.display = "none";
+          }
+          notesIndex = null;
+        },
+        "Notes modal close button",
       );
     }
 
@@ -928,11 +981,26 @@ const setupSearch = () => {
             elements.searchInput.value = "";
           }
           searchQuery = "";
-          columnFilter = { field: null, value: null };
+          columnFilters = {};
           currentPage = 1;
           renderTable();
         },
         "Clear search button",
+      );
+    }
+
+    if (elements.newItemBtn) {
+      safeAttachListener(
+        elements.newItemBtn,
+        "click",
+        () => {
+          if (elements.inventoryForm) {
+            elements.inventoryForm.reset();
+            elements.itemDate.value = todayStr();
+          }
+          if (elements.addModal) elements.addModal.style.display = "flex";
+        },
+        "New item button",
       );
     }
 
@@ -1320,6 +1388,8 @@ const setupApiEvents = () => {
           const historyModal = document.getElementById("apiHistoryModal");
           const providersModal = document.getElementById("apiProvidersModal");
           const editModal = document.getElementById("editModal");
+          const addModal = document.getElementById("addModal");
+          const notesModal = document.getElementById("notesModal");
           const detailsModal = document.getElementById("detailsModal");
 
           if (
@@ -1349,6 +1419,11 @@ const setupApiEvents = () => {
           } else if (editModal && editModal.style.display === "flex") {
             editModal.style.display = "none";
             editingIndex = null;
+          } else if (addModal && addModal.style.display === "flex") {
+            addModal.style.display = "none";
+          } else if (notesModal && notesModal.style.display === "flex") {
+            notesModal.style.display = "none";
+            notesIndex = null;
           } else if (
             detailsModal &&
             detailsModal.style.display === "flex" &&
