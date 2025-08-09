@@ -534,8 +534,8 @@ const renderTable = () => {
       <td class="shrink">${formatDisplayDate(item.date)}</td>
       <td class="shrink">${filterLink('type', item.type, getTypeColor(item.type))}</td>
       <td class="shrink">${filterLink('metal', item.metal || 'Silver', METAL_COLORS[item.metal] || 'var(--primary)')}</td>
-      <td class="shrink">${item.qty}</td>
       <td class="clickable-name expand" onclick="editItem(${originalIdx})" title="Click to edit" tabindex="0" role="button" aria-label="Edit ${sanitizeHtml(item.name)}" onkeydown="if(event.key==='Enter'||event.key===' ')editItem(${originalIdx})">${sanitizeHtml(item.name)}</td>
+      <td class="shrink">${item.qty}</td>
       <td class="shrink">${parseFloat(item.weight).toFixed(2)}</td>
       <td class="shrink">${formatDollar(item.price)}</td>
       <td class="shrink">${item.isCollectable ? 'N/A' : (item.spotPriceAtPurchase > 0 ? formatDollar(item.spotPriceAtPurchase) : 'N/A')}</td>
@@ -775,10 +775,12 @@ const updateSummary = () => {
  * @param {number} idx - Index of item to delete
  */
 const deleteItem = (idx) => {
+  const item = inventory[idx];
   if (confirm("Delete this item?")) {
     inventory.splice(idx, 1);
     saveInventory();
     renderTable();
+    if (item) logChange(item.name, 'Deleted', '', '');
   }
 };
 
@@ -853,6 +855,7 @@ const editItem = (idx) => {
 */
 const toggleCollectable = (idx) => {
   const item = inventory[idx];
+  const oldItem = { ...item };
   const wasCollectable = item.isCollectable;
   const isCollectable = !wasCollectable;
 
@@ -888,6 +891,7 @@ const toggleCollectable = (idx) => {
 
   saveInventory();
   renderTable();
+  logItemChanges(oldItem, item);
 };
 
 // =============================================================================

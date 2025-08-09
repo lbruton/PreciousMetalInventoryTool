@@ -447,6 +447,8 @@ const setupEventListeners = () => {
             totalPremium = premiumPerOz * qty * weight;
           }
 
+          const oldItem = { ...inventory[editingIndex] };
+
           // Update the item
           inventory[editingIndex] = {
             metal,
@@ -467,6 +469,7 @@ const setupEventListeners = () => {
 
           saveInventory();
           renderTable();
+          logItemChanges(oldItem, inventory[editingIndex]);
 
           // Close modal
           elements.editModal.style.display = "none";
@@ -534,9 +537,11 @@ const setupEventListeners = () => {
             elements.notesTextarea || document.getElementById("notesTextarea");
           const text = textareaElement ? textareaElement.value.trim() : "";
 
+          const oldItem = { ...inventory[notesIndex] };
           inventory[notesIndex].notes = text;
           saveInventory();
           renderTable();
+          logItemChanges(oldItem, inventory[notesIndex]);
 
           const modalElement =
             elements.notesModal || document.getElementById("notesModal");
@@ -578,6 +583,32 @@ const setupEventListeners = () => {
           notesIndex = null;
         },
         "Notes modal close button",
+      );
+    }
+
+    if (elements.changeLogLink) {
+      safeAttachListener(
+        elements.changeLogLink,
+        "click",
+        (e) => {
+          e.preventDefault();
+          renderChangeLog();
+          if (elements.changeLogModal)
+            elements.changeLogModal.style.display = "flex";
+        },
+        "Change log link",
+      );
+    }
+
+    if (elements.changeLogCloseBtn) {
+      safeAttachListener(
+        elements.changeLogCloseBtn,
+        "click",
+        () => {
+          if (elements.changeLogModal)
+            elements.changeLogModal.style.display = "none";
+        },
+        "Change log close button",
       );
     }
 
@@ -1391,6 +1422,7 @@ const setupApiEvents = () => {
           const addModal = document.getElementById("addModal");
           const notesModal = document.getElementById("notesModal");
           const detailsModal = document.getElementById("detailsModal");
+          const changeLogModal = document.getElementById("changeLogModal");
 
           if (
             settingsModal &&
@@ -1424,6 +1456,8 @@ const setupApiEvents = () => {
           } else if (notesModal && notesModal.style.display === "flex") {
             notesModal.style.display = "none";
             notesIndex = null;
+          } else if (changeLogModal && changeLogModal.style.display === "flex") {
+            changeLogModal.style.display = "none";
           } else if (
             detailsModal &&
             detailsModal.style.display === "flex" &&

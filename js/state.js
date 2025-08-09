@@ -119,6 +119,12 @@ const elements = {
   lastPage: null,
   pageNumbers: null,
 
+  // Change log elements
+  changeLogLink: null,
+  changeLogModal: null,
+  changeLogCloseBtn: null,
+  changeLogTable: null,
+
   // Search elements
   searchInput: null,
   clearSearchBtn: null,
@@ -216,6 +222,9 @@ const elements = {
     },
   },
 };
+
+/** @type {Array} Change log entries */
+let changeLog = JSON.parse(localStorage.getItem('changeLog') || '[]');
 
 /** @type {Array} Main inventory data structure */
 let inventory = [];

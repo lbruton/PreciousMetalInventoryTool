@@ -2020,7 +2020,20 @@ td input:checked + .slider:before {
   justify-content: flex-end;
   align-items: center;
   gap: var(--spacing-sm);
+}
+
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: var(--spacing-sm);
+}
+
+.change-log-link {
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--primary);
+  text-decoration: underline;
 }
 
 .pagination-select {
@@ -2361,6 +2374,12 @@ input:disabled + .slider {
 
     .items-per-page {
       justify-content: center;
+    }
+
+    .table-controls {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-sm);
     }
 
   .search-container {

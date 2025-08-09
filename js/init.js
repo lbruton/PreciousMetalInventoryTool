@@ -154,6 +154,11 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.lastPage = safeGetElement("lastPage");
     elements.pageNumbers = safeGetElement("pageNumbers");
 
+    elements.changeLogLink = safeGetElement("changeLogLink");
+    elements.changeLogModal = safeGetElement("changeLogModal");
+    elements.changeLogCloseBtn = safeGetElement("changeLogCloseBtn");
+    elements.changeLogTable = safeGetElement("changeLogTable");
+
     // Search elements
     debugLog("Phase 6: Initializing search elements...");
     elements.searchInput = safeGetElement("searchInput");
