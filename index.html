@@ -68,16 +68,16 @@
     <div class="app-header">
       <h1>Precious Metals Inventory Tool</h1>
       <div style="margin-left: auto; display: flex; gap: 0.5rem">
-        <button class="btn" id="aboutBtn" title="About" aria-label="About">
-          📖
-        </button>
         <button
           class="btn"
           id="settingsBtn"
           title="Settings"
           aria-label="Settings"
         >
-          ⚙️
+          Settings ⚙️
+        </button>
+        <button class="btn" id="aboutBtn" title="About" aria-label="About">
+          About 📖
         </button>
       </div>
     </div>
@@ -1232,24 +1232,6 @@
         </div>
         <div class="modal-body">
           <div class="settings-section">
-            <h3>Appearance</h3>
-            <div class="theme-options">
-              <label
-                ><input type="radio" name="themePreference" value="light" />
-                Light Default</label
-              >
-              <label
-                ><input type="radio" name="themePreference" value="dark" /> Dark
-                Default</label
-              >
-              <label
-                ><input type="radio" name="themePreference" value="system" />
-                Follow System</label
-              >
-            </div>
-          </div>
-
-          <div class="settings-section">
             <h3 style="margin-bottom: 1rem">API Configuration</h3>
 
             <div class="api-providers">
@@ -1261,6 +1243,7 @@
                 <a href="#" class="api-info-link" data-provider="METALS_DEV">
                   Provider Information
                 </a>
+                <div class="provider-history"></div>
                 <div class="api-key-row">
                   <label for="apiKey_METALS_DEV">Key:</label>
                   <input
@@ -1282,27 +1265,25 @@
                   <div class="provider-actions">
                     <button
                       type="button"
-                      class="btn api-sync-btn"
+                      class="btn api-sync-btn success"
                       data-provider="METALS_DEV"
                     >
                       Test & Sync
                     </button>
                     <button
                       type="button"
-                      class="btn api-clear-btn"
+                      class="btn api-clear-btn warning"
                       data-provider="METALS_DEV"
                     >
                       Clear Key
                     </button>
-                    <label
-                      ><input
-                        type="radio"
-                        name="defaultProvider"
-                        value="METALS_DEV"
-                        checked
-                      />
-                      Default</label
+                    <button
+                      type="button"
+                      class="btn provider-default-btn"
+                      data-provider="METALS_DEV"
                     >
+                      Default
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1315,6 +1296,7 @@
                 <a href="#" class="api-info-link" data-provider="METALS_API">
                   Provider Information
                 </a>
+                <div class="provider-history"></div>
                 <div class="api-key-row">
                   <label for="apiKey_METALS_API">Key:</label>
                   <input
@@ -1336,26 +1318,25 @@
                   <div class="provider-actions">
                     <button
                       type="button"
-                      class="btn api-sync-btn"
+                      class="btn api-sync-btn success"
                       data-provider="METALS_API"
                     >
                       Test & Sync
                     </button>
                     <button
                       type="button"
-                      class="btn api-clear-btn"
+                      class="btn api-clear-btn warning"
                       data-provider="METALS_API"
                     >
                       Clear Key
                     </button>
-                    <label
-                      ><input
-                        type="radio"
-                        name="defaultProvider"
-                        value="METALS_API"
-                      />
-                      Default</label
+                    <button
+                      type="button"
+                      class="btn provider-default-btn"
+                      data-provider="METALS_API"
                     >
+                      Default
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1391,30 +1372,30 @@
                       <span class="status-dot"></span>
                       <span class="status-text">Disconnected</span>
                     </div>
+                    <div class="provider-history"></div>
                   </div>
                   <div class="provider-actions">
                     <button
                       type="button"
-                      class="btn api-sync-btn"
+                      class="btn api-sync-btn success"
                       data-provider="METAL_PRICE_API"
                     >
                       Test & Sync
                     </button>
                     <button
                       type="button"
-                      class="btn api-clear-btn"
+                      class="btn api-clear-btn warning"
                       data-provider="METAL_PRICE_API"
                     >
                       Clear Key
                     </button>
-                    <label
-                      ><input
-                        type="radio"
-                        name="defaultProvider"
-                        value="METAL_PRICE_API"
-                      />
-                      Default</label
+                    <button
+                      type="button"
+                      class="btn provider-default-btn"
+                      data-provider="METAL_PRICE_API"
                     >
+                      Default
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1446,6 +1427,7 @@
                     <option value="word">Word</option>
                   </select>
                 </div>
+                <div class="provider-history"></div>
                 <div class="api-key-row">
                   <label for="apiKey_CUSTOM">Key:</label>
                   <input
@@ -1467,26 +1449,25 @@
                   <div class="provider-actions">
                     <button
                       type="button"
-                      class="btn api-sync-btn"
+                      class="btn api-sync-btn success"
                       data-provider="CUSTOM"
                     >
                       Test & Sync
                     </button>
                     <button
                       type="button"
-                      class="btn api-clear-btn"
+                      class="btn api-clear-btn warning"
                       data-provider="CUSTOM"
                     >
                       Clear Key
                     </button>
-                    <label
-                      ><input
-                        type="radio"
-                        name="defaultProvider"
-                        value="CUSTOM"
-                      />
-                      Default</label
+                    <button
+                      type="button"
+                      class="btn provider-default-btn"
+                      data-provider="CUSTOM"
                     >
+                      Default
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1504,8 +1485,39 @@
             </div>
 
             <div class="settings-actions">
-              <button type="button" class="btn" id="clearApiCacheBtn">
+              <button type="button" class="btn danger" id="clearApiCacheBtn">
                 Clear API Cache
+              </button>
+              <button type="button" class="btn" id="apiHistoryBtn">API History</button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="theme-options">
+              <button
+                class="theme-btn"
+                data-theme="light"
+                title="Light"
+                aria-label="Light"
+              >
+                ☀️
+              </button>
+              <button
+                class="theme-btn"
+                data-theme="dark"
+                title="Dark"
+                aria-label="Dark"
+              >
+                🌙
+              </button>
+              <button
+                class="theme-btn"
+                data-theme="system"
+                title="System"
+                aria-label="System"
+              >
+                💻
               </button>
             </div>
           </div>
@@ -1530,6 +1542,22 @@
         <div id="apiInfoBody" class="api-info-body"></div>
         <div class="modal-footer">
           <button type="button" class="btn" id="apiInfoCloseBtn">Close</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="apiHistoryModal" style="display: none">
+      <div class="modal-content">
+        <h3>API Price History</h3>
+        <div class="api-history-body">
+          <table id="apiHistoryTable"></table>
+          <canvas id="apiHistoryChart"></canvas>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" id="exportHistoryBtn">Export</button>
+          <button type="button" class="btn" id="clearHistoryBtn">
+            Clear History
+          </button>
+          <button type="button" class="btn" id="apiHistoryCloseBtn">Close</button>
         </div>
       </div>
     </div>

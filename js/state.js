@@ -24,6 +24,7 @@ let columnFilter = { field: null, value: null };
 let chartInstances = {
   typeChart: null,
   locationChart: null,
+  apiHistoryChart: null,
 };
 
 /** @type {Object} Cached DOM elements for performance */
@@ -130,6 +131,7 @@ const elements = {
   settingsBtn: null,
   settingsModal: null,
   apiInfoModal: null,
+  apiHistoryModal: null,
 
   // Spot price action buttons
   spotSyncBtn: null,

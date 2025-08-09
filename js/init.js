@@ -98,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     debugLog("Phase 4: Initializing modal elements...");
     elements.settingsModal = safeGetElement("settingsModal");
     elements.apiInfoModal = safeGetElement("apiInfoModal");
+    elements.apiHistoryModal = safeGetElement("apiHistoryModal");
     elements.aboutModal = safeGetElement("aboutModal");
     elements.ackModal = safeGetElement("ackModal");
     elements.ackAcceptBtn = safeGetElement("ackAcceptBtn");

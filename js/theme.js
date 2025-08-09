@@ -36,14 +36,10 @@ const setTheme = (theme) => {
  */
 const initTheme = () => {
   const savedTheme = localStorage.getItem(THEME_KEY);
-  const systemPrefersDark =
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches;
-
   if (savedTheme) {
     setTheme(savedTheme);
   } else {
-    setTheme(systemPrefersDark ? "dark" : "light");
+    setTheme("system");
   }
 };
 
