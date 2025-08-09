@@ -1202,7 +1202,11 @@ const setupApiEvents = () => {
         "click",
         () => {
           if (typeof clearApiCache === "function") {
-            clearApiCache();
+            const warnMessage =
+              "This will delete the API cache and history. Click OK to continue or Cancel to keep it.";
+            if (confirm(warnMessage)) {
+              clearApiCache();
+            }
           }
         },
         "Flush cache button",

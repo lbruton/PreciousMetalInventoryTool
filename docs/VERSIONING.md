@@ -7,7 +7,7 @@ The StackTrackr now uses a dynamic version management system that automatically 
 ## How It Works
 
 ### Single Source of Truth
-- Version is defined once in `/app/js/constants.js` as `APP_VERSION = '3.2.02rc'`
+- Version is defined once in `/app/js/constants.js` as `APP_VERSION = '3.2.03rc'`
 - This is the ONLY place you need to update the version number
 
 ### Automatic Propagation
@@ -28,7 +28,7 @@ To release a new version:
 1. **Update ONLY the constants file:**
    ```javascript
    // In /app/js/constants.js
-   const APP_VERSION = '3.2.02rc';  // Change this line only
+   const APP_VERSION = '3.2.03rc';  // Change this line only
    ```
 
 2. **All these will automatically update:**
@@ -77,15 +77,15 @@ Use semantic versioning: `MAJOR.MINOR.PATCH`
 ## Example Usage in Code
 ```javascript
 // Get just the version number
-const version = APP_VERSION; // "3.2.02rc"
+const version = APP_VERSION; // "3.2.03rc"
 
 // Get formatted version string
-const versionString = getVersionString(); // "v3.2.02rc"
-const customVersion = getVersionString('version '); // "version 3.2.02rc"
+const versionString = getVersionString(); // "v3.2.03rc"
+const customVersion = getVersionString('version '); // "version 3.2.03rc"
 
 // Get full app title
-const title = getAppTitle(); // "StackTrackr v3.2.02rc"
-const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.2.02rc"
+const title = getAppTitle(); // "StackTrackr v3.2.03rc"
+const customTitle = getAppTitle('My Custom Tool'); // "My Custom Tool v3.2.03rc"
 ```
 
 This system ensures version consistency and makes maintenance much easier!
