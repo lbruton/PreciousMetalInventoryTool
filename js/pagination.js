@@ -40,9 +40,6 @@ const renderPagination = (filteredData = filterInventory()) => {
     pageNumbersContainer.appendChild(btn);
   }
 
-  // Update pagination info
-  elements.paginationInfo.textContent = `${currentPage} of ${totalPages}`;
-
   // Update button states
   elements.firstPage.disabled = currentPage === 1;
   elements.prevPage.disabled = currentPage === 1;
