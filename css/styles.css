@@ -2045,6 +2045,10 @@ td input:checked + .slider:before {
   margin-bottom: var(--spacing-sm);
 }
 
+.pagination-select {
+  width: 6rem;
+}
+
 .pagination-btn {
   min-width: 2.5rem;
   height: 2.5rem;
