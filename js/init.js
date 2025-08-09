@@ -250,7 +250,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.title = getAppTitle();
     const appHeader = document.querySelector(".app-header h1");
     if (appHeader) {
-      appHeader.textContent = getAppTitle();
+      const headerBrand = BRANDING_DOMAIN_OVERRIDE || getBrandingName();
+      appHeader.textContent = headerBrand;
     }
     const aboutVersion = document.getElementById("aboutVersion");
     if (aboutVersion) {
