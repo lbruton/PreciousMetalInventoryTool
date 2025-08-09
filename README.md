@@ -1,8 +1,10 @@
-# StackTrackr v3.2.05rc
+# StackTrackr v3.2.07rc
 
 StackTrackr is a comprehensive client-side web application for tracking precious metal investments. It's designed to help users manage their silver, gold, platinum, and palladium holdings with detailed financial metrics and enhanced tracking capabilities.
 
 ## Recent Updates
+- **v3.2.07rc - Spot Timestamp Source Display**: Spot price cards now show the API provider or Manual entry along with the exact timestamp of the last update
+- **v3.2.06rc - UI Refinements & Auto Sync**: Adds modal-based item entry with stacked filters, pagination polish, collectable status button, notes button showing green "Yes" when notes exist, and automatic spot price refresh when cached data expires
 - **v3.2.05rc - Splash Opt-Out & Branding**: Disclaimer modal now hides after acknowledgment, header branding adapts to the hosting domain with an updated subtitle, and API providers store keys separately
 - **v3.2.04rc - Import Negative Price Handling**: Negative prices default to $0 during imports
 - **v3.2.03rc - Cache Flush Confirmation**: Added warning before clearing API cache and history
@@ -16,6 +18,18 @@ StackTrackr is a comprehensive client-side web application for tracking precious
 - **v3.1.9 - UI Consistency**: Clear Cache button styling improvements across themes
 - **v3.1.8 - Backup System**: Full ZIP backup functionality with restoration guides
 - **v3.1.6 - Theme Toggle**: Fixed theme management with system preference detection
+
+## 🆕 What's New in v3.2.07rc
+- Spot price cards display API provider or Manual entry along with exact timestamp of last update
+
+## 🆕 What's New in v3.2.06rc
+- Automatically refreshes spot prices at startup when an API key is configured and cached data is stale
+- Item entry now occurs in a dedicated modal with support for stacked filtering
+- Items-per-page selector repositioned with unified pagination button theming and fixed dropdown width
+- Collectable checkbox replaced with status button and action buttons aligned in inventory table
+- Totals cards renamed with refined labels and font sizes
+- About modal title contrast improved in light mode
+- Notes button displays "Yes" in green when an item contains notes
 
 ## 🆕 What's New in v3.2.05rc
 - Disclaimer splash hides permanently after you click "I Understand"
@@ -226,7 +240,7 @@ This project is designed to be maintainable and extensible. When making changes:
 This project is open source and available for personal use.
 
 ---
-**Current Version**: 3.2.05rc
+**Current Version**: 3.2.07rc
 **Last Updated**: August 9, 2025
 **Status**: Feature complete release candidate
 

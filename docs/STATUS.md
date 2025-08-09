@@ -1,8 +1,8 @@
 # Project Status - StackTrackr
 
-## 🎯 Current State: **FEATURE COMPLETE v3.2.05rc** ✅ MAINTAINED & OPTIMIZED
+## 🎯 Current State: **FEATURE COMPLETE v3.2.07rc** ✅ MAINTAINED & OPTIMIZED
 
-**StackTrackr v3.2.05rc** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management, API integration, and complete backup capabilities. The 3.2.x series focuses on polish, maintenance, and optimization.
+**StackTrackr v3.2.07rc** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management, API integration, and complete backup capabilities. The 3.2.x series focuses on polish, maintenance, and optimization.
 
 ## 🏗️ Architecture Overview
 
@@ -18,8 +18,10 @@ The tool features a **modular JavaScript architecture** with separate files for 
 - `theme.js` - Dark/light theme management
 - `utils.js` - Helper functions and formatters
 
-## ✨ Latest Changes (3.1.x Series)
+## ✨ Latest Changes (3.2.x Series)
 
+- **v3.2.07rc - Spot Timestamp Source Display**: Spot price cards show the API provider or Manual entry and the exact time of the last update
+- **v3.2.06rc - UI Refinements & Auto Sync**: Modal-based item entry with stacked filters, pagination polish with repositioned items-per-page selector, collectable status button, totals card label updates, improved About modal contrast, and automatic spot price refresh at startup
 - **v3.2.05rc - Splash Opt-Out & Branding**: Disclaimer modal can be hidden permanently, header adapts to hosting domain with updated subtitle, and each API provider stores its own key
 - **v3.2.03rc - Cache Flush Confirmation**: Added warning before clearing API cache and history
 - **v3.2.02rc - Feature Complete Release Candidate**: Application rebranded to StackTrackr and prepared for final release
@@ -118,8 +120,8 @@ All data is stored locally in the browser using localStorage with:
 
 If continuing development in a new chat session:
 
-1. **Current Version**: 3.2.05rc (managed in `js/constants.js`)
-2. **Last Change**: Added confirmation before flushing API cache and history
+1. **Current Version**: 3.2.07rc (managed in `js/constants.js`)
+2. **Last Change**: Introduced modal-based item entry, pagination refinements, totals card updates, and auto spot price refresh
 3. **Last Documentation Update**: August 9, 2025 - All docs synchronized
 4. **Architecture**: Fully modular with proper separation of concerns
 5. **Documentation**: Comprehensive JSDoc comments throughout codebase
