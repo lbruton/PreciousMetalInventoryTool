@@ -212,8 +212,8 @@ const updateProviderHistoryTables = () => {
     const providerName = API_PROVIDERS[prov].name;
     const metals = ["Silver", "Gold", "Platinum", "Palladium"];
     const selections = config.metals?.[prov] || {};
-    let priceRow = '<div class="provider-price-row">';
-    let checkboxRow = '<div class="provider-checkbox-row">';
+    let priceRow = '<div class="provider-price-row"><span class="provider-label">Last Price:</span>';
+    let checkboxRow = '<div class="provider-checkbox-row"><span class="provider-label">Enable:</span>';
     metals.forEach((metal) => {
       const entries = history.filter(
         (e) => e.provider === providerName && e.metal === metal,
@@ -991,6 +991,37 @@ const handleProviderSync = async (provider) => {
 };
 
 /**
+ * Syncs all configured providers and records results
+ */
+const syncAllProviders = async () => {
+  const config = loadApiConfig();
+  if (!config || !config.keys) return;
+  for (const prov of Object.keys(API_PROVIDERS)) {
+    const apiKey = config.keys[prov];
+    if (!apiKey) continue;
+    try {
+      const data = await fetchSpotPricesFromApi(prov, apiKey);
+      Object.entries(data).forEach(([metal, price]) => {
+        const metalConfig = Object.values(METALS).find((m) => m.key === metal);
+        if (metalConfig && price > 0) {
+          recordSpot(
+            price,
+            "api",
+            metalConfig.name,
+            API_PROVIDERS[prov].name,
+          );
+        }
+      });
+      setProviderStatus(prov, "connected");
+    } catch (err) {
+      console.error(`Sync failed for ${prov}:`, err);
+      setProviderStatus(prov, "error");
+    }
+  }
+  updateProviderHistoryTables();
+};
+
+/**
  * Updates sync button states based on API availability
  * @param {boolean} syncing - Whether sync is in progress
  */
@@ -1137,6 +1168,7 @@ window.setCacheDuration = setCacheDuration;
 window.showApiHistoryModal = showApiHistoryModal;
 window.hideApiHistoryModal = hideApiHistoryModal;
 window.clearApiHistory = clearApiHistory;
+window.syncAllProviders = syncAllProviders;
 
 /**
  * Shows manual price input for a specific metal

@@ -67,10 +67,9 @@ const elements = {
   exportJsonBtn: null,
   exportExcelBtn: null,
   exportPdfBtn: null,
-  exportHtmlBtn: null,
   cloudSyncBtn: null,
-  backupAllBtn: null,
-
+  syncAllBtn: null,
+  
   // Emergency reset button
   boatingAccidentBtn: null,
 

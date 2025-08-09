@@ -575,12 +575,16 @@ input[type="submit"] {
 .provider-history {
   font-size: 0.75rem;
   margin-top: 0.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .provider-price-row,
 .provider-checkbox-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: var(--spacing-sm);
 }
 
@@ -590,12 +594,30 @@ input[type="submit"] {
   text-align: center;
 }
 
+.provider-label {
+  font-weight: 600;
+  margin-right: var(--spacing-sm);
+}
+
+.provider-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.provider-actions-right {
+  margin-left: auto;
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
 .provider-checkbox-row label {
   font-size: 0.75rem;
 }
 
 .api-usage {
-  margin-top: var(--spacing);
+  margin: var(--spacing) auto 0;
 }
 
 .api-usage .usage-bar {
@@ -2027,9 +2049,20 @@ td input:checked + .slider:before {
   font-size: 1.125rem;
 }
 
+.file-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing);
+}
+
+.import-block,
+.export-block {
+  flex: 1;
+}
+
 .import-export-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--spacing-sm);
 }
 

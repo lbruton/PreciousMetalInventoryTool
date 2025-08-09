@@ -16,16 +16,18 @@
  * @returns {void} Downloads a ZIP file containing complete backup
  * 
  * @example
- * // Called from backup button click
- * document.getElementById('backupAllBtn').addEventListener('click', createBackupZip);
+ * // Called to generate a complete backup archive
+ * await createBackupZip();
  */
 const createBackupZip = async () => {
   try {
     // Show loading indicator
     const backupBtn = document.getElementById('backupAllBtn');
-    const originalText = backupBtn.textContent;
-    backupBtn.textContent = 'Creating Backup...';
-    backupBtn.disabled = true;
+    const originalText = backupBtn ? backupBtn.textContent : '';
+    if (backupBtn) {
+      backupBtn.textContent = 'Creating Backup...';
+      backupBtn.disabled = true;
+    }
 
     // Create new JSZip instance
     const zip = new JSZip();
@@ -173,8 +175,10 @@ const createBackupZip = async () => {
     URL.revokeObjectURL(url);
 
     // Restore button state
-    backupBtn.textContent = originalText;
-    backupBtn.disabled = false;
+    if (backupBtn) {
+      backupBtn.textContent = originalText;
+      backupBtn.disabled = false;
+    }
     
     alert('Backup created successfully!');
   } catch (error) {
@@ -183,8 +187,10 @@ const createBackupZip = async () => {
     
     // Restore button state on error
     const backupBtn = document.getElementById('backupAllBtn');
-    backupBtn.textContent = 'Backup All Data';
-    backupBtn.disabled = false;
+    if (backupBtn) {
+      backupBtn.textContent = 'Backup All Data';
+      backupBtn.disabled = false;
+    }
   }
 };
 
@@ -1521,357 +1527,6 @@ const exportPdf = () => {
   // Save PDF
   doc.save(`metal_inventory_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.pdf`);
 };
-
-/**
- * Exports current inventory to HTML format with embedded styles
- */
-const exportHtml = () => {
-  const timestamp = new Date().toISOString().slice(0,10).replace(/-/g,'');
-
-  // Sort inventory by date (newest first) for export
-  const sortedInventory = sortInventoryByDateNewestFirst();
-
-  // Create HTML content with inline styles for portability
-  const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Precious Metals Inventory</title>
-  
-</head>
-<style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      line-height: 1.6;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-      color: #0d6efd;
-      margin-bottom: 10px;
-    }
-    .export-date {
-      text-align: center;
-      color: #6c757d;
-      margin-bottom: 25px;
-      font-size: 0.9rem;
-    }
-    .totals-section {
-      background: #f8f9fa;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 25px;
-      border: 1px solid #dee2e6;
-    }
-    .totals-title {
-      font-weight: 600;
-      color: #0d6efd;
-      margin-bottom: 10px;
-      text-align: center;
-      font-size: 1.1rem;
-    }
-    .totals-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-    }
-    .total-card {
-      background: white;
-      border-radius: 6px;
-      padding: 12px;
-      border: 1px solid #e9ecef;
-    }
-    .total-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 4px 0;
-      border-bottom: 1px dashed #dee2e6;
-    }
-    .total-item:last-child {
-      border-bottom: none;
-    }
-    .total-label {
-      font-weight: 500;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 25px;
-    }
-    th {
-      background-color: #e9ecef;
-      color: #212529;
-      font-weight: 600;
-      padding: 10px;
-      text-align: left;
-    }
-    td {
-      padding: 8px 10px;
-      border-bottom: 1px solid #dee2e6;
-    }
-    tr:nth-child(even) {
-      background-color: #f8f9fa;
-    }
-    .footer {
-      text-align: center;
-      margin-top: 30px;
-      color: #6c757d;
-      font-size: 0.85rem;
-      border-top: 1px solid #dee2e6;
-      padding-top: 15px;
-    }
-  </style>
-    
-<body>
-  <h1>Precious Metals Inventory</h1>
-  <div class="export-date">Exported: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</div>
-
-  <div class="totals-section">
-    <div class="totals-title">Inventory Totals</div>
-    <div class="totals-grid">
-      <div class="total-card">
-        <div style="font-weight: 600; margin-bottom: 12px; color: var(--silver, #a8a8a8);">Silver Totals</div>
-        <div class="total-item">
-          <span class="total-label">Total Items:</span>
-          <span class="total-value">${elements.totals.silver.items.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Weight:</span>
-          <span class="total-value">${elements.totals.silver.weight.textContent} oz</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Purchase Price:</span>
-          <span class="total-value">${elements.totals.silver.purchased.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Current Value:</span>
-          <span class="total-value">${elements.totals.silver.value.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Price (oz):</span>
-          <span class="total-value">${elements.totals.silver.avgPrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Collectable Price (oz):</span>
-          <span class="total-value">${elements.totals.silver.avgCollectablePrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Non-collectable Price (oz):</span>
-          <span class="total-value">${elements.totals.silver.avgNonCollectablePrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Premium (oz):</span>
-          <span class="total-value">${elements.totals.silver.avgPremium.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Premium Paid:</span>
-          <span class="total-value">${elements.totals.silver.premium.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Loss/Profit:</span>
-          <span class="total-value">${elements.totals.silver.lossProfit.textContent}</span>
-        </div>
-      </div>
-
-      <div class="total-card">
-        <div style="font-weight: 600; margin-bottom: 12px; color: var(--gold, #ffd700);">Gold Totals</div>
-        <div class="total-item">
-          <span class="total-label">Total Items:</span>
-          <span class="total-value">${elements.totals.gold.items.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Weight:</span>
-          <span class="total-value">${elements.totals.gold.weight.textContent} oz</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Purchase Price:</span>
-          <span class="total-value">${elements.totals.gold.purchased.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Current Value:</span>
-          <span class="total-value">${elements.totals.gold.value.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Price (oz):</span>
-          <span class="total-value">${elements.totals.gold.avgPrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Collectable Price (oz):</span>
-          <span class="total-value">${elements.totals.gold.avgCollectablePrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Non-collectable Price (oz):</span>
-          <span class="total-value">${elements.totals.gold.avgNonCollectablePrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Premium (oz):</span>
-          <span class="total-value">${elements.totals.gold.avgPremium.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Premium Paid:</span>
-          <span class="total-value">${elements.totals.gold.premium.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Loss/Profit:</span>
-          <span class="total-value">${elements.totals.gold.lossProfit.textContent}</span>
-        </div>
-      </div>
-
-      <div class="total-card">
-        <div style="font-weight: 600; margin-bottom: 12px; color: var(--platinum, #e5e4e2);">Platinum Totals</div>
-        <div class="total-item">
-          <span class="total-label">Total Items:</span>
-          <span class="total-value">${elements.totals.platinum.items.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Weight:</span>
-          <span class="total-value">${elements.totals.platinum.weight.textContent} oz</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Purchase Price:</span>
-          <span class="total-value">${elements.totals.platinum.purchased.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Current Value:</span>
-          <span class="total-value">${elements.totals.platinum.value.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Price (oz):</span>
-          <span class="total-value">${elements.totals.platinum.avgPrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Collectable Price (oz):</span>
-          <span class="total-value">${elements.totals.platinum.avgCollectablePrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Non-collectable Price (oz):</span>
-          <span class="total-value">${elements.totals.platinum.avgNonCollectablePrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Premium (oz):</span>
-          <span class="total-value">${elements.totals.platinum.avgPremium.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Premium Paid:</span>
-          <span class="total-value">${elements.totals.platinum.premium.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Loss/Profit:</span>
-          <span class="total-value">${elements.totals.platinum.lossProfit.textContent}</span>
-        </div>
-      </div>
-
-      <div class="total-card">
-        <div style="font-weight: 600; margin-bottom: 12px; color: var(--palladium, #c0c0ee);">Palladium Totals</div>
-        <div class="total-item">
-          <span class="total-label">Total Items:</span>
-          <span class="total-value">${elements.totals.palladium.items.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Weight:</span>
-          <span class="total-value">${elements.totals.palladium.weight.textContent} oz</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Purchase Price:</span>
-          <span class="total-value">${elements.totals.palladium.purchased.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Current Value:</span>
-          <span class="total-value">${elements.totals.palladium.value.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Price (oz):</span>
-          <span class="total-value">${elements.totals.palladium.avgPrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Collectable Price (oz):</span>
-          <span class="total-value">${elements.totals.palladium.avgCollectablePrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Non-collectable Price (oz):</span>
-          <span class="total-value">${elements.totals.palladium.avgNonCollectablePrice.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Average Premium (oz):</span>
-          <span class="total-value">${elements.totals.palladium.avgPremium.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Premium Paid:</span>
-          <span class="total-value">${elements.totals.palladium.premium.textContent}</span>
-        </div>
-        <div class="total-item">
-          <span class="total-label">Total Loss/Profit:</span>
-          <span class="total-value">${elements.totals.palladium.lossProfit.textContent}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Metal</th>
-        <th>Name</th>
-        <th>Qty</th>
-        <th>Type</th>
-        <th>Weight (oz)</th>
-        <th>Purchase Price</th>
-        <th>Spot Price ($/oz)</th>
-        <th>Premium ($/oz)</th>
-        <th>Total Premium</th>
-        <th>Purchase Location</th>
-        <th>Storage Location</th>
-        <th>Notes</th>
-        <th>Date</th>
-        <th>Collectable</th>
-      </tr>
-    </thead>
-    <tbody>
-      ${sortedInventory.map(item => `
-      <tr>
-        <td>${item.metal}</td>
-        <td>${item.name}</td>
-        <td>${item.qty}</td>
-        <td>${item.type}</td>
-        <td>${parseFloat(item.weight).toFixed(2)}</td>
-        <td>${formatDollar(item.price)}</td>
-        <td>${item.isCollectable ? 'N/A' : formatDollar(item.spotPriceAtPurchase)}</td>
-        <td>${item.isCollectable ? 'N/A' : formatDollar(item.premiumPerOz)}</td>
-        <td>${item.isCollectable ? 'N/A' : formatDollar(item.totalPremium)}</td>
-        <td>${item.purchaseLocation}</td>
-        <td>${item.storageLocation || 'Unknown'}</td>
-        <td>${item.notes || ''}</td>
-        <td>${item.date}</td>
-        <td>${item.isCollectable ? 'Yes' : 'No'}</td>
-      </tr>
-      `).join('')}
-    </tbody>
-  </table>
-
-  <div class="footer">
-    Precious Metals Tool Inventory Report
-  </div>
-</body>
-</html>
-  `;
-
-  // Create and download HTML file
-  const blob = new Blob([htmlContent], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `metal_inventory_${timestamp}.html`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-};
-
 // =============================================================================
 // Expose inventory actions globally for inline event handlers
 window.toggleCollectable = toggleCollectable;

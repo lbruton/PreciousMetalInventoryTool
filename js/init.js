@@ -90,9 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.exportJsonBtn = safeGetElement("exportJsonBtn");
     elements.exportExcelBtn = safeGetElement("exportExcelBtn");
     elements.exportPdfBtn = safeGetElement("exportPdfBtn");
-    elements.exportHtmlBtn = safeGetElement("exportHtmlBtn");
     elements.cloudSyncBtn = safeGetElement("cloudSyncBtn");
-    elements.backupAllBtn = safeGetElement("backupAllBtn");
+    elements.syncAllBtn = safeGetElement("syncAllBtn");
     elements.boatingAccidentBtn = safeGetElement("boatingAccidentBtn");
 
     // Modal elements
