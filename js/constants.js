@@ -93,7 +93,7 @@ const API_PROVIDERS = {
 // =============================================================================
 
 /** @constant {string} APP_VERSION - Application version */
-const APP_VERSION = "3.1.13";
+const APP_VERSION = "3.2.0";
 
 /** @constant {string} BRANDING_TITLE - Optional custom application title */
 const BRANDING_TITLE = "";

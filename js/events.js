@@ -1242,9 +1242,10 @@ const setupApiEvents = () => {
       safeAttachListener(
         syncAllBtn,
         "click",
-        () => {
+        async () => {
           if (typeof syncAllProviders === "function") {
-            syncAllProviders();
+            const count = await syncAllProviders();
+            alert(`${count} records updated.`);
           }
         },
         "Sync all providers button",
@@ -1253,7 +1254,6 @@ const setupApiEvents = () => {
 
     const historyModal = document.getElementById("apiHistoryModal");
     const historyCloseBtn = document.getElementById("apiHistoryCloseBtn");
-    const clearHistoryBtn = document.getElementById("clearHistoryBtn");
     const providersModal = document.getElementById("apiProvidersModal");
     const providersCloseBtn = document.getElementById("apiProvidersCloseBtn");
     if (historyModal) {
@@ -1278,18 +1278,6 @@ const setupApiEvents = () => {
           }
         },
         "API history close button",
-      );
-    }
-    if (clearHistoryBtn) {
-      safeAttachListener(
-        clearHistoryBtn,
-        "click",
-        () => {
-          if (typeof clearApiHistory === "function") {
-            clearApiHistory();
-          }
-        },
-        "Clear API history button",
       );
     }
     if (providersModal) {

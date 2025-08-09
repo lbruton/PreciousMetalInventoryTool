@@ -1,8 +1,8 @@
 # Project Status - Precious Metals Inventory Tool
 
-## 🎯 Current State: **FEATURE COMPLETE v3.1.13** ✅ MAINTAINED & OPTIMIZED
+## 🎯 Current State: **FEATURE COMPLETE v3.2.0** ✅ MAINTAINED & OPTIMIZED
 
-**Precious Metals Inventory Tool v3.1.13** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management, API integration, and complete backup capabilities. The 3.1.x series focuses on polish, maintenance, and optimization.
+**Precious Metals Inventory Tool v3.2.0** is a fully-featured, client-side web application for tracking precious metal investments (Silver, Gold, Platinum, Palladium) with comprehensive inventory management, API integration, and complete backup capabilities. The 3.2.x series focuses on polish, maintenance, and optimization.
 
 ## 🏗️ Architecture Overview
 
@@ -20,6 +20,7 @@ The tool features a **modular JavaScript architecture** with separate files for 
 
 ## ✨ Latest Changes (3.1.x Series)
 
+- **v3.2.0 - Settings & History Polish**: Appearance section moved up, sync confirmation dialog, and API history modal redesign
 - **v3.1.13 - Cloud Sync & API Quotas**: Cloud Sync placeholder modal, API usage tracking with quotas and monthly reset, Sync All provider button, reorganized file tools, and interface polish
 - **v3.1.12 - About Modal & Disclaimer**: Added mandatory disclaimer splash, About header button, and Sources link within modal; modal now includes styled header with version info
 - **v3.1.11 - UI Enhancements & Documentation**: Improved table usability and AI assistant guidance
@@ -113,7 +114,7 @@ All data is stored locally in the browser using localStorage with:
 
 If continuing development in a new chat session:
 
-1. **Current Version**: 3.1.13 (managed in `js/constants.js`)
+1. **Current Version**: 3.2.0 (managed in `js/constants.js`)
 2. **Last Change**: Added Cloud Sync placeholder, API quotas with monthly reset, footer, and CSV import fix
 3. **Last Documentation Update**: August 8, 2025 - All docs synchronized
 4. **Architecture**: Fully modular with proper separation of concerns
