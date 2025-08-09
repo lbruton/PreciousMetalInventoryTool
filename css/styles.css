@@ -2032,49 +2032,17 @@ td input:checked + .slider:before {
 
 .pagination-center {
   display: flex;
-  gap: 4px;
+  gap: var(--spacing-sm);
   justify-content: center;
   flex-grow: 1;
 }
 
-.pagination-info-controls {
+.items-per-page {
   display: flex;
-  justify-content: center;
-  margin-top: var(--spacing-sm);
-}
-
-.page-numbers {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-}
-
-.page-numbers button {
-  min-width: 2.5rem;
-  height: 2.5rem;
-  display: flex;
+  justify-content: flex-end;
   align-items: center;
-  justify-content: center;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-weight: 500;
-  transition: var(--transition);
-  cursor: pointer;
-  padding: 0;
-}
-
-.page-numbers button:hover:not(.active) {
-  background: var(--bg-secondary);
-  border-color: var(--border-hover);
-}
-
-.page-numbers button.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-  font-weight: 600;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
 }
 
 .pagination-btn {
@@ -2091,6 +2059,13 @@ td input:checked + .slider:before {
   transition: var(--transition);
   cursor: pointer;
   padding: 0;
+}
+
+.pagination-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  font-weight: 600;
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -2393,17 +2368,15 @@ input:disabled + .slider {
     margin-bottom: var(--spacing-sm);
   }
 
-  .pagination-center {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: var(--spacing-sm);
-  }
+    .pagination-center {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
 
-  .pagination-info-controls {
-    flex-direction: column;
-    align-items: center;
-    gap: var(--spacing-sm);
-  }
+    .items-per-page {
+      justify-content: center;
+    }
 
   .search-container {
     flex-direction: column;
