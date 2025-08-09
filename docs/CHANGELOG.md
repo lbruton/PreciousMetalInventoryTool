@@ -8,6 +8,13 @@
 
 ## 📋 Version History
 
+### Version 3.1.13 – Cloud Sync Placeholder and API Quotas (2025-08-08)
+- CSV import sanitizes negative prices by setting values below zero to $0
+- Added gray Cloud Sync button with coming-soon modal and icons for all import/export buttons
+- Boating Accident button now indicates local data presence with red/green styling
+- API provider modal gains metal selectors, call quota tracking with progress bars, warning flags at 90%, and automatic monthly quota reset
+- Footer with GPL-3.0 license link and configurable branding title support
+
 ### Version 3.1.12 – About Modal and Disclaimer (2025-08-08)
 - **User Notice**: Added mandatory about/disclaimer modal informing users that data is stored locally and advising regular backups
 - **About Access**: New About button in header provides version info and change history

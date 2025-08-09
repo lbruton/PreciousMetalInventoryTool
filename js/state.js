@@ -68,6 +68,7 @@ const elements = {
   exportExcelBtn: null,
   exportPdfBtn: null,
   exportHtmlBtn: null,
+  cloudSyncBtn: null,
   backupAllBtn: null,
 
   // Emergency reset button
@@ -132,6 +133,9 @@ const elements = {
   settingsModal: null,
   apiInfoModal: null,
   apiHistoryModal: null,
+  apiProvidersModal: null,
+  cloudSyncModal: null,
+  apiQuotaModal: null,
 
   // Spot price action buttons
   spotSyncBtn: null,

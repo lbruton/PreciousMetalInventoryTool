@@ -17,7 +17,7 @@
 
 ## 1. Purpose
 
-Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Metals Inventory Tool v3.1.12** to guide development, documentation, and QA tasks.
+Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Metals Inventory Tool v3.1.13** to guide development, documentation, and QA tasks.
 
 ## 2. Project Snapshot
 
@@ -30,7 +30,7 @@ Provide AI assistants (LLMs) a concise, up-to-date overview of the **Precious Me
   - **Comprehensive backup ZIP system** with all data formats and restoration guides
   - Responsive & accessible UI (mobile-first, ARIA, keyboard support)  
   - Modular JS architecture (constants, state, events, utils, inventory)  
-- **Version**: 3.1.12 (About modal and disclaimer)
+- **Version**: 3.1.13 (Cloud Sync placeholder and API quotas with monthly reset)
 - **Last Updated**: August 8, 2025  
 
 ## 3. Project Structure
@@ -92,7 +92,7 @@ PreciousMetalInventoryTool/
 
 ## 6. v3.1.x Family Highlights
 
-- **v3.1.12 - About Modal & Disclaimer**:
+- **v3.1.13 - Cloud Sync & API Quotas**:
   - Introduced mandatory disclaimer splash and About button
   - Refreshed styling with version info and GitHub source link
 

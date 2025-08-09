@@ -93,7 +93,10 @@ const API_PROVIDERS = {
 // =============================================================================
 
 /** @constant {string} APP_VERSION - Application version */
-const APP_VERSION = "3.1.12";
+const APP_VERSION = "3.1.13";
+
+/** @constant {string} BRANDING_TITLE - Optional custom application title */
+const BRANDING_TITLE = "";
 
 /** @constant {string} LS_KEY - LocalStorage key for inventory data */
 const LS_KEY = "metalInventory";
@@ -114,6 +117,9 @@ const API_CACHE_KEY = "metalApiCache";
  * @constant {number} DEFAULT_API_CACHE_DURATION - Default cache duration in milliseconds (24 hours)
  */
 const DEFAULT_API_CACHE_DURATION = 24 * 60 * 60 * 1000;
+
+/** @constant {number} DEFAULT_API_QUOTA - Default monthly API call quota */
+const DEFAULT_API_QUOTA = 100;
 
 /** @constant {boolean} DEV_MODE - Enables verbose debug logging when true */
 const DEV_MODE = false;

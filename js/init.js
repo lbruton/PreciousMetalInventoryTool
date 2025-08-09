@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.exportExcelBtn = safeGetElement("exportExcelBtn");
     elements.exportPdfBtn = safeGetElement("exportPdfBtn");
     elements.exportHtmlBtn = safeGetElement("exportHtmlBtn");
+    elements.cloudSyncBtn = safeGetElement("cloudSyncBtn");
     elements.backupAllBtn = safeGetElement("backupAllBtn");
     elements.boatingAccidentBtn = safeGetElement("boatingAccidentBtn");
 
@@ -99,6 +100,9 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.settingsModal = safeGetElement("settingsModal");
     elements.apiInfoModal = safeGetElement("apiInfoModal");
     elements.apiHistoryModal = safeGetElement("apiHistoryModal");
+    elements.apiProvidersModal = safeGetElement("apiProvidersModal");
+    elements.cloudSyncModal = safeGetElement("cloudSyncModal");
+    elements.apiQuotaModal = safeGetElement("apiQuotaModal");
     elements.aboutModal = safeGetElement("aboutModal");
     elements.ackModal = safeGetElement("ackModal");
     elements.ackAcceptBtn = safeGetElement("ackAcceptBtn");
